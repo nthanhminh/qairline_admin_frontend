@@ -40,3 +40,42 @@ a {
     color-scheme: dark;
   }
 }
+
+.react-datepicker__header {
+  background-color: #FFF !important;
+  border-bottom: 1px solid #c7e0f4 !important;
+  position: relative;
+  top: -8px;
+}
+
+.react-datepicker__day--selected {
+  background-color: #76edbb !important;
+}
+
+.react-datepicker__day-name {
+  color: #67bc99 !important;
+  font-size: 13px !important;
+  font-weight: bold !important;
+}
+
+.react-datepicker__day--today {
+  font-weight: normal !important;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: transparent !important;
+}
+
+h2.react-datepicker__current-month {
+  color: #333;
+  font-size: 14;
+  font-weight: bold;
+}
+
+.react-datepicker__navigation--next{
+  color: #76edbb !important ;
+}
+
+.react-datepicker__tab-loop {
+  position: absolute;
+}

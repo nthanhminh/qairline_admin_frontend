@@ -1,0 +1,10 @@
+{
+    "HomePage": {
+      "title": "Chào",
+      "about": "Chào mừng tới about Page"
+    },
+    "Dashboard": {
+        "title": "Chào dashboard",
+        "about": "Chào mừng đến dashboard page"
+    }
+}

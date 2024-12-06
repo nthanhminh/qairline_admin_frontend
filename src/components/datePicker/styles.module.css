@@ -1,0 +1,66 @@
+.dateContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+}
+.customDatePickerContainer {
+    background-color: #FFF;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    display: inline-block;
+}
+
+.customInput {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    font-size: 14px;
+    outline: none;
+    font-weight: bold;
+    background-color: #e8e3e3;
+    letter-spacing: 1.2px;
+    border-radius: 12px;
+    min-width: 120px;
+}
+
+.react-datepicker__header {
+    background-color: #f0f0f0;
+}
+
+.customCalendar {
+    border-radius: 8px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.react-datepicker__day--today {
+    background-color: rgb(148, 201, 223);
+    color: white;
+    border-radius: 50%;
+}
+
+.customDayOutsideMonth {
+    color: #ccc;
+}
+
+.react-datepicker__day {
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+}
+
+.react-datepicker__day--selected {
+    background-color: #ff6347;
+    color: white;
+    border-radius: 50%;
+}
+
+.react-datepicker__day:hover {
+    background-color: #f0f0f0;
+    border-radius: 50%;
+}

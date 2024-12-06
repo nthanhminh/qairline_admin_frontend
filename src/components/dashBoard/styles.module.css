@@ -1,0 +1,314 @@
+.leftContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 32px 0px;
+}
+
+.dashboardContainer {
+    padding: 18px 18px;
+    display: flex;
+    overflow: auto;
+    flex-wrap: wrap;
+    /* justify-content: center; */
+}
+.statisticContainer {
+    flex: 1;
+    /* width: 20%; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #FFF;
+    max-width: 240px;
+    border-radius: 12px;
+    padding: 6px 24px;
+}
+
+.contentContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.contentName {
+    color: #908989;
+    font-size: 12px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+}
+
+.contentCnt {
+    font-size: 32px;
+    color: #000;
+    font-weight: bold;
+}
+
+.content {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.trend {
+    display: flex;
+    gap: 12px;
+}
+
+.trendDiff {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.rowsContainer {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 100%;
+    gap:32px;
+}
+
+.leftContainer {
+    width: 100%;
+}
+
+/* ticket css */
+.ticketContainer{
+    display: flex;
+    flex-direction: column;
+    background-color: #FFF;
+    width: 50%;
+    /* min-height: 300px; */
+    flex: 1;
+    padding: 12px 18px;
+    border-radius: 12px;
+    min-width: 480px;
+}
+
+.firstRow{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.timeTypeContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background-color: rgba(197, 243, 248, 1);
+    padding: 8px 18px;
+    border-radius: 12px;
+}
+
+.rowName {
+    color: #000;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.timeTypeValue {
+    color: #333;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.below_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 32px;
+}
+
+.secondeRowCount {
+    font-size: 36px;
+    color: #000;
+    font-weight: bold;
+}
+
+.secondRow{
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.secondeRowName {
+    font-size: 13px;
+    color: #746c6c;
+    font-weight: bold;
+    position: relative;
+    bottom: 8px;
+}
+
+/** booking css **/
+.bookingContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 32px;
+    background-color: #FFF;
+    border-radius: 12px;
+    flex: 1;
+    min-width: 480px;
+}
+
+.bookingItemContainer {
+    display: flex;
+}
+
+.bookingInfoContainer {
+    display: flex;
+    flex-direction: column;
+    padding-right: 16px;
+    border-right: 2px solid #e4e2e2;
+    gap: 12px;
+    margin-right: 16px;
+}
+
+.numberInfo {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.dateInfo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.passengerInfo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.flightInfoContainer {
+    flex: 1;
+    display: flex;
+    gap: 48px;
+}
+
+.airportContainer {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 6px;
+}
+
+.airportNameLeft {
+    position: relative;
+    left: -12px;
+}
+
+.airportNameRight {
+    position: relative;
+    right: -12px;
+}
+
+.timeBookingContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.bookingAirportContainer {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    /* flex-direction: column; */
+}
+
+.bookingDecoration {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.circle {
+    width: 8px;
+    height: 8px;
+    border-radius: 100%;
+    background-color: rgba(197, 243, 248, 1);
+}
+
+.line {
+    flex: 1;
+    height: 2px;
+    background-color: rgba(197, 243, 248, 1);
+}
+
+.bookingNameHeader {
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.bookingInfo {
+    color: #a39c9c;
+    font-size: 14px;
+    text-align: center;
+}
+
+/** top flight routes */
+.rightContainer {
+    padding: 0 18px;
+    width: 30%;
+}
+
+.topFlightRoutesContainer {
+    /* width: 100%; */
+    background-color: #FFF;
+    padding: 12px 16px;
+    border-radius: 12px;
+    height: fit-content;
+    flex: 1;
+    min-width: 480px;
+}
+
+.topFlightItemContainer {
+    display: flex;
+    gap: 12px;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.headerName {
+    color: #000;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.flightInfo {
+    color: #a39c9c;
+    font-size: 14px;
+    text-align: left;
+}
+
+.passengers {
+    width: 100%;
+    background-color: #908989;
+    height: 36px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.passengersFlightCount {
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #393737;
+    width: 90%;
+    /* text-align: left; */
+}
+
+.passengersCount {
+    margin-left: 16px;
+    color: #f4e7e7;
+}

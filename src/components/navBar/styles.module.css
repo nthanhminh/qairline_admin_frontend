@@ -1,0 +1,55 @@
+.navBarContainer{
+    padding: 32px 36px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    row-gap: 32px;
+    background-color: #FFF;
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-height: 100vh;
+}
+
+.logoContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+}
+
+.branchName {
+    font-size: 16px;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+}
+
+.itemContainer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 12px;
+    min-width: 180px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin: 12px 0px;
+    transition: all 0.35s ease-in-out;
+}
+
+.navBarSelected {
+    background-color: rgba(197, 243, 248, 1);
+    font-weight: 600;
+}
+
+.itemContainer:hover {
+    cursor: pointer;
+    background-color: rgb(213, 247, 251);
+}
+
+.itemName {
+    font-size: 12px;
+    font-weight: 400;
+    color: #333;
+    letter-spacing: 0.9px;
+}
