@@ -228,3 +228,91 @@
     position: relative;
     top: -6px
 }
+
+.fligthList {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 16px 0;
+}
+
+.fligthListName {
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.functionalBtnContainer {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.functionalDes {
+    color: #a39c9c;
+    font-size: 14px;
+}
+
+.sortBy {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 18px;
+    background-color: #FFF;
+    border-radius: 12px;
+    color: #948d8d;
+    font-size: 16px;
+    position: relative;
+    /* min-width: 160px; */
+}
+
+.sortBy:hover .optionContainer {
+    max-height: 84px;
+}
+
+.optionContainer {
+    /* display: none; */
+    max-height: 0;
+    position: absolute;
+    display: block;
+    top: 42px;
+    background-color: #b6b6b6;
+    color: #FFF;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.35s ease-in-out;
+}
+
+.optionItem {
+    padding: 8px 12px;
+    transition: all 0.35s ease-in-out;
+    text-align: left;
+}
+
+.sortByDeparture {
+    /* padding: 0 18px; */
+    bottom: -66px;
+}
+
+.optionItem:hover {
+    background-color: #f7e1e1;
+    color: #333;
+    cursor: pointer;
+}
+
+.addFlight {
+    background-color: rgb(202, 246, 246);
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.35s ease-in-out;  
+}
+
+.addFlight:hover {
+    background-color: rgb(153, 211, 211);
+    color: #FFF;
+    cursor: pointer;
+}
+

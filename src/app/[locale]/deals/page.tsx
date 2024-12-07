@@ -1,10 +1,11 @@
 // import {useTranslations} from 'next-intl';
+
+import { DealPage } from "@/components/deals/deal.page";
+
  
 export default function DealsPage() {
     //   const t = useTranslations('HomePage');
       return (
-        <div>
-          <h1>Deal</h1>
-        </div>
+        <DealPage translate={{}}/>
       );
     }

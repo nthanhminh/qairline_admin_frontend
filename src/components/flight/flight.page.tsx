@@ -4,7 +4,6 @@ import { FC, useEffect, useState } from "react";
 // import { NavBarTranslation } from "./navBar.translation";
 import styles from "./styles.module.css"
 import Image from "next/image";
-import DatePicker from "react-datepicker";
 import CustomDatePicker from "../datePicker/datePicker";
 export interface FlightPageProps {
     translate: any
@@ -32,6 +31,10 @@ export const FlightPage: FC<FlightPageProps> = ({
                     <label htmlFor="toAirport">To</label>
                     <input type="text" name="toAirport" id="toAirport" className={styles.input} />
                 </div> 
+                <div className={styles.airportSearch}>
+                    <label htmlFor="Flight Code">Flight Code</label>
+                    <input type="text" name="Flight Code" id="Flight Code" className={styles.input} />
+                </div> 
                 <CustomDatePicker></CustomDatePicker>
                 <div className={styles.SearchBtn}>
                     <Image src="/images/flights/search.png" width={24} height={24} unoptimized alt=""></Image>
@@ -46,8 +49,51 @@ export const FlightPage: FC<FlightPageProps> = ({
                         Sort by
                     </div>
                     <div className={styles.sortBy}>
-                        
+                        Cheapest
+                        <Image src="/images/dashboard/arrow.png" alt="" width={12} height={12}></Image>
+                        <div className={styles.optionContainer}>
+                            <div className={styles.optionItem}>
+                                Cheapest
+                            </div>
+                            <div className={styles.optionItem}>
+                                Most expensive
+                            </div>
+                        </div>
+                    </div>
+                    <div className={styles.sortBy}>
+                        Earliest
+                        <Image src="/images/dashboard/arrow.png" alt="" width={12} height={12}></Image>
+                        <div className={`${styles.optionContainer} ${styles.sortByDeparture}`}>
+                            <div className={styles.optionItem} style={{
+                                padding: "8px 30px"
+                            }}>
+                                Earliest
+                            </div>
+                            <div className={`${styles.optionItem}`} style={{
+                                padding: "8px 30px"
+                            }}>
+                                Latest
+                            </div>
+                        </div>
                     </div> 
+                    <div className={styles.functionalDes}>
+                        Filter by
+                    </div>
+                    <div className={styles.sortBy}>
+                        Active
+                        <Image src="/images/dashboard/arrow.png" alt="" width={12} height={12}></Image>
+                        <div className={styles.optionContainer}>
+                            <div className={styles.optionItem}>
+                                Active
+                            </div>
+                            <div className={styles.optionItem}>
+                                Cancelled
+                            </div>
+                        </div>
+                    </div>
+                    <div className={styles.addFlight}>
+                        Add Flight
+                    </div>  
                 </div>
             </div>
             <div className={styles.contentContainer}>

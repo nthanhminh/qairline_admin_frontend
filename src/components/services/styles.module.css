@@ -1,0 +1,99 @@
+.container {
+    padding: 18px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.addItem {
+    border: none;
+    background-color: aquamarine;
+    border-radius: 12px;
+    padding: 12px 18px;
+    color: #908e8e;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.listContainer {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+}
+
+.itemContainer {
+    flex: 1;
+    min-width: 320px;
+    max-width: 360px;
+    background-color: #FFF;
+    padding: 18px;
+    border-radius: 12px;
+}
+
+.imageContainer {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.description {
+    margin-top: 18px;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #FFF;
+}
+
+.name {
+    color: #827d7d;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.price {
+    font-size: 24px;
+    color: aquamarine;
+    font-weight: bold;
+}
+
+.priceContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
+}
+
+.editItem {
+    border: none;
+    background-color: aquamarine;
+    border-radius: 12px;
+    padding: 12px 18px;
+    color: #908e8e;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.serviceDes {
+    color: #908e8e;
+    font-size: 15px;
+    font-weight: w500;
+}
+
+.typeContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}

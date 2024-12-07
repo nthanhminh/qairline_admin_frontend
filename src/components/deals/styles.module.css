@@ -1,0 +1,122 @@
+.container {
+    padding: 18px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.addItem {
+    border: none;
+    background-color: aquamarine;
+    border-radius: 12px;
+    padding: 12px 18px;
+    color: #908e8e;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.listContainer {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+}
+
+.itemContainer {
+    flex: 1;
+    min-width: 320px;
+    max-width: 360px;
+    background-color: #FFF;
+    padding: 18px;
+    border-radius: 12px;
+    position: relative;
+}
+
+.imageContainer {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.description {
+    margin-top: 18px;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #FFF;
+}
+
+.name {
+    color: #827d7d;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.price {
+    font-size: 24px;
+    color: aquamarine;
+    font-weight: bold;
+}
+
+.priceContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
+}
+
+.editItem {
+    border: none;
+    background-color: aquamarine;
+    border-radius: 12px;
+    padding: 12px 18px;
+    color: #908e8e;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.serviceDes {
+    color: #908e8e;
+    font-size: 15px;
+    font-weight: w500;
+}
+
+.typeContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+.discount {
+    padding: 8px;
+    color: red;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: rgba(255, 216, 64, 0.95);
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.discount::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    border-style: solid;
+    border-width: 0 25px 10px;
+    border-color: transparent rgba(255, 216, 64, 0.95) transparent rgba(255, 216, 64, 0.95);
+}

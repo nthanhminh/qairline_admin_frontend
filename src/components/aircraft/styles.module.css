@@ -1,0 +1,75 @@
+.aircraftContainer {
+    margin: 32px;
+    padding: 12px 18px;
+}
+
+.airCraftHeader {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.listContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.itemContainer {
+    padding: 12px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: #FFF;
+    border-radius: 12px;
+    width: 100%;
+}
+
+.row {
+    display: flex;
+
+}
+
+.header {
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.info {
+    color: #968d8d;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.infoContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.description {
+    color: #968d8d;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.btn {
+    background-color: aquamarine;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 18px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #968d8d;
+    transition: all 0.35s ease-in-out;
+}
+
+.btn:hover {
+    filter: brightness(1.2);
+    cursor: pointer; 
+}

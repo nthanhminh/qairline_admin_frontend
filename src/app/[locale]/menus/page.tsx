@@ -1,10 +1,11 @@
 // import {useTranslations} from 'next-intl';
+
+import { MenuPage } from "@/components/menu/menu.page";
+
  
 export default function MenusPage() {
     //   const t = useTranslations('HomePage');
       return (
-        <div>
-          <h1>Menu</h1>
-        </div>
+        <MenuPage translate={{}}/>
       );
     }
