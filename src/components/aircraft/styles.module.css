@@ -59,13 +59,13 @@
 }
 
 .btn {
-    background-color: aquamarine;
+    background-color: #1D7D8F;
     border: none;
     border-radius: 12px;
     padding: 12px 18px;
     font-size: 14px;
     font-weight: bold;
-    color: #968d8d;
+    color: #FFF;
     transition: all 0.35s ease-in-out;
 }
 

@@ -232,13 +232,13 @@
     width: 8px;
     height: 8px;
     border-radius: 100%;
-    background-color: rgba(197, 243, 248, 1);
+    background-color: #1D7D8F;
 }
 
 .line {
     flex: 1;
     height: 2px;
-    background-color: rgba(197, 243, 248, 1);
+    background-color: #1D7D8F;
 }
 
 .bookingNameHeader {
@@ -292,7 +292,7 @@
 
 .passengers {
     width: 100%;
-    background-color: #908989;
+    background-color: #AAD3D8;
     height: 36px;
     border-radius: 10px;
     overflow: hidden;
@@ -303,7 +303,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    background-color: #393737;
+    background-color: #28646F;
     width: 90%;
     /* text-align: left; */
 }

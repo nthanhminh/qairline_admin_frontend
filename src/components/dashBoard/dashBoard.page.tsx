@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import BarChart from "./barChart";
 import LineChart from "./lineChart";
+import { getAllMenu } from "@/ultis/apis/menu.api";
 export interface DashBoardPageProps {
     translate: any
 }
@@ -14,7 +15,9 @@ export interface DashBoardPageProps {
 export const DashBoardPage: FC<DashBoardPageProps> = ({
     translate
 }) => {
-
+    useEffect(() => {
+        getAllMenu();
+    }, [])
     return (
         <div className={styles.dashboardContainer}>
             <div className={styles.leftContainer}>

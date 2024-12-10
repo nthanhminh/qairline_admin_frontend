@@ -142,7 +142,7 @@ export const FlightPage: FC<FlightPageProps> = ({
                             <div className={styles.advantage}>
                                 <Image src='/images/flights/travel.png' alt="" width={16} height={16}></Image>
                                 <div className={styles.classInfo}>
-                                    1baggage
+                                    1 baggage
                                 </div>
                             </div>
                             <div className={styles.advantage}>
@@ -154,7 +154,7 @@ export const FlightPage: FC<FlightPageProps> = ({
                         </div>
                         <div className={styles.priceInfo}>
                             <div className={styles.price}>
-                                $350 <span className={styles.unit}>/ pox</span>
+                                $350 <span className={styles.unit}>/ pax</span>
                             </div>
                             <div className={styles.viewDetail}>
                                 View Detail
@@ -206,7 +206,7 @@ export const FlightPage: FC<FlightPageProps> = ({
                             <div className={styles.advantage}>
                                 <Image src='/images/flights/travel.png' alt="" width={16} height={16}></Image>
                                 <div className={styles.classInfo}>
-                                    1baggage
+                                    1 baggage
                                 </div>
                             </div>
                             <div className={styles.advantage}>
@@ -218,7 +218,7 @@ export const FlightPage: FC<FlightPageProps> = ({
                         </div>
                         <div className={styles.priceInfo}>
                             <div className={styles.price}>
-                                $350 <span className={styles.unit}>/ pox</span>
+                                $350 <span className={styles.unit}>/ pax</span>
                             </div>
                             <div className={styles.viewDetail}>
                                 View Detail
@@ -270,7 +270,7 @@ export const FlightPage: FC<FlightPageProps> = ({
                             <div className={styles.advantage}>
                                 <Image src='/images/flights/travel.png' alt="" width={16} height={16}></Image>
                                 <div className={styles.classInfo}>
-                                    1baggage
+                                    1 baggage
                                 </div>
                             </div>
                             <div className={styles.advantage}>
@@ -282,7 +282,7 @@ export const FlightPage: FC<FlightPageProps> = ({
                         </div>
                         <div className={styles.priceInfo}>
                             <div className={styles.price}>
-                                $350 <span className={styles.unit}>/ pox</span>
+                                $350 <span className={styles.unit}>/ pax</span>
                             </div>
                             <div className={styles.viewDetail}>
                                 View Detail
@@ -334,7 +334,7 @@ export const FlightPage: FC<FlightPageProps> = ({
                             <div className={styles.advantage}>
                                 <Image src='/images/flights/travel.png' alt="" width={16} height={16}></Image>
                                 <div className={styles.classInfo}>
-                                    1baggage
+                                    1 baggage
                                 </div>
                             </div>
                             <div className={styles.advantage}>
@@ -346,7 +346,7 @@ export const FlightPage: FC<FlightPageProps> = ({
                         </div>
                         <div className={styles.priceInfo}>
                             <div className={styles.price}>
-                                $350 <span className={styles.unit}>/ pox</span>
+                                $350 <span className={styles.unit}>/ pax</span>
                             </div>
                             <div className={styles.viewDetail}>
                                 View Detail

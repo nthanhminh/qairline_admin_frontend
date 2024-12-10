@@ -1,9 +1,9 @@
 'use client';
 
 import { FC, useEffect, useState } from "react";
-// import { NavBarTranslation } from "./navBar.translation";
 import styles from "./styles.module.css"
-import Image from "next/image";
+import { Plane } from "@/ultis/type/plane.type";
+import { deletePlane, getAllPlane } from "@/ultis/apis/plane.api";
 import AircraftForm from "../edit/aircraft/editAircraft.page";
 export interface AircraftPageProps {
     translate: any
@@ -12,6 +12,39 @@ export interface AircraftPageProps {
 export const AircraftPage: FC<AircraftPageProps> = ({
     translate
 }) => {
+    const [planes, setPlane] = useState<Plane[]>([]);
+    const [isShowPopup, setIsShowPopup] = useState<boolean>(false);
+    const [planeChange, setPlaneChange] = useState<Plane | null>(null);
+    const [isDummy, setIsDummy] = useState<boolean>(false);
+    const fetchData = async () => {
+        const planeResponse = await getAllPlane() ?? [];
+        const planeList = planeResponse.items;
+        console.log(planeList);
+        setPlane(planeList);
+    }
+
+    const handleEditPlane = async (plane: Plane) => {
+        setPlaneChange(plane);
+        setIsShowPopup(true);
+    }
+
+    const handleCreatePlane = async () => {
+        setPlaneChange(null);
+        setIsShowPopup(true);
+    }
+
+    const closePopup = () => {
+        setIsShowPopup(false);
+    }
+
+    const removePlane = async (id: string) => {
+        const result = await deletePlane(id);
+        setIsDummy(!isDummy)
+    }
+
+    useEffect(() => {
+        fetchData()
+    }, [isDummy]);
 
     return (
         <div className={styles.aircraftContainer}>
@@ -19,52 +52,58 @@ export const AircraftPage: FC<AircraftPageProps> = ({
                 <h2 className={styles.bookingHeader}>
                     Aircraft
                 </h2>
-                <button className={styles.btn}>Add Aircraft</button>
+                <button className={styles.btn} onClick={() => handleCreatePlane()}>Add Aircraft</button>
             </div>
             <div className={styles.listContainer}>
-                <div className={styles.itemContainer}>
-                    <div className={styles.row}>
-                        <div className={styles.infoContainer}>
-                            <p className={styles.header}>Boeing 757</p>
-                        </div>
-                        <div className={styles.infoContainer}>
-                            <p className={styles.header}>Type</p>
-                            <p className={styles.info}>A310</p>
-                        </div>
-                        <div className={styles.infoContainer}>
-                            <p className={styles.header}>Seat Configuration</p>
-                            <p className={styles.info}>3 - 3 -3</p>
-                        </div>
-                    </div>
-                    <div className={styles.row}>
-                        <div className={styles.infoContainer}>
-                            <p className={styles.header}>Business</p>
-                            <p className={styles.info}>50</p>
-                        </div>
-                        <div className={styles.infoContainer}>
-                            <p className={styles.header}>Premium Economy</p>
-                            <p className={styles.info}>50</p>
-                        </div>
-                        <div className={styles.infoContainer}>
-                            <p className={styles.header}>Economy</p>
-                            <p className={styles.info}>50</p>
-                        </div>
-                        <div className={styles.infoContainer}>
-                            <p className={styles.header}>Basic Economy</p>
-                            <p className={styles.info}>50</p>
-                        </div>
-                    </div>
-                    <div className={styles.row}>
-                        <p className={styles.description}>This is a plane</p>
-                    </div>
-                    <div className={styles.row}>
-                        <button className={styles.btn}>
-                            Edit
-                        </button>
-                    </div>
-                </div>
+                {
+                    planes.map((plane, index) => {
+                        return (
+                            <div className={styles.itemContainer} key={index}>
+                                <div className={styles.row}>
+                                    <div className={styles.infoContainer}>
+                                        <p className={styles.header}>{plane.name}</p>
+                                    </div>
+                                    <div className={styles.infoContainer}>
+                                        <p className={styles.header}>Type</p>
+                                        <p className={styles.info}>{plane.type}</p>
+                                    </div>
+                                    <div className={styles.infoContainer}>
+                                        <p className={styles.header}>Seat Configuration</p>
+                                        <p className={styles.info}>3 - 3 -3</p>
+                                    </div>
+                                </div>
+                                <div className={styles.row}>
+                                    <div className={styles.infoContainer}>
+                                        <p className={styles.header}>Business</p>
+                                        <p className={styles.info}>{plane.seatLayoutId.numberOfBusinessSeats}</p>
+                                    </div>
+                                    <div className={styles.infoContainer}>
+                                        <p className={styles.header}>Premium Economy</p>
+                                        <p className={styles.info}>{plane.seatLayoutId.numberOfPreminumEconomySeats}</p>
+                                    </div>
+                                    <div className={styles.infoContainer}>
+                                        <p className={styles.header}>Economy</p>
+                                        <p className={styles.info}>{plane.seatLayoutId.numberOfEconomySeats}</p>
+                                    </div>
+                                    <div className={styles.infoContainer}>
+                                        <p className={styles.header}>Basic Economy</p>
+                                        <p className={styles.info}>{plane.seatLayoutId.numberOfBasicSeats}</p>
+                                    </div>
+                                </div>
+                                <div className={styles.row}>
+                                    <p className={styles.description}>{plane.description}</p>
+                                </div>
+                                <div className={styles.row}>
+                                    <button className={styles.btn} onClick={() => handleEditPlane(plane)}>
+                                        Edit
+                                    </button>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
             </div>
-            <AircraftForm/>
+            {isShowPopup && <AircraftForm callback={closePopup} setIsDummy={setIsDummy} isDummy={isDummy} plane={planeChange}/>}
         </div>
     );
 }

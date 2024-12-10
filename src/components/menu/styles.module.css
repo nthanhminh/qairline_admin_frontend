@@ -2,7 +2,7 @@
     padding: 18px 32px;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 40px;
 }
 
 .header {
@@ -12,12 +12,19 @@
 
 .addItem {
     border: none;
-    background-color: aquamarine;
+    background-color: #65B9C7;
     border-radius: 12px;
     padding: 12px 18px;
-    color: #908e8e;
+    color: #FFF;
     font-size: 14px;
     font-weight: bold;
+    transition: all 0.35s ease-in-out;
+}
+
+.addItem:hover {
+    background-color: #1D7D8F;
+    color: #FFF;
+    cursor: pointer;
 }
 
 .listContainer {
@@ -43,8 +50,9 @@
 
 .image {
     width: 100%;
-    height: 100%;
+    height: 180px;
     object-fit: contain;
+    border-radius: 12px;
 }
 
 .description {
@@ -56,15 +64,21 @@
     background-color: #FFF;
 }
 
+.menuDescription {
+    color: #908e8e;
+    font-size: 15px;
+    font-weight: w500;
+}
+
 .name {
-    color: #827d7d;
+    color: #000;
     font-size: 16px;
     font-weight: bold;
 }
 
 .price {
     font-size: 24px;
-    color: aquamarine;
+    color: #1D7D8F;
     font-weight: bold;
 }
 
@@ -77,10 +91,27 @@
 
 .editItem {
     border: none;
-    background-color: aquamarine;
+    background-color: #65B9C7;
     border-radius: 12px;
     padding: 12px 18px;
-    color: #908e8e;
+    color: #FFF;
     font-size: 14px;
     font-weight: bold;
+    transition: all 0.35s ease-in-out;
+}
+
+.editItem:hover {
+    background-color: #1D7D8F;
+    color: #FFF;
+    cursor: pointer;
+}
+
+.menuTypeoContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.deleteBtn:hover {
+    cursor: pointer;
 }

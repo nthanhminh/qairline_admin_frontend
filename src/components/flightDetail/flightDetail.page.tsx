@@ -19,7 +19,12 @@ export const FlightDetailPage: FC<FlightDetailPageProps> = ({
                         <Image src="/images/flights/back.png" alt="" width={18} height={18}></Image>
                     </div>
                     <div className={styles.flightInfoContainer}>
-                        <div className={styles.flightInfo}>
+                        <div className={styles.flightInfo} style={
+                                {
+                                    color: "#1D7D8F",
+                                    fontWeight: "bold",
+                                }
+                        }>
                             QAL001
                         </div>
                         <div className={styles.aiport}>
@@ -70,7 +75,7 @@ export const FlightDetailPage: FC<FlightDetailPageProps> = ({
                         208 passengers
                     </div>
                     <div className={styles.priceContainer}>
-                        350$ <span className={styles.pricePer}>/pox</span>    
+                        350$ <span className={styles.pricePer}>/pax</span>    
                     </div> 
                     <div className={styles.addFlight}>
                         Edit
@@ -114,7 +119,7 @@ export const FlightDetailPage: FC<FlightDetailPageProps> = ({
                             <div className={styles.flightAirlineDetailInfo}>
                                 Q Airline
                             </div>
-                            <div className={styles.flightCode}>
+                            <div className={styles.flightCode} >
                                 QAL001
                             </div>
                         </div>
@@ -259,7 +264,7 @@ export const FlightDetailPage: FC<FlightDetailPageProps> = ({
                     </div>
                 </div>
             </div> */}
-            <FlightForm></FlightForm>
+            {/* <FlightForm></FlightForm> */}
         </div>
     );
 }

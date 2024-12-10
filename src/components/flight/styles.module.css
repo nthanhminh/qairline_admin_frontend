@@ -102,12 +102,12 @@
     width: 8px;
     height: 8px;
     border-radius: 100%;
-    background-color: aqua;
+    background-color: #1D7D8F;
 }
 
 .line {
     height: 1px;
-    border: 1px aqua dashed;
+    border: 1px #1D7D8F dashed;
     flex: 1;
 }
 
@@ -151,7 +151,7 @@
 }
 
 .price {
-    color: aqua;
+    color: #1D7D8F;
     font-size: 28px;
     font-weight: bold;
     display: flex;
@@ -214,13 +214,13 @@
     letter-spacing: 1.2px;
     border-radius: 12px;
     min-width: 120px;
-    background-color: #e8e3e3;
+    background-color: #f3f3f3;
 }
 
 .SearchBtn {
     padding: 6px 8px;
     border-radius: 12px;
-    background-color: #e8e3e3;
+    background-color: #f3f3f3;
     cursor: pointer;
 }
 
@@ -249,7 +249,7 @@
 }
 
 .functionalDes {
-    color: #a39c9c;
+    color: #000;
     font-size: 14px;
 }
 
@@ -277,7 +277,7 @@
     position: absolute;
     display: block;
     top: 42px;
-    background-color: #b6b6b6;
+    background-color: #65B9C7;
     color: #FFF;
     border-radius: 12px;
     overflow: hidden;
@@ -302,16 +302,17 @@
 }
 
 .addFlight {
-    background-color: rgb(202, 246, 246);
+    background-color: #65B9C7;
     padding: 12px 18px;
     border-radius: 12px;
     font-size: 14px;
     font-weight: bold;
+    color: #FFF;
     transition: all 0.35s ease-in-out;  
 }
 
 .addFlight:hover {
-    background-color: rgb(153, 211, 211);
+    background-color: #1D7D8F;
     color: #FFF;
     cursor: pointer;
 }

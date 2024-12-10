@@ -1,9 +1,12 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import styles from "./styles.module.css"; // Đường dẫn file CSS của bạn
+import { EServiceType, Service } from "@/ultis/type/service.type";
+import { uploadFile } from "@/ultis/apis/file.api";
+import { createService, editService } from "@/ultis/apis/service.api";
 
 interface ServiceFormData {
   name: string;
-  imageUrl: string;
+  imageUrl: File | null; // Định nghĩa imageUrl là File hoặc null
   description: string;
   type: string;
   price: number;
@@ -13,33 +16,55 @@ interface FormErrors {
   [key: string]: string;
 }
 
-const ServiceForm: React.FC = () => {
+interface ServiceFormProps {
+  service: Service | null;
+  callback: Function;
+  setIsDummy: Function;
+  isDummy: boolean;
+}
+
+const ServiceForm: React.FC<ServiceFormProps> = ({ service, callback, isDummy, setIsDummy }) => {
   const [formData, setFormData] = useState<ServiceFormData>({
-    name: "",
-    imageUrl: "",
-    description: "",
-    type: "",
-    price: 0,
+    name: service?.name ?? "",
+    imageUrl: null,
+    description: service?.description ?? "",
+    type: service?.type ?? "",
+    price: service?.price ?? 0,
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
 
-  const serviceTypes = ["Type 1", "Type 2", "Type 3"]; // Danh sách các giá trị dropdown
+  const serviceTypes = Object.values(EServiceType);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value, files } = e.target as HTMLInputElement;
 
-    // Clear the error for the specific field when its value changes
-    setErrors((prev) => ({ ...prev, [name]: "" }));
+    setErrors((prev) => ({ ...prev, [name]: "" })); // Xóa lỗi khi thay đổi giá trị
 
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === "imageUrl" && files) {
+      console.log(files);
+      // Nếu là input file, lấy file đầu tiên
+      setFormData((prev) => ({ ...prev, imageUrl: files[0] }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleOverlayOnClick = () => {
+    callback();
+  };
+
+  const handleContentOnClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation(); // Ngăn chặn sự kiện click lan tới overlay
   };
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
     if (!formData.name) newErrors.name = "Name is required.";
-    if (!formData.imageUrl) newErrors.imageUrl = "Image URL is required.";
+    if (!formData.imageUrl) newErrors.imageUrl = "Image is required.";
     if (!formData.description) newErrors.description = "Description is required.";
     if (!formData.type) newErrors.type = "Type is required.";
     if (formData.price <= 0) newErrors.price = "Price must be greater than 0.";
@@ -48,20 +73,54 @@ const ServiceForm: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const createNewService = async () => {
+    const imageUrl = await uploadFile(formData.imageUrl!);
+    const newService = await createService({
+      name: formData.name,
+      // imageUrl: imageUrl,
+      imageUrl: 'https://www.wikihow.com/images/thumb/4/4f/Take-Care-of-Your-Pet-Step-7-Version-4.jpg/v4-460px-Take-Care-of-Your-Pet-Step-7-Version-4.jpg',
+      description: formData.description,
+      type: formData.type as EServiceType,
+      price: formData.price
+    })
+    setIsDummy(!isDummy);
+    callback();
+    console.log(newService);
+  }
+
+  const updateService = async () => {
+    const imageUrl = await uploadFile(formData.imageUrl!);
+    const newService = await editService(service!.id!, {
+      name: formData.name,
+      // imageUrl: imageUrl,
+      imageUrl: 'https://www.wikihow.com/images/thumb/4/4f/Take-Care-of-Your-Pet-Step-7-Version-4.jpg/v4-460px-Take-Care-of-Your-Pet-Step-7-Version-4.jpg',
+      description: formData.description,
+      type: formData.type as EServiceType,
+      price: formData.price
+    })
+    setIsDummy(!isDummy);
+    callback();
+    console.log(newService);
+  }
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (validateForm()) {
-      console.log("Form data submitted:", formData);
+      if(service) {
+        updateService()
+      } else {
+        createNewService();
+      }
+      console.log(formData);
     }
   };
 
   return (
-    <div className={styles.overlay}>
+    <div className={styles.overlay} onClick={handleOverlayOnClick}>
       <form onSubmit={handleSubmit} noValidate>
-        <div className={styles.overlayContent}>
+        <div className={styles.overlayContent} onClick={handleContentOnClick}>
           <h3 style={{ textAlign: "center", width: "100%" }}>Service</h3>
-
           {/* Input Name */}
           <div className={styles.itemContainer}>
             <label className={styles.label} htmlFor="name">Name</label>
@@ -77,17 +136,15 @@ const ServiceForm: React.FC = () => {
             {errors.name && <p className={styles.error}>{errors.name}</p>}
           </div>
 
-          {/* Input Image URL */}
+          {/* Input Image */}
           <div className={styles.itemContainer}>
-            <label className={styles.label} htmlFor="imageUrl">Image URL</label>
+            <label className={styles.label} htmlFor="imageUrl">Image</label>
             <input
               className={styles.input}
-              type="text"
+              type="file" // Thay đổi từ text thành file
               name="imageUrl"
               id="imageUrl"
-              placeholder="Image URL"
-              value={formData.imageUrl}
-              onChange={handleChange}
+              onChange={handleChange} // Gọi handleChange khi file thay đổi
             />
             {errors.imageUrl && <p className={styles.error}>{errors.imageUrl}</p>}
           </div>

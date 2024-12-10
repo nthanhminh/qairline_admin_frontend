@@ -12,12 +12,19 @@
 
 .addItem {
     border: none;
-    background-color: aquamarine;
+    background-color: #65B9C7;
     border-radius: 12px;
     padding: 12px 18px;
-    color: #908e8e;
+    color: #FFF;
     font-size: 14px;
     font-weight: bold;
+    transition: all 0.35s ease-in-out;
+}
+
+.addItem:hover {
+    background-color: #1D7D8F;
+    color: #FFF;
+    cursor: pointer;
 }
 
 .listContainer {
@@ -43,8 +50,9 @@
 
 .image {
     width: 100%;
-    height: 100%;
+    height: 180px;
     object-fit: contain;
+    
 }
 
 .description {
@@ -64,7 +72,7 @@
 
 .price {
     font-size: 24px;
-    color: aquamarine;
+    color: #1D7D8F;
     font-weight: bold;
 }
 
@@ -77,12 +85,19 @@
 
 .editItem {
     border: none;
-    background-color: aquamarine;
+    background-color: #65B9C7;
     border-radius: 12px;
     padding: 12px 18px;
-    color: #908e8e;
+    color: #FFF;
     font-size: 14px;
     font-weight: bold;
+    transition: all 0.35s ease-in-out;
+}
+
+.editItem:hover {
+    background-color: #1D7D8F;
+    color: #FFF;
+    cursor: pointer;
 }
 
 .serviceDes {
@@ -96,4 +111,8 @@
     flex-direction: column;
     gap: 16px;
     width: 100%;
+}
+
+.deleteBtn:hover {
+    cursor: pointer;
 }

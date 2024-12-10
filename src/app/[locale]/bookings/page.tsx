@@ -8,5 +8,6 @@ export default function BookingsPage() {
 //   const t = useTranslations('HomePage');
   return (
     <BookingPage translate={{}}/>
+    // <BookingDetailPage translate={{}}/>
   );
 }

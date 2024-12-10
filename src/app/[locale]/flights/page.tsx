@@ -7,7 +7,7 @@ import { FlightDetailPage } from "@/components/flightDetail/flightDetail.page";
 export default function FlightsPage() {
     //   const t = useTranslations('HomePage');
       return (
-        // <FlightPage translate={{}}/>
-        <FlightDetailPage translate={{}}/>
+        <FlightPage translate={{}}/>
+        // <FlightDetailPage translate={{}}/>
       );
     }

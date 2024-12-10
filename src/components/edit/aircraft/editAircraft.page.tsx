@@ -1,5 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import styles from "./styles.module.css"; // Đường dẫn file CSS của bạn
+import styles from "./styles.module.css";
+import { EPlaneType, Plane } from "@/ultis/type/plane.type";
+import { createPlane, editPlane } from "@/ultis/apis/plane.api";
 
 interface FormData {
   name: string;
@@ -11,11 +13,18 @@ interface FormErrors {
   [key: string]: string;
 }
 
-const AircraftForm: React.FC = () => {
+interface AircraftFormProps {
+  plane: Plane | null;
+  callback: Function;
+  setIsDummy: Function;
+  isDummy: boolean;
+}
+
+const AircraftForm: React.FC<AircraftFormProps> = ({plane, callback, setIsDummy, isDummy}) => {
   const [formData, setFormData] = useState<FormData>({
-    name: "",
-    type: "",
-    description: "",
+    name: plane!.name ?? '',
+    type: plane!.type ?? EPlaneType.A310,
+    description: plane!.description ?? '',
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -44,14 +53,48 @@ const AircraftForm: React.FC = () => {
     e.preventDefault();
 
     if (validateForm()) {
-      console.log("Form data submitted:", formData);
+      if(plane) {
+        updatePlane()
+      } else {
+        createNewPlane();
+      }
     }
   };
 
+  const handleOverlayOnClick = () => {
+    callback();
+  };
+
+  const handleContentOnClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation(); // Ngăn chặn sự kiện click lan tới overlay
+  };
+
+  const createNewPlane = async () => {
+    const newService = await createPlane({
+      name: formData.name,
+      type: formData.type as EPlaneType,
+      description: formData.description,
+    })
+    setIsDummy(!isDummy);
+    callback();
+    console.log(newService);
+  }
+
+  const updatePlane = async () => {
+    const newService = await editPlane(plane!.id!, {
+      name: formData.name,
+      type: formData.type as EPlaneType,
+      description: formData.description,
+    })
+    setIsDummy(!isDummy);
+    callback();
+    console.log(newService);
+  }
+
   return (
-    <div className={styles.overlay}>
+    <div className={styles.overlay} onClick={handleOverlayOnClick}>
       <form onSubmit={handleSubmit} noValidate>
-        <div className={styles.overlayContent}>
+        <div className={styles.overlayContent} onClick={handleContentOnClick}>
           <h3 style={{ textAlign: "center", width: "100%" }}>Aircraft</h3>
 
           {/* Input Name */}
@@ -79,10 +122,11 @@ const AircraftForm: React.FC = () => {
               value={formData.type}
               onChange={handleChange}
             >
-              <option value="">Select Type</option>
-              <option value="commercial">Commercial</option>
-              <option value="private">Private</option>
-              <option value="military">Military</option>
+              {Object.values(EPlaneType).map((planeType) => (
+                <option key={planeType} value={planeType}>
+                  {planeType} 
+                </option>
+              ))}
             </select>
             {errors.type && <p className={styles.error}>{errors.type}</p>}
           </div>

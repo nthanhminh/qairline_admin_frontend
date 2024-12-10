@@ -24,10 +24,10 @@
 }
 
 .flightInfo {
-    color: #a39c9c;
+    color: #000;
     font-size: 12px;
     text-align: left;
-    font-weight: bold;
+    font-weight: normal;
 }
 
 .flightInfoContainer {
@@ -68,11 +68,12 @@
     position: absolute;
     display: block;
     top: 42px;
-    background-color: #b6b6b6;
+    background-color: #65B9C7;
     color: #FFF;
     border-radius: 12px;
     overflow: hidden;
     transition: all 0.35s ease-in-out;
+    z-index: 1;
 }
 
 .optionItem {
@@ -88,7 +89,8 @@
 }
 
 .addFlight {
-    background-color: rgb(202, 246, 246);
+    background-color: #65B9C7;
+    color: #FFF;
     padding: 12px 18px;
     border-radius: 12px;
     font-size: 14px;
@@ -99,7 +101,7 @@
 }
 
 .addFlight:hover {
-    background-color: rgb(153, 211, 211);
+    background-color: #1D7D8F;
     color: #FFF;
     cursor: pointer;
 }
@@ -139,7 +141,8 @@
 
 .status {
     padding: 6px 10px;
-    background-color: rgb(179, 253, 253);
+    background-color: #65B9C7;
+    color: #FFF;
     border-radius: 8px;
 }
 
@@ -162,7 +165,7 @@
 
 .priceContainer {
     display: flex;
-    color: rgb(141, 218, 218);
+    color: #1D7D8F;
     font-size: 20px;
     font-weight: bold;
     align-items: flex-end;
@@ -181,7 +184,7 @@
     margin: 18px;
     display: flex;
     padding: 16px 24px;
-    background-color: #f4f0f0;
+    background-color: #f3f3f3;
     border-radius: 12px;
 }
 
@@ -201,15 +204,17 @@
 }
 
 .date {
-    color: #a39c9c;
+    color: #333;
     font-size: 13px;
-    font-weight: bold;
+    font-weight: normal;
+    text-transform: capitalize;
 }
 
 .duration {
-    color: #a39c9c;
+    color: #261111;
     font-size: 14px;
     font-weight: bold;
+    text-transform: capitalize;
 }
 
 .decoration {
@@ -224,14 +229,14 @@
 .circle {
     width: 12px;
     height: 12px;
-    background-color: aquamarine;
+    background-color: #1D7D8F;
     border-radius: 100%;
 }
 
 .line {
     flex: 1;
     width: 2px;
-    background-color: aquamarine;
+    background-color: #1D7D8F;
 }
 
 .image {
@@ -322,7 +327,7 @@
 
 .rowContainer {
     display: flex;
-    align-items: flex-end;
+    align-items: flex-start;
     gap: 32px;
     margin: 8px 0;
     color: #333;
