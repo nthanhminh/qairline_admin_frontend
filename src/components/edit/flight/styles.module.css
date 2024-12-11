@@ -17,6 +17,8 @@
     background-color: #FFF;
     padding: 12px 16px;
     border-radius: 16px;
+    max-height: 96vh;
+    overflow: auto;
     /* align-items: center; */
 }
 
@@ -26,6 +28,7 @@
     gap: 6px;
     flex: 1;
     width: 100%;
+    position: relative;
 }
 
 .rowAddContainer {
@@ -83,4 +86,68 @@
 
 .error {
     color: red;
+}
+
+.airportContainer {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    flex-direction: column;
+    background-color: #c6c6c6;
+    border-radius: 12px;
+    transition: all 0.25s ease-in;
+    animation: show 0.25s ease-in;
+    z-index: 20;
+}
+
+.regionContainer {
+    width: 100%;
+    text-align: left;
+    padding: 4px 12px;
+    color: #333;
+    position: relative;
+}
+
+.airportList {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 100%;
+    background-color: #65B9C7;
+    color: #FFF;
+    border-radius: 12px;
+    z-index: 200;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.35s ease-in;
+    display: none;
+    animation: show 0.35s ease-in;
+}
+
+.regionContainer:hover .airportList {
+    display: block;
+    opacity: 1;
+    z-index: 20;
+}
+
+.airportItem {
+    padding: 8px 12px;
+    transition: all 0.35s ease-in-out;
+    cursor: pointer;
+}
+
+.airportItem:hover {
+    background-color: #f7e1e1;
+    color: #333;
+    cursor: pointer;
+}
+
+@keyframes show {
+    0% {
+        opacity: 0;
+    } 
+    100% {
+        opacity: 1;
+    }
 }

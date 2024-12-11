@@ -1,5 +1,9 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
-import styles from "./styles.module.css"; // Đường dẫn file CSS của bạn
+import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import styles from "./styles.module.css"; // Make sure the path to your CSS file is correct
+import { Flight } from "@/ultis/type/flight.type";
+import { DataGroupByType } from "@/ultis/type/commom.type";
+import { Airport } from "@/ultis/type/airport.type";
+import { getAllAirport } from "@/ultis/apis/airport.api";
 
 interface FormData {
   name: string;
@@ -14,13 +18,22 @@ interface FormData {
   premiumEconomy: string;
   economy: string;
   basicEconomy: string;
+  fromAirport: string;
+  toAirport: string;
 }
 
 interface FormErrors {
   [key: string]: string;
 }
 
-const FlightForm: React.FC = () => {
+interface FlightFormProps {
+  flight: Flight | null;
+  callback: Function;
+  setIsDummy: Function;
+  isDummy: boolean;
+}
+
+const FlightForm: React.FC<FlightFormProps> = ({ flight, callback, setIsDummy, isDummy }) => {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     code: "",
@@ -34,9 +47,29 @@ const FlightForm: React.FC = () => {
     premiumEconomy: "",
     economy: "",
     basicEconomy: "",
+    fromAirport: "",
+    toAirport: "",
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
+  const [aiportsGroupByRegions, setAiportsGroupByRegions] = useState<DataGroupByType<Airport>[]>([]);
+
+  const fetchData = async () => {
+    let data = await getAllAirport();
+    setAiportsGroupByRegions(data); 
+  }
+
+  useEffect(() => {
+      fetchData();
+  }, [])
+
+  const handleOverlayOnClick = () => {
+    callback();
+  };
+
+  const handleContentOnClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -58,6 +91,7 @@ const FlightForm: React.FC = () => {
       newErrors.duration = "Invalid duration format (hh:mm:ss).";
     if (!formData.plane) newErrors.plane = "Please select an aircraft.";
 
+    // Validate prices and other input fields
     [
       "windowPrice",
       "aislePrice",
@@ -66,14 +100,16 @@ const FlightForm: React.FC = () => {
       "premiumEconomy",
       "economy",
       "basicEconomy",
+      "fromAirport",
+      "toAirport",
     ].forEach((field) => {
       if (formData[field as keyof FormData] === "") {
-        newErrors[field] = `${field.replace(/([A-Z])/g, " $1")} is required.`;
+        // newErrors[field] = `${field.replace(/([A-Z])/g, " $1")} is required.`;
+        newErrors[field] = `required.`;
       } else if (
-        isNaN(Number(formData[field as keyof FormData])) ||
-        Number(formData[field as keyof FormData]) < 0
+        (field !== "fromAirport" && field !== "toAirport" && (isNaN(Number(formData[field as keyof FormData])) || Number(formData[field as keyof FormData]) < 0))
       ) {
-        newErrors[field] = `invalid`;
+        newErrors[field] = `Invalid value`;
       }
     });
 
@@ -90,9 +126,9 @@ const FlightForm: React.FC = () => {
   };
 
   return (
-    <div className={styles.overlay}>
+    <div className={styles.overlay} onClick={handleOverlayOnClick}>
       <form onSubmit={handleSubmit} noValidate>
-        <div className={styles.overlayContent}>
+        <div className={styles.overlayContent} onClick={handleContentOnClick}>
           <h3 style={{ textAlign: "center", width: "100%" }}>Flight</h3>
 
           {/* Input Name */}
@@ -103,7 +139,7 @@ const FlightForm: React.FC = () => {
               type="text"
               name="name"
               id="name"
-              placeholder="name"
+              placeholder="Name"
               value={formData.name}
               onChange={handleChange}
             />
@@ -118,7 +154,7 @@ const FlightForm: React.FC = () => {
               type="text"
               name="code"
               id="code"
-              placeholder="code"
+              placeholder="Code"
               value={formData.code}
               onChange={handleChange}
             />
@@ -174,7 +210,41 @@ const FlightForm: React.FC = () => {
             {errors.plane && <p className={styles.error}>{errors.plane}</p>}
           </div>
 
-          {/* Các trường giá */}
+          {/* Input for From and To Airport */}
+          <div className={styles.rowAddContainer}>
+            <div key={"fromAirport"} className={styles.itemContainer}>
+              <label className={styles.label} htmlFor={"fromAirport"}>
+                    {"fromAirport".replace(/([A-Z])/g, " $1")}
+                  </label>
+                  <input
+                    className={styles.input}
+                    type="text"
+                    name={"fromAirport"}
+                    id={"fromAirport"}
+                    placeholder="Airport"
+                    value={formData["fromAirport" as keyof FormData]}
+                    onChange={handleChange}
+                  />
+                  {errors["fromAirport"] && <p className={styles.error}>{errors["fromAirport"]}</p>}
+              </div>
+              <div key={"toAirport"} className={styles.itemContainer}>
+              <label className={styles.label} htmlFor={"toAirport"}>
+                    {"toAirport".replace(/([A-Z])/g, " $1")}
+                  </label>
+                  <input
+                    className={styles.input}
+                    type="text"
+                    name={"toAirport"}
+                    id={"toAirport"}
+                    placeholder="Airport"
+                    value={formData["toAirport" as keyof FormData]}
+                    onChange={handleChange}
+                  />
+                  {errors["toAirport"] && <p className={styles.error}>{errors["toAirport"]}</p>}
+              </div>
+          </div>
+
+          {/* Price Fields */}
           <div className={styles.rowAddContainer}>
             {["windowPrice", "aislePrice", "exitSeat"].map((field) => (
               <div key={field} className={styles.itemContainer}>

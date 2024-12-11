@@ -3,4 +3,5 @@ export type Airport = {
     name?: string;
     code?: string;
     location?: string
+    region?: string
 }

@@ -56,6 +56,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    min-width: 84px;
 }
 
 .airlineName {
@@ -178,11 +179,12 @@
     border-radius: 10px;
     transition: all 0.35s ease-in-out;
     cursor: pointer;
+    border: none;
 }
 
 .pageButton:hover{
-    background-color: aqua;
-    color: #a39c9c;
+    background-color: #1D7D8F;
+    color: #FFF;
 }
 
 .flightSearchContainer {
@@ -202,6 +204,98 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    position: relative;
+}
+
+.airportContainer {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    flex-direction: column;
+    background-color: #c6c6c6;
+    border-radius: 12px;
+    transition: all 0.25s ease-in;
+    animation: show 0.25s ease-in;
+    z-index: 20;
+}
+
+@keyframes show {
+    0% {
+        opacity: 0;
+    } 
+    100% {
+        opacity: 1;
+    }
+}
+
+.regionContainer {
+    width: 100%;
+    text-align: left;
+    padding: 8px 12px;
+    color: #333;
+    position: relative;
+}
+
+.airportList {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 100%;
+    background-color: #65B9C7;
+    color: #FFF;
+    border-radius: 12px;
+    z-index: 20;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.35s ease-in;
+    display: none;
+    animation: show 0.35s ease-in;
+}
+
+.airportListRecommended {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #65B9C7;
+    color: #FFF;
+    border-radius: 12px;
+    z-index: 20;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.35s ease-in;
+    animation: show 0.35s ease-in;
+}
+
+.airportItemRecommended {
+    padding: 8px 12px;
+    transition: all 0.35s ease-in-out;
+    cursor: pointer;
+}
+
+.airportItemRecommended:hover {
+    background-color: #f7e1e1;
+    color: #333;
+    cursor: pointer;
+}
+
+.regionContainer:hover .airportList {
+    display: block;
+    opacity: 1;
+    z-index: 20;
+}
+
+.airportItem {
+    padding: 8px 12px;
+    transition: all 0.35s ease-in-out;
+    cursor: pointer;
+}
+
+.airportItem:hover {
+    background-color: #f7e1e1;
+    color: #333;
+    cursor: pointer;
 }
 
 .input {
@@ -264,11 +358,11 @@
     color: #948d8d;
     font-size: 16px;
     position: relative;
-    /* min-width: 160px; */
+    transition: all 0.35s ease-in-out;
 }
 
 .sortBy:hover .optionContainer {
-    max-height: 84px;
+    max-height: 138px;
 }
 
 .optionContainer {
@@ -282,6 +376,7 @@
     border-radius: 12px;
     overflow: hidden;
     transition: all 0.35s ease-in-out;
+    height: fit-content;
 }
 
 .optionItem {
@@ -317,3 +412,18 @@
     cursor: pointer;
 }
 
+.selected {
+    background-color: #1D7D8F;
+    color: #FFF;
+}
+
+.noData {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #787878;
+}

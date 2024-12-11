@@ -9,8 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/lodash": "^4.17.13",
     "chart.js": "^4.4.7",
     "date-fns": "^4.1.0",
+    "lodash": "^4.17.21",
     "next": "15.0.3",
     "next-intl": "^3.25.3",
     "react": "^18.2.0",

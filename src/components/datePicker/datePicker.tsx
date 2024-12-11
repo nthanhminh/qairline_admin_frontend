@@ -1,11 +1,14 @@
 'use client'
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styles from "./styles.module.css";  // Import file styles.module.css
-
-const CustomDatePicker = () => {
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+interface CustomDatePickerProps {
+    selectedDate: Date | null;
+    setSelectedDate: Function
+}
+const CustomDatePicker: FC<CustomDatePickerProps> = ({selectedDate, setSelectedDate}) => {
+    // const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [currentMonthYear, setCurrentMonthYear] = useState<Date>(new Date());
 
     return (
