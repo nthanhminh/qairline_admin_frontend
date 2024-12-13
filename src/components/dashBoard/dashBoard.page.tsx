@@ -8,6 +8,9 @@ import { useLocale } from "next-intl";
 import BarChart from "./barChart";
 import LineChart from "./lineChart";
 import { getAllMenu } from "@/ultis/apis/menu.api";
+import { BookingStatisticDetails, ETimeType, FlightChartData, FlightStatisticByAirportData, FlightStatisticDashboard, TicketChartData } from "@/ultis/type/statistic.type";
+import { getFlightDataDashboard, getFlightChartData, getTicketChartData, getFlightStatisticByAirport, getBookingStatisticDetail, getAllTickets, getAllFlights } from "@/ultis/apis/statistic.api";
+import { convertSecondsToHHMM, handleTime } from "@/ultis/helpers/time.helper";
 export interface DashBoardPageProps {
     translate: any
 }
@@ -15,9 +18,85 @@ export interface DashBoardPageProps {
 export const DashBoardPage: FC<DashBoardPageProps> = ({
     translate
 }) => {
+    const [flightDashboardData, setFlightDashboardData] = useState<FlightStatisticDashboard>({});
+    const [flightChartData, setFlightChartData] = useState<FlightChartData[]>([]);
+    const [ticketChartData, setTicketChartData] = useState<TicketChartData[]>([]);
+    const [flightStatisticByAirport, setFlightStatisticByAirport] = useState<FlightStatisticByAirportData[]>([]);
+    const [bookingData, setBookingData] = useState<BookingStatisticDetails[]>([]);
+    const [timeType, setTimeType] = useState<ETimeType>(ETimeType.WEEK);
+    const [ticketChartLabel, setTicketChartLabel] = useState<string[]>([]);
+    const [ticketChartValue, setTicketChartValue] = useState<number[]>([]);
+    const [flightChartValue, setFlightChartValue] = useState<number[]>([]);
+    const [flightChartLabel, setFlightChartLabel] = useState<string[]>([]);
+    const [totalTickets, setTotalTickets] = useState<number>(0);
+    const [totalFlights, setTotalFlights] = useState<number>(0);
+    const initData = async () => {
+        const [
+            flightDashboardDataFromApi,
+            flightChartDataFromApi,
+            ticketChartDataFromApi,
+            flightStatisticByAirportFromApi,
+            bookingDataFromApi,
+            totalTicketsFromApi,
+            totalFlightsFromApi,
+        ] = await Promise.all([
+            getFlightDataDashboard(),
+            getFlightChartData(),
+            getTicketChartData(timeType),
+            getFlightStatisticByAirport(),
+            getBookingStatisticDetail(),
+            getAllTickets(),
+            getAllFlights()
+        ])
+        console.log(flightDashboardDataFromApi);
+        console.log(flightChartDataFromApi);
+        console.log(ticketChartDataFromApi);
+        console.log(flightStatisticByAirportFromApi);
+        console.log(bookingDataFromApi);
+        setFlightDashboardData(flightDashboardDataFromApi);
+        setFlightChartData(flightChartDataFromApi);
+        setTicketChartData(ticketChartDataFromApi);
+        setFlightStatisticByAirport(flightStatisticByAirportFromApi);
+        setBookingData(bookingDataFromApi);
+        setTotalTickets(totalTicketsFromApi);
+        setTotalFlights(totalFlightsFromApi);
+    }
+
     useEffect(() => {
-        getAllMenu();
-    }, [])
+        const labels: string[] = [];
+        const values: number[] = [];
+        for(const ticketCharItem of ticketChartData) {
+            labels.push(ticketCharItem?.period!);
+            values.push(ticketCharItem?.totalTickets!);
+        }
+        setTicketChartLabel(labels);
+        setTicketChartValue(values);
+    }, [ticketChartData])
+
+    useEffect(() => {
+        const labels: string[] = [];
+        const values: number[] = [];
+        for(const flightChartItem of flightChartData) {
+            labels.push(flightChartItem?.month!);
+            values.push(flightChartItem?.totalFlights!);
+        }
+        console.log(labels, values);
+        setFlightChartLabel(labels);
+        setFlightChartValue(values);
+    }, [flightChartData])
+
+    const fetchTicketChartData = async() => {
+        const ticketChartDataFromApi = await getTicketChartData(timeType);
+        setTicketChartData(ticketChartDataFromApi);
+    }
+
+    useEffect(() => {
+        initData();
+    }, []);
+
+    useEffect(() => {
+        fetchTicketChartData();
+    }, [timeType]);
     return (
         <div className={styles.dashboardContainer}>
             <div className={styles.leftContainer}>
@@ -28,14 +107,15 @@ export const DashBoardPage: FC<DashBoardPageProps> = ({
                                 Completed Flights
                             </div>
                             <div className={styles.contentCnt}>
-                                125
+                                {flightDashboardData?.["DONE"]?.flightsThisMonth}
                             </div>
                             <div className={styles.trend}>
                                 <div className={styles.trendImage}>
-                                    <Image src='/images/dashboard/growth.png' alt="" width={20} height={20} unoptimized></Image>
+                                    {flightDashboardData?.["DONE"]?.diffrentLastMonth >= 0 ? <Image src='/images/dashboard/growth.png' alt="" width={20} height={20} unoptimized></Image> : <Image src='/images/dashboard/decrease.png' alt="" width={20} height={20} unoptimized></Image>}
+                                    {/* <Image src='/images/dashboard/growth.png' alt="" width={20} height={20} unoptimized></Image> */}
                                 </div>
                                 <div className={styles.trendDiff}>
-                                    5.32%
+                                    {Math.abs(flightDashboardData?.["DONE"]?.diffrentLastMonth).toFixed(2)}%
                                 </div>
                             </div>
                         </div>
@@ -49,14 +129,15 @@ export const DashBoardPage: FC<DashBoardPageProps> = ({
                                 Active Flights
                             </div>
                             <div className={styles.contentCnt}>
-                                80
+                                {flightDashboardData?.["ACTIVE"]?.flightsThisMonth}
                             </div>
                             <div className={styles.trend}>
                                 <div className={styles.trendImage}>
-                                    <Image src='/images/dashboard/growth.png' alt="" width={20} height={20} unoptimized></Image>
+                                    {flightDashboardData?.["ACTIVE"]?.diffrentLastMonth >= 0 ? <Image src='/images/dashboard/growth.png' alt="" width={20} height={20} unoptimized></Image> : <Image src='/images/dashboard/decrease.png' alt="" width={20} height={20} unoptimized></Image>}
+                                    {/* <Image src='/images/dashboard/growth.png' alt="" width={20} height={20} unoptimized></Image> */}
                                 </div>
                                 <div className={styles.trendDiff}>
-                                    3.68%
+                                    {Math.abs(flightDashboardData?.["ACTIVE"]?.diffrentLastMonth).toFixed(2)}%
                                 </div>
                             </div>
                         </div>
@@ -70,14 +151,15 @@ export const DashBoardPage: FC<DashBoardPageProps> = ({
                                 Cancelled Flights
                             </div>
                             <div className={styles.contentCnt}>
-                                25
+                                {flightDashboardData?.["CANCELLED"]?.flightsThisMonth}
                             </div>
                             <div className={styles.trend}>
                                 <div className={styles.trendImage}>
-                                    <Image src='/images/dashboard/decrease.png' alt="" width={20} height={20} unoptimized></Image>
+                                    {flightDashboardData?.["CANCELLED"]?.diffrentLastMonth >= 0 ? <Image src='/images/dashboard/growth.png' alt="" width={20} height={20} unoptimized></Image> : <Image src='/images/dashboard/decrease.png' alt="" width={20} height={20} unoptimized></Image>}
+                                    {/* <Image src='/images/dashboard/decrease.png' alt="" width={20} height={20} unoptimized></Image> */}
                                 </div>
                                 <div className={styles.trendDiff}>
-                                    1.45%
+                                    {Math.abs(flightDashboardData?.["CANCELLED"]?.diffrentLastMonth).toFixed(2)}%
                                 </div>
                             </div>
                         </div>
@@ -91,14 +173,15 @@ export const DashBoardPage: FC<DashBoardPageProps> = ({
                                 Total Revenue
                             </div>
                             <div className={styles.contentCnt}>
-                                125
+                                {flightDashboardData?.["REVENUE"]?.flightsThisMonth}
                             </div>
                             <div className={styles.trend}>
                                 <div className={styles.trendImage}>
-                                    <Image src='/images/dashboard/growth.png' alt="" width={20} height={20} unoptimized></Image>
+                                    {flightDashboardData?.["REVENUE"]?.diffrentLastMonth >= 0 ? <Image src='/images/dashboard/growth.png' alt="" width={20} height={20} unoptimized></Image> : <Image src='/images/dashboard/decrease.png' alt="" width={20} height={20} unoptimized></Image>}
+                                    {/* <Image src='/images/dashboard/growth.png' alt="" width={20} height={20} unoptimized></Image> */}
                                 </div>
                                 <div className={styles.trendDiff}>
-                                    5.32%
+                                    {Math.abs(flightDashboardData?.["REVENUE"]?.diffrentLastMonth).toFixed(2)}%
                                 </div>
                             </div>
                         </div>
@@ -118,24 +201,32 @@ export const DashBoardPage: FC<DashBoardPageProps> = ({
                                     <Image src="/images/dashboard/schedule.png" width={16} height={16} alt="picture" unoptimized></Image>
                                 </div>
                                 <div className={styles.timeTypeValue}>
-                                    This Week
+                                    {timeType}
                                 </div>
                                 <div className={styles.timeTypeIcon}>
-                                <Image src="/images/dashboard/arrow.png" width={12} height={12} alt="picture" unoptimized></Image>
+                                    <Image src="/images/dashboard/arrow.png" width={12} height={12} alt="picture" unoptimized></Image>
+                                </div>
+                                <div className={styles.timeTypeOptionContainer}>
+                                {
+                                    Object.keys(ETimeType).map((key) => (
+                                        <div key={key} className={styles.timeTypeOption} onClick={() => {setTimeType(ETimeType[key as keyof typeof ETimeType])}}>
+                                            {ETimeType[key as keyof typeof ETimeType]}
+                                        </div>
+                                ))}
                                 </div>
                             </div>
                         </div>
                         <div className={styles.below_container}>
                         <div className={styles.secondRow}>
                             <span className={styles.secondeRowCount}>
-                                12,500
+                                {totalTickets}
                             </span>
                             <span className={styles.secondeRowName}>
                                 Tickets Sold
                             </span>
                         </div>
                         <div className={styles.content}>
-                            <BarChart></BarChart>
+                            <BarChart labels={ticketChartLabel} data={ticketChartValue} label="Tickets"></BarChart>
                         </div>
                         </div>
                     </div>
@@ -149,24 +240,21 @@ export const DashBoardPage: FC<DashBoardPageProps> = ({
                                     <Image src="/images/dashboard/schedule.png" width={16} height={16} alt="picture" unoptimized></Image>
                                 </div>
                                 <div className={styles.timeTypeValue}>
-                                    This Week
-                                </div>
-                                <div className={styles.timeTypeIcon}>
-                                <Image src="/images/dashboard/arrow.png" width={12} height={12} alt="picture" unoptimized></Image>
+                                    Eight Months
                                 </div>
                             </div>
                         </div>
                         <div className={styles.below_container}>
                         <div className={styles.secondRow}>
                             <span className={styles.secondeRowCount}>
-                                12,500
+                                {totalFlights}
                             </span>
                             <span className={styles.secondeRowName}>
-                                Tickets Sold
+                                Flights
                             </span>
                         </div>
                         <div className={styles.content}>
-                            <LineChart></LineChart>
+                            <LineChart labels={flightChartLabel} data={flightChartValue} label="Flight"></LineChart>
                         </div>
                         </div>
                     </div>
@@ -174,102 +262,86 @@ export const DashBoardPage: FC<DashBoardPageProps> = ({
                 <div className={styles.rowsContainer}>
                     <div className={styles.bookingContainer}>
                         <div className={styles.headerName}>Bookings</div>
-                        <div className={styles.bookingItemContainer}>
-                            <div className={styles.bookingInfoContainer}>
-                                <div className={styles.bookingNameHeader}>Q Airline</div>
-                                <div className={styles.numberInfo}>
-                                    <div className={styles.dateInfo}>
-                                        <Image src="/images/dashboard/schedule.png" width={12} height={12} alt="" unoptimized></Image>
-                                        <div className={styles.bookingInfo}>July 15, 2024</div>
-                                    </div>
-                                    <div className={styles.passengerInfo}>
-                                        <Image src="/images/dashboard/candidate.png" width={12} height={12} alt="" unoptimized></Image>
-                                        <div className={styles.bookingInfo}>200</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className={styles.flightInfoContainer}>
-                                <div className={styles.timeBookingContainer}>
-                                    <div className={styles.bookingNameHeader}>
-                                        9:00
-                                    </div>
-                                    <div className={styles.bookingInfo}>
-                                        Paris
-                                    </div>
-                                </div>
-                                <div className={styles.airportContainer}>
-                                    <div className={styles.bookingInfo}>
-                                        Duration: 8 hours
-                                    </div>
-                                    <div className={styles.bookingDecoration}>
-                                        <div className={styles.circle}></div>
-                                        <div className={styles.line}></div>
-                                        <div className={styles.circle}></div>
-                                    </div>
-                                    <div className={styles.bookingAirportContainer}>
-                                        <div className={`${styles.bookingInfo} ${styles.airportNameLeft}`}>
-                                            CDG
+                        {
+                            bookingData.map((booking, index) => {
+                                const {startTime, endTime, date} = handleTime(booking.departuretime!, booking.duration!);
+                                const durationFormatted = convertSecondsToHHMM(booking.duration!);
+                                return (
+                                    <div className={styles.bookingItemContainer}>
+                                        <div className={styles.bookingInfoContainer}>
+                                            <div className={styles.bookingNameHeader}>Q Airline</div>
+                                            <div className={styles.numberInfo}>
+                                                <div className={styles.dateInfo}>
+                                                    <Image src="/images/dashboard/schedule.png" width={12} height={12} alt="" unoptimized></Image>
+                                                    <div className={styles.bookingInfo}>{date}</div>
+                                                </div>
+                                                <div className={styles.passengerInfo}>
+                                                    <Image src="/images/dashboard/candidate.png" width={12} height={12} alt="" unoptimized></Image>
+                                                    <div className={styles.bookingInfo}>{booking?.flighttickets?.length ?? 0}</div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className={`${styles.bookingInfo} ${styles.airportNameRight}`}>
-                                            JFK
+                                        <div className={styles.flightInfoContainer}>
+                                            <div className={styles.timeBookingContainer}>
+                                                <div className={styles.bookingNameHeader}>
+                                                    {startTime}
+                                                </div>
+                                                <div className={styles.bookingInfo}>
+                                                    {booking.fromairportname}
+                                                </div>
+                                            </div>
+                                            <div className={styles.airportContainer}>
+                                                <div className={styles.bookingInfo}>
+                                                    Duration: {durationFormatted}
+                                                </div>
+                                                <div className={styles.bookingDecoration}>
+                                                    <div className={styles.circle}></div>
+                                                    <div className={styles.line}></div>
+                                                    <div className={styles.circle}></div>
+                                                </div>
+                                                <div className={styles.bookingAirportContainer}>
+                                                    <div className={`${styles.bookingInfo} ${styles.airportNameLeft}`}>
+                                                        {booking?.fromairportcode}
+                                                    </div>
+                                                    <div className={`${styles.bookingInfo} ${styles.airportNameRight}`}>
+                                                        {booking?.toairportcode}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className={styles.timeBookingContainer}>
+                                                <div className={styles.bookingNameHeader}>
+                                                    {endTime}
+                                                </div>
+                                                <div className={styles.bookingInfo}>
+                                                    {booking.toairportname}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className={styles.timeBookingContainer}>
-                                    <div className={styles.bookingNameHeader}>
-                                        12:00
-                                    </div>
-                                    <div className={styles.bookingInfo}>
-                                        New York
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                )
+                            })
+                        }
                     </div>
                     <div className={styles.topFlightRoutesContainer}>
                     <div className={styles.headerName}>
                         Top Flight Routes
                     </div>
-                    <div className={styles.topFlightItemContainer}>
-                        <div className={styles.flightInfo}>
-                            Paris(CDG) - New York(JFK)
-                        </div>
-                        <div className={styles.passengers}>
-                            <div className={styles.passengersFlightCount}>
-                                <p className={styles.passengersCount}>140000 passengers</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className={styles.topFlightItemContainer}>
-                        <div className={styles.flightInfo}>
-                            Paris(CDG) - New York(JFK)
-                        </div>
-                        <div className={styles.passengers}>
-                            <div className={styles.passengersFlightCount}>
-                                <p className={styles.passengersCount}>140000 passengers</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className={styles.topFlightItemContainer}>
-                        <div className={styles.flightInfo}>
-                            Paris(CDG) - New York(JFK)
-                        </div>
-                        <div className={styles.passengers}>
-                            <div className={styles.passengersFlightCount}>
-                                <p className={styles.passengersCount}>140000 passengers</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className={styles.topFlightItemContainer}>
-                        <div className={styles.flightInfo}>
-                            Paris(CDG) - New York(JFK)
-                        </div>
-                        <div className={styles.passengers}>
-                            <div className={styles.passengersFlightCount}>
-                                <p className={styles.passengersCount}>140000 passengers</p>
-                            </div>
-                        </div>
-                    </div>
+                    {
+                        flightStatisticByAirport.map((flight,index) => {
+                            return (
+                                <div className={styles.topFlightItemContainer} key={index}>
+                                    <div className={styles.flightInfo}>
+                                        {flight.fromairportname}({flight.fromairportcode}) - {flight.toairportname}({flight.toairportcode})
+                                    </div>
+                                    <div className={styles.passengers}>
+                                        <div className={styles.passengersFlightCount} style={{width: `${(flight.totalflights / (totalFlights > 0 ? totalFlights : 1) * 100.0) > 10 ? (flight.totalflights / (totalFlights > 0 ? totalFlights : 1) * 100.0) : 10}%`}}>
+                                            <p className={styles.passengersCount}>{flight.totalflights} flights</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )
+                        })
+                    }
                 </div>
                 </div>
             </div>

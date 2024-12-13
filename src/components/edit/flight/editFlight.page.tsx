@@ -1,9 +1,12 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import styles from "./styles.module.css"; // Make sure the path to your CSS file is correct
-import { Flight } from "@/ultis/type/flight.type";
+import { ESeatClass, Flight, FlightPrice, Plane } from "@/ultis/type/flight.type";
 import { DataGroupByType } from "@/ultis/type/commom.type";
 import { Airport } from "@/ultis/type/airport.type";
 import { getAllAirport } from "@/ultis/apis/airport.api";
+import { createFlight, UpdateFlightAndPrice } from "@/ultis/apis/flight.api";
+import { getAllPlane } from "@/ultis/apis/plane.api";
+import moment from 'moment-timezone';
 
 interface FormData {
   name: string;
@@ -31,32 +34,45 @@ interface FlightFormProps {
   callback: Function;
   setIsDummy: Function;
   isDummy: boolean;
+  groupBySeatClassData: Record<string, FlightPrice[]> | null;
 }
 
-const FlightForm: React.FC<FlightFormProps> = ({ flight, callback, setIsDummy, isDummy }) => {
+const FlightForm: React.FC<FlightFormProps> = ({ flight, callback, setIsDummy, isDummy, groupBySeatClassData }) => {
+  const formattedData = moment(flight?.departureTime!)
+    .tz('Asia/Ho_Chi_Minh')
+    .format('DD-MM-YYYY HH:mm:ss');
   const [formData, setFormData] = useState<FormData>({
-    name: "",
-    code: "",
-    departureTime: "",
-    duration: "",
-    plane: "",
-    windowPrice: "",
-    aislePrice: "",
-    exitSeat: "",
-    businessPrice: "",
-    premiumEconomy: "",
-    economy: "",
-    basicEconomy: "",
-    fromAirport: "",
-    toAirport: "",
+    name: flight?.name || '',
+    code: flight?.flightCode || '',
+    departureTime: formattedData ?? '',
+    duration: flight?.duration?.toString() ?? '',
+    plane: flight?.plane?.id ?? '',
+    windowPrice: flight?.window_seat_price.toString() ?? '',
+    aislePrice: flight?.aisle_seat_price.toString() ?? '',
+    exitSeat: flight?.exit_row_seat_price.toString() ?? '',
+    businessPrice: groupBySeatClassData?.[`${ESeatClass.BUSINESS}`]?.[0]?.price?.toString() ?? '',
+    premiumEconomy: groupBySeatClassData?.[`${ESeatClass.PREMIUM_ECONOMY}`]?.[0]?.price?.toString() ?? '',
+    economy: groupBySeatClassData?.[`${ESeatClass.ECONOMY}`]?.[0]?.price?.toString() ?? '',
+    basicEconomy: groupBySeatClassData?.[`${ESeatClass.BASIC_ECONOMY}`]?.[0]?.price?.toString() ?? '',
+    fromAirport: flight?.fromAirport?.name ?? '',
+    toAirport: flight?.toAirport?.name ?? '',
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [aiportsGroupByRegions, setAiportsGroupByRegions] = useState<DataGroupByType<Airport>[]>([]);
+  const [isFromActive, setIsFromActive] = useState<boolean>(false);
+  const [isToActive, setIsToActive] = useState<boolean>(false);
+  const [fromAirportId, setFromAirportId] = useState<string>(flight?.fromAirport?.id ?? '');
+  const [toAirportId, setToAirportId] = useState<string>(flight?.toAirport?.id ?? '');
+  const [planes, setPlanes] = useState<Plane[]>([]);
 
   const fetchData = async () => {
-    let data = await getAllAirport();
+    let [data, planeData] = await Promise.all([
+      getAllAirport(),
+      getAllPlane(),
+    ]);
     setAiportsGroupByRegions(data); 
+    setPlanes(planeData.items);
   }
 
   useEffect(() => {
@@ -121,9 +137,75 @@ const FlightForm: React.FC<FlightFormProps> = ({ flight, callback, setIsDummy, i
     e.preventDefault();
 
     if (validateForm()) {
-      console.log("Form data submitted:", formData);
+      if(!flight) {
+        create();
+      } else {
+        update();
+      }
     }
   };
+
+  const handleChooseFromAirport = (id: string, value: string) => {
+    setFromAirportId(id);
+    setFormData((prev) => ({ ...prev, ["fromAirport"]: value }));
+  }
+
+  const handleChooseToAirport = (id: string, value: string) => {
+    setToAirportId(id);
+    setFormData((prev) => ({ ...prev, ["toAirport"]: value }));
+  }
+
+  const create = async() => {
+    const check = await createFlight({
+      name: formData.name,
+      flightCode: formData.code,
+      departureTime: formData.departureTime,
+      duration: formData.duration,
+      planeId: formData.plane,
+      fromAirportId: fromAirportId,
+      toAirportId: toAirportId,
+      window_seat_price: parseFloat(formData.windowPrice),
+      aisle_seat_price: parseFloat(formData.aislePrice),
+      exit_row_seat_price: parseFloat(formData.exitSeat),
+      business_price: parseFloat(formData.businessPrice),
+      premium_economy_price: parseFloat(formData.premiumEconomy),
+      economy_price: parseFloat(formData.economy),
+      basic_economy_price: parseFloat(formData.basicEconomy),
+    });
+    if(check) {
+      setIsDummy(!isDummy);
+      callback();
+      console.log('create new flight successfully');
+    } else {
+      console.log('error');
+    }
+  }
+
+  const update = async () => {
+    const check = await UpdateFlightAndPrice(flight?.id!,{
+      name: formData.name,
+      flightCode: formData.code,
+      departureTime: formData.departureTime,
+      duration: formData.duration,
+      planeId: formData.plane,
+      fromAirportId: fromAirportId,
+      toAirportId: toAirportId,
+      window_seat_price: parseFloat(formData.windowPrice),
+      aisle_seat_price: parseFloat(formData.aislePrice),
+      exit_row_seat_price: parseFloat(formData.exitSeat),
+      business_price: parseFloat(formData.businessPrice),
+      premium_economy_price: parseFloat(formData.premiumEconomy),
+      economy_price: parseFloat(formData.economy),
+      basic_economy_price: parseFloat(formData.basicEconomy),
+    }, flight?.flightsPrice!);
+    if(check) {
+      setIsDummy(!isDummy);
+      callback();
+      console.log('update flight successfully');
+    } else {
+      console.log('error');
+    }
+  }
 
   return (
     <div className={styles.overlay} onClick={handleOverlayOnClick}>
@@ -201,11 +283,18 @@ const FlightForm: React.FC<FlightFormProps> = ({ flight, callback, setIsDummy, i
               value={formData.plane}
               onChange={handleChange}
             >
-              <option value="">Select an aircraft</option>
+              {
+                planes.map((plane,index) => {
+                  return (
+                    <option value={plane.id} key={index}>{plane.name}</option>
+                  )
+                })
+              }
+              {/* <option value="">Select an aircraft</option>
               <option value="boeing737">Boeing 737</option>
               <option value="airbusA320">Airbus A320</option>
               <option value="cessna172">Cessna 172</option>
-              <option value="gulfstreamG650">Gulfstream G650</option>
+              <option value="gulfstreamG650">Gulfstream G650</option> */}
             </select>
             {errors.plane && <p className={styles.error}>{errors.plane}</p>}
           </div>
@@ -216,30 +305,73 @@ const FlightForm: React.FC<FlightFormProps> = ({ flight, callback, setIsDummy, i
               <label className={styles.label} htmlFor={"fromAirport"}>
                     {"fromAirport".replace(/([A-Z])/g, " $1")}
                   </label>
-                  <input
-                    className={styles.input}
-                    type="text"
-                    name={"fromAirport"}
-                    id={"fromAirport"}
-                    placeholder="Airport"
-                    value={formData["fromAirport" as keyof FormData]}
-                    onChange={handleChange}
-                  />
+                  <div
+                    className={`${styles.input} ${styles.listAirportContainer}`}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      minHeight: "28px"
+                    }}
+                    id={"toAirport"}
+                  >{formData['fromAirport']}</div>
+                    <div className={styles.airportContainer}>
+                        {
+                            aiportsGroupByRegions.map(({type, items}, index) => {
+                                return (
+                                    <div className={styles.regionContainer} key={index}>
+                                        {type}
+                                        <div className={styles.airportList}>
+                                            {
+                                                items.map((airport, index) => {
+                                                    return (
+                                                        <div className={styles.airportItem} key={airport.id ?? index} onClick={() => handleChooseFromAirport(airport.id!, `${airport.name!}, ${airport.location!} (${airport.code})`)}>
+                                                            {airport.name!}, {airport.location!} ({airport.code})
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                        </div>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
                   {errors["fromAirport"] && <p className={styles.error}>{errors["fromAirport"]}</p>}
               </div>
               <div key={"toAirport"} className={styles.itemContainer}>
               <label className={styles.label} htmlFor={"toAirport"}>
                     {"toAirport".replace(/([A-Z])/g, " $1")}
                   </label>
-                  <input
-                    className={styles.input}
-                    type="text"
-                    name={"toAirport"}
-                    id={"toAirport"}
-                    placeholder="Airport"
-                    value={formData["toAirport" as keyof FormData]}
-                    onChange={handleChange}
-                  />
+                  <div
+                    className={`${styles.input} ${styles.listAirportContainer}`}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    id={"toAirport"} 
+                  >{formData["toAirport"]}</div>
+                      <div className={styles.airportContainer}>
+                          {
+                              aiportsGroupByRegions.map(({type, items}, index) => {
+                                  return (
+                                      <div className={styles.regionContainer} key={index}>
+                                          {type}
+                                          <div className={styles.airportList}>
+                                              {
+                                                  items.map((airport, index) => {
+                                                      return (
+                                                          <div className={styles.airportItem} key={airport.id ?? index} onClick={() => handleChooseToAirport(airport.id!, `${airport.name!}, ${airport.location!} (${airport.code})`)}>
+                                                              {airport.name!}, {airport.location!} ({airport.code})
+                                                          </div>
+                                                      )
+                                                  })
+                                              }
+                                          </div>
+                                      </div>
+                                  )
+                              })
+                          }
+                      </div>
                   {errors["toAirport"] && <p className={styles.error}>{errors["toAirport"]}</p>}
               </div>
           </div>

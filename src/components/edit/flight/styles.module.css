@@ -88,16 +88,25 @@
     color: red;
 }
 
+.listAirportContainer {
+    /* position: relative; */
+}
+
 .airportContainer {
+    display: none;
     position: absolute;
     top: 100%;
-    width: 100%;
+    width: 50%;
     flex-direction: column;
     background-color: #c6c6c6;
     border-radius: 12px;
     transition: all 0.25s ease-in;
     animation: show 0.25s ease-in;
-    z-index: 20;
+    z-index: 200;
+}
+
+.itemContainer:hover .airportContainer {
+    display: block;
 }
 
 .regionContainer {

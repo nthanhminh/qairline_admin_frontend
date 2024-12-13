@@ -14,6 +14,8 @@ import { EFlightStatus, FlightStatusRender, SortBy, SortByRender } from "./enums
 import { getAllFlight } from "@/ultis/apis/flight.api";
 import { Flight } from "@/ultis/type/flight.type";
 import FlightForm from "../edit/flight/editFlight.page";
+import { useRouter } from "next/navigation";
+import { convertSecondsToHHMM, handleTime } from "@/ultis/helpers/time.helper";
 
 export interface FlightPageProps {
     translate: any
@@ -43,6 +45,7 @@ export const FlightPage: FC<FlightPageProps> = ({
     const [isShowPopup, setIsShowPopup] = useState<boolean>(false);
     const [flightChange, setFlightChange] = useState<Flight | null>(null);
     const [isDummy, setIsDummy] = useState<boolean>(false);
+    const router = useRouter()
 
     useEffect(() => {
         setPageNumber(Math.ceil(totalPages/4))
@@ -56,11 +59,6 @@ export const FlightPage: FC<FlightPageProps> = ({
     useEffect(() => {
         handleSearch();
     },[]);
-
-    const handleEditmenu = async (flight: Flight) => {
-        setFlightChange(flight);
-        setIsShowPopup(true);
-    }
 
     const handleCreateNewFlight = async () => {
         setFlightChange(null);
@@ -93,24 +91,6 @@ export const FlightPage: FC<FlightPageProps> = ({
         setFlightList(items);
         setTotalPages(count);
     }
-
-    const handleTime = (departureTime: string, duration: number) : {startTime: string, endTime: string} => {
-        const departureDate = new Date(departureTime);
-      
-        const options: Intl.DateTimeFormatOptions = {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false
-        };
-      
-        const startTime = departureDate.toLocaleTimeString([], options).slice(0, 5);
-      
-        departureDate.setSeconds(departureDate.getSeconds() + duration);
-      
-        const endTime = departureDate.toLocaleTimeString([], options).slice(0, 5);
-      
-        return { startTime, endTime };
-    };
 
     const handleChangeFlightCode = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { value } = e.target;
@@ -171,12 +151,6 @@ export const FlightPage: FC<FlightPageProps> = ({
         setToAirportValue(value);
     }
 
-    const convertSecondsToHHMM = (seconds: number): string => {
-        const hours = Math.floor(seconds / 3600); 
-        const minutes = Math.floor((seconds % 3600) / 60); 
-        return `${hours}h${minutes < 10 ? '0' + minutes : minutes}m`;
-    };
-    
     // const pageSize:number = 4;
     return (
         <div className={styles.flightContainer}>
@@ -371,7 +345,11 @@ export const FlightPage: FC<FlightPageProps> = ({
                     flightList.map((flight, index) => {
                         const {startTime, endTime} = handleTime(flight.departureTime!, flight.duration!);
                         return (
-                            <div className={styles.flightItemContainer} key={flight.id ?? index}>
+                            <div className={styles.flightItemContainer} key={flight.id ?? index} onClick={
+                                () => {
+                                    router.push(`flights/${flight.id!}`);
+                                }
+                            }>
                                 <div className={styles.flightItemInfo}>
                                     <Image src='/images/flights/paper-plane.png' width={28} height={28} alt="" unoptimized></Image>
                                     <div className={styles.airlineInfo}>
@@ -448,7 +426,7 @@ export const FlightPage: FC<FlightPageProps> = ({
                 ))}
             </div>
             </div>
-            {isShowPopup && <FlightForm callback={closePopup} flight={flightChange} setIsDummy={setIsDummy} isDummy={isDummy}></FlightForm>}
+            {isShowPopup && <FlightForm callback={closePopup} flight={flightChange} setIsDummy={setIsDummy} isDummy={isDummy} groupBySeatClassData={null}></FlightForm>}
         </div>
     );
 }

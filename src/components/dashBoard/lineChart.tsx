@@ -1,35 +1,38 @@
 import React, { useEffect, useRef } from "react";
 import { Chart, LineController, LineElement, CategoryScale, LinearScale, Tooltip, Legend, PointElement } from "chart.js";
 
-// Đăng ký các thành phần
 Chart.register(LineController, LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-const LineChart = () => {
+interface LineChartProps {
+  labels: string[];
+  data: number[];
+  label?: string;
+}
+
+const LineChart: React.FC<LineChartProps> = ({ labels, data, label = "Doanh thu" }) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
-  const chartInstance = useRef<Chart | null>(null); // Lưu trữ instance của biểu đồ
+  const chartInstance = useRef<Chart | null>(null);
 
   useEffect(() => {
     if (chartRef.current) {
       const ctx = chartRef.current.getContext("2d");
       if (ctx) {
-        // Hủy biểu đồ nếu đã tồn tại
         if (chartInstance.current) {
           chartInstance.current.destroy();
         }
 
-        // Tạo biểu đồ mới và lưu instance
         chartInstance.current = new Chart(ctx, {
-          type: "line", // Loại biểu đồ đường
+          type: "line",
           data: {
-            labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5"],
+            labels: labels,
             datasets: [
               {
-                label: "Doanh thu",
-                data: [12000, 19000, 3000, 5000, 20000],
-                backgroundColor: "rgba(75, 192, 192, 0.2)", // Màu nền
-                borderColor: "rgba(75, 192, 192, 1)", // Màu đường
-                borderWidth: 2, // Độ rộng đường viền
-                fill: true, // Đổ màu nền dưới đường
+                label: label,
+                data: data,
+                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                borderColor: "rgba(75, 192, 192, 1)",
+                borderWidth: 2,
+                fill: true,
               },
             ],
           },
@@ -37,7 +40,7 @@ const LineChart = () => {
             responsive: true,
             plugins: {
               legend: {
-                display: false, // Ẩn legend
+                display: false,
               },
               tooltip: {
                 enabled: true,
@@ -47,7 +50,7 @@ const LineChart = () => {
               x: {
                 display: true,
                 grid: {
-                  color: "transparent", // Ẩn lưới trên trục x
+                  color: "transparent",
                   display: false,
                 },
               },
@@ -71,13 +74,12 @@ const LineChart = () => {
       }
     }
 
-    // Cleanup instance khi component bị unmount
     return () => {
       if (chartInstance.current) {
         chartInstance.current.destroy();
       }
     };
-  }, []); // Chạy khi component được render lần đầu
+  }, [labels, data]);
 
   return <canvas ref={chartRef}></canvas>;
 };

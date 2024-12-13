@@ -3,13 +3,39 @@
 import { FC, useEffect, useState } from "react";
 import styles from "./styles.module.css"
 import Image from "next/image";
+import { Flight, Ticket } from "@/ultis/type/flight.type";
+import { getFlighById } from "@/ultis/apis/flight.api";
 export interface BookingDetailPageProps {
-    translate: any
+    translate: any,
+    id: string
 }
   
 export const BookingDetailPage: FC<BookingDetailPageProps> = ({
-    translate
+    translate,
+    id,
 }) => {
+    const [flight, setFlight] = useState<Flight | null>(null);
+    const [tickets, setTickets] = useState<Ticket[]>([]);
+    const [totalPages, setTotalPages] = useState<number>(0);
+    const [page, setPage] = useState<number>(1);
+    const [pageNumber, setPageNumber] = useState<number>(0);
+    const pageSize = 10;
+    const fetchData = async () => {
+        const flight = await getFlighById(id);
+        setFlight(flight);
+        const tmpTicketList: Ticket[] = [];
+        for (const booking of flight?.bookings || []) {
+            tmpTicketList.push(...(booking.tickets ?? []));
+        }
+        console.log(flight);
+        setTickets(tmpTicketList);
+        setTotalPages(tmpTicketList.length);
+        setPageNumber(Math.ceil(tmpTicketList.length/pageSize));
+    }
+    useEffect(() => {
+        fetchData();
+    }, [])
+
     const bookings = [
         {
             flightCode: "QAL001",
@@ -58,27 +84,31 @@ export const BookingDetailPage: FC<BookingDetailPageProps> = ({
                         </tr>
                     </thead>
                     <tbody>
-                        {bookings.map((booking, index) => (
-                            <tr key={index}>
-                                <td className={styles.bookingInfo}>{booking.flightCode}</td>
-                                <td className={styles.bookingInfo}>{booking.customerName}</td>
-                                <td className={styles.bookingInfo}>{booking.customerEmail}</td>
-                                <td className={styles.bookingInfo}>{booking.customerSSID}</td>
-                                <td className={styles.bookingInfo}>{booking.seatClass}</td>
-                            </tr>
-                        ))}
+                        {tickets.map((booking, index) => {
+                            const start = pageSize * (page - 1);
+                            const end = start + pageSize;
+                            if(index >= start && index < end ) {
+                                return (
+                                    <tr key={index}>
+                                        <td className={styles.bookingInfo}>{flight?.flightCode}</td>
+                                        <td className={styles.bookingInfo}>{booking.customerName}</td>
+                                        <td className={styles.bookingInfo}>{booking.customerEmail}</td>
+                                        <td className={styles.bookingInfo}>{booking.customerSSID}</td>
+                                        <td className={styles.bookingInfo}>{booking.seatClass}</td>
+                                    </tr>
+                                )
+                            } else {
+                                return <></>
+                            }
+                        })}
                     </tbody>
                 </table>
-                <div className={styles.pagesContainer}>
-                    <div className={styles.pageItem}>
-                        1
-                    </div>
-                    <div className={styles.pageItem}>
-                        2
-                    </div>
-                    <div className={styles.pageItem}>
-                        3
-                    </div>
+                <div className={styles.pageContainer}>
+                    {Array.from({ length: pageNumber }, (_, i) => (
+                        <button key={i} className={`${styles.pageButton} ${(i+1) === page ? styles.selected : ''}`} onClick={() => setPage(i+1)}>
+                            {i + 1}
+                        </button>
+                    ))}
                 </div>
             </div>
         </div>

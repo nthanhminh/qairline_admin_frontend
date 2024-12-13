@@ -100,6 +100,8 @@
     background-color: rgba(197, 243, 248, 1);
     padding: 8px 18px;
     border-radius: 12px;
+    position: relative;
+    min-width: 150px;
 }
 
 .rowName {
@@ -164,11 +166,13 @@
     border-right: 2px solid #e4e2e2;
     gap: 12px;
     margin-right: 16px;
+    min-width: 182px;
 }
 
 .numberInfo {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 12px;
     gap: 24px;
 }
 
@@ -213,6 +217,7 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+    min-width: 84px;
 }
 
 .bookingAirportContainer {
@@ -268,6 +273,7 @@
     height: fit-content;
     flex: 1;
     min-width: 480px;
+    height: 100%;
 }
 
 .topFlightItemContainer {
@@ -304,11 +310,41 @@
     align-items: center;
     justify-content: flex-start;
     background-color: #28646F;
-    width: 90%;
+    /* width: 90%; */
     /* text-align: left; */
 }
 
 .passengersCount {
     margin-left: 16px;
     color: #f4e7e7;
+}
+
+.timeTypeContainer:hover .timeTypeOptionContainer {
+    max-height: 120px;
+}
+
+.timeTypeOptionContainer {
+    max-height: 0;
+    position: absolute;
+    display: block;
+    top: 100%;
+    background-color: #65B9C7;
+    color: #FFF;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.35s ease-in-out;
+    z-index: 1;
+    width: 100%;
+}
+
+.timeTypeOption {
+    padding: 8px 12px;
+    transition: all 0.35s ease-in-out;
+    text-align: left;
+}
+
+.timeTypeOption:hover {
+    background-color: #f7e1e1;
+    color: #333;
+    cursor: pointer;
 }

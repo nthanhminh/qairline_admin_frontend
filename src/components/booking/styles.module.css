@@ -15,6 +15,14 @@
     min-width: 480px;
 }
 
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    min-height: 72vh;
+}
+
 .bookingItemContainer {
     display: flex;
     background-color: #FFF;
@@ -151,4 +159,72 @@
 
 .textCenter {
     text-align: center;
+}
+
+.pageContainer {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.pageButton{
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: all 0.35s ease-in-out;
+    cursor: pointer;
+    border: none;
+}
+
+.pageButton:hover{
+    background-color: #1D7D8F;
+    color: #FFF;
+}
+
+.selected {
+    background-color: #1D7D8F;
+    color: #FFF;
+}
+
+.bookingSearch {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+    background-color: #FFF;
+    padding: 12px 18px;
+    border-radius: 18px;
+}
+
+.searchContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+}
+
+.input {
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 18px;
+    background-color: #e8e8e8;
+    outline: none;
+}
+
+.searchBtn {
+    padding: 8px 12px;
+    background-color: #65B9C7;
+    border-radius: 18px;
+    transition: all 0.35s ease-in-out;
+}
+
+.searchBtn:hover {
+    background-color: #1D7D8F;
+    cursor: pointer;
+}
+
+.labelInput {
+    color: #c1c1c1;
+    font-size: 16px;
+    font-weight: bold;
 }

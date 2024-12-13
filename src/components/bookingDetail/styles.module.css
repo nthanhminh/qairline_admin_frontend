@@ -79,3 +79,27 @@
     font-size: 14px;
     text-align: center;
 }
+
+.pageContainer {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.pageButton{
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: all 0.35s ease-in-out;
+    cursor: pointer;
+    border: none;
+}
+
+.pageButton:hover{
+    background-color: #1D7D8F;
+    color: #FFF;
+}
+
+.selected {
+    background-color: #1D7D8F;
+    color: #FFF;
+}

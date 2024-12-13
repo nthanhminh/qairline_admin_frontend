@@ -4,18 +4,78 @@ import { FC, useEffect, useState } from "react";
 import styles from "./styles.module.css"
 import Image from "next/image";
 import FlightForm from "../edit/flight/editFlight.page";
+import { ESeatClass, Flight, FlightPrice } from "@/ultis/type/flight.type";
+import { getFlighById, getNumberOfTicketFromFlightId } from "@/ultis/apis/flight.api";
+import { useRouter } from "next/navigation";
+import { convertSecondsToHHMM, handleTime } from "@/ultis/helpers/time.helper";
 export interface FlightDetailPageProps {
+    id: string
     translate: any
 }
   
 export const FlightDetailPage: FC<FlightDetailPageProps> = ({
+    id,
     translate
 }) => {
+    const [flight, setFlight] = useState<Flight | null>(null);
+    const [passengers, setPassengers] = useState<number>(0);
+    const [isShowPopup, setIsShowPopup] = useState<boolean>(false);
+    const [isDummy, setIsDummy] = useState<boolean>(false);
+    const [groupFlightsBySeatClassData, setGroupFlightsBySeatClassData] = useState<Record<string, FlightPrice[]>>();
+    const [seatClassDetail, setSeatClassDetail] = useState<ESeatClass>(ESeatClass.ECONOMY)
+    const router = useRouter();
+
+    const groupFlightsBySeatClassName = (flights: FlightPrice[]) => {
+        return flights.reduce((acc, flight) => {
+          const { name } = flight.seatClassInfo!;
+          if (!acc[name!]) {
+            acc[name!] = [];
+          }
+          acc[name!].push(flight);
+          return acc;
+        }, {} as Record<string, FlightPrice[]>);
+    };
+
+    const fetchData = async () => {
+        const [flightData, ticketsData] = await Promise.all([
+            getFlighById(id),
+            getNumberOfTicketFromFlightId(id),
+        ])
+        console.log(flightData.flightsPrice);
+        const data = groupFlightsBySeatClassName(flightData.flightsPrice!);
+        console.log("test",data);
+        console.log(data["BUSINESS"]?.[0]?.price);
+        setFlight(flightData);
+        setPassengers(ticketsData);
+        setGroupFlightsBySeatClassData(data);
+        // console.log(groupFlightsBySeatClassName(flight?.flightsPrice!));
+    }
+
+    useEffect(() => {
+        console.log(groupFlightsBySeatClassData);
+    }, [groupFlightsBySeatClassData])
+
+    const handleEditFlight = async () => {
+        setIsShowPopup(true);
+    }
+    const closePopup = () => {
+        setIsShowPopup(false);
+    }
+    useEffect(() => {
+        fetchData();
+    }, [isDummy]);
+
+    const {startTime, endTime, date} = handleTime(flight?.departureTime!, flight?.duration!);
+    const durationFormatted = convertSecondsToHHMM(flight?.duration!);
     return (
         <div className={styles.flightDetailContainer}>
             <div className={styles.headerFlightDetailContainer}>
                 <div className={styles.descriptionContainer}>
-                    <div className={styles.backBtn}>
+                    <div className={styles.backBtn} onClick= {
+                        () => {
+                            router.back();
+                        }
+                    }>
                         <Image src="/images/flights/back.png" alt="" width={18} height={18}></Image>
                     </div>
                     <div className={styles.flightInfoContainer}>
@@ -25,31 +85,31 @@ export const FlightDetailPage: FC<FlightDetailPageProps> = ({
                                     fontWeight: "bold",
                                 }
                         }>
-                            QAL001
+                            {flight?.flightCode}
                         </div>
                         <div className={styles.aiport}>
-                            Los Angeles - New York
+                            {flight?.fromAirport?.name} - {flight?.toAirport?.name}
                         </div>
                         <div className={styles.flightInfo}>
-                            Boeing 787 Dreamliner - 220 Passengers
+                            {flight?.plane?.name} - {passengers} Passengers
                         </div>
                     </div>
                 </div>
                 <div className={styles.leftContainer}>
                     <div className={styles.sortBy}>
-                        ECONOMY
+                        {seatClassDetail}
                         <Image src="/images/dashboard/arrow.png" alt="" width={12} height={12}></Image>
                         <div className={styles.optionContainer}>
-                            <div className={styles.optionItem}>
+                            <div className={styles.optionItem} onClick={() => setSeatClassDetail(ESeatClass.ECONOMY)}>
                                 ECONOMY
                             </div>
-                            <div className={styles.optionItem}>
+                            <div className={styles.optionItem} onClick={() => setSeatClassDetail(ESeatClass.BUSINESS)}>
                                 BUSINESS
                             </div>
-                            <div className={styles.optionItem}>
+                            <div className={styles.optionItem} onClick={() => setSeatClassDetail(ESeatClass.PREMIUM_ECONOMY)}>
                                 PREMIUM ECONMY
                             </div>
-                            <div className={styles.optionItem}>
+                            <div className={styles.optionItem} onClick={() => setSeatClassDetail(ESeatClass.BASIC_ECONOMY)}>
                                 BASIC ECONMY
                             </div>
                         </div>
@@ -64,20 +124,20 @@ export const FlightDetailPage: FC<FlightDetailPageProps> = ({
                     <div className={styles.airlineInfo}>
                         <h5>Q Airline</h5>
                         <div className={styles.flightCode}>
-                            <p>QAL001</p>
-                            <div className={styles.status}>On time</div>
+                            <p>{flight?.flightCode}</p>
+                            <div className={styles.status}>{flight?.status}</div>
                         </div>
                     </div>
                     <div className={styles.flightDate}>
-                        Date July 1, 2018
+                        Date {date}
                     </div>
                     <div className={styles.passengers}>
-                        208 passengers
+                        {passengers} passengers
                     </div>
                     <div className={styles.priceContainer}>
-                        350$ <span className={styles.pricePer}>/pax</span>    
+                        {groupFlightsBySeatClassData?.[`${seatClassDetail}`]?.[0]?.price}$ <span className={styles.pricePer}>/pax</span>    
                     </div> 
-                    <div className={styles.addFlight}>
+                    <div className={styles.addFlight} onClick={handleEditFlight}>
                         Edit
                     </div> 
                 </div>
@@ -85,21 +145,21 @@ export const FlightDetailPage: FC<FlightDetailPageProps> = ({
                     <div className={styles.timeContainer}>
                         <div className={styles.dateContainer}>
                             <p className={styles.hour}>
-                                06:00
+                                {startTime}
                             </p>
                             <p className={styles.date}>
-                                15 jul, 2028
+                                {date}
                             </p>
                         </div>    
                         <div className={styles.duration}>
-                            13 hours
+                            {durationFormatted}
                         </div>
                         <div className={styles.dateContainer}>
                             <p className={styles.hour}>
-                                09:00
+                                {endTime}
                             </p>
                             <p className={styles.date}>
-                                15 jul, 2028
+                                {date}
                             </p>
                         </div> 
                     </div> 
@@ -111,8 +171,8 @@ export const FlightDetailPage: FC<FlightDetailPageProps> = ({
                     </div>
                     <div className={styles.flightDetailInfoContainer}>
                     <div className={styles.airportInfoContainer}>
-                        <p className={styles.location}>Los Angeles</p>
-                        <p className={styles.airportCode}>LAX</p>
+                        <p className={styles.location}>{flight?.fromAirport?.name}</p>
+                        <p className={styles.airportCode}>{flight?.fromAirport?.code}</p>
                     </div>
                     <div className={styles.flightDetailInfo}>
                         <div className={styles.flightInfoList}>
@@ -120,7 +180,7 @@ export const FlightDetailPage: FC<FlightDetailPageProps> = ({
                                 Q Airline
                             </div>
                             <div className={styles.flightCode} >
-                                QAL001
+                                {flight?.flightCode}
                             </div>
                         </div>
                         <div className={styles.seatInfo}>
@@ -130,7 +190,7 @@ export const FlightDetailPage: FC<FlightDetailPageProps> = ({
                                         Model
                                     </p>
                                     <p className={styles.infoContent}>
-                                        Boeing 787 Dreamliner
+                                        {flight?.plane?.name}
                                     </p>
                                 </div>
                                 <div className={styles.planeInfo}>
@@ -138,7 +198,7 @@ export const FlightDetailPage: FC<FlightDetailPageProps> = ({
                                         Class
                                     </p>
                                     <p className={styles.infoContent}>
-                                        Economy
+                                        {seatClassDetail}
                                     </p>
                                 </div>
                             </div>
@@ -190,81 +250,14 @@ export const FlightDetailPage: FC<FlightDetailPageProps> = ({
                         </div>
                     </div>
                     <div className={styles.airportInfoContainer}>
-                        <p className={styles.location}>Los Angeles</p>
-                        <p className={styles.airportCode}>LAX</p>
+                        <p className={styles.location}>{flight?.toAirport?.name}</p>
+                        <p className={styles.airportCode}>{flight?.toAirport?.code}</p>
                     </div>
                 </div>
                 </div>
             </div>
-            {/* <div className={styles.overlay}>
-                <div className={styles.editFlightContainer}>
-                    <div className={styles.overlayContent}>
-                        <h3 style={{textAlign: "center", width: "100%"}}>Flight</h3>
-                        <div className={styles.itemContainer}>
-                            <label className={styles.label} htmlFor="name">Name</label>
-                            <input className={styles.input} type="text" name="name" id="name" placeholder="name" required/>
-                        </div>
-                        <div className={styles.itemContainer}>
-                            <label className={styles.label} htmlFor="code">Flight Code</label>
-                            <input className={styles.input} type="text" name="code" id="code" placeholder="code" required/>
-                        </div>
-                        <div className={styles.itemContainer}>
-                            <label className={styles.label} htmlFor="departureTime">DepartureTime</label>
-                            <input className={styles.input} type="text" name="departureTime" id="departureTime" placeholder="dd-mm-yyyy hh:mm:ss" required/>
-                        </div>
-                        <div className={styles.itemContainer}>
-                            <label className={styles.label} htmlFor="duration">Duration</label>
-                            <input className={styles.input} type="text" name="duration" id="duration" placeholder="hh:mm:ss" required/>
-                        </div>
-                        <div className={styles.itemContainer}>
-                            <label className={styles.label} htmlFor="plane">Aircraft</label>
-                            <select size={1} className={`${styles.input} ${styles.select}`} name="plane" id="plane" required>
-                                    <option value="">Select an aircraft</option>
-                                    <option value="boeing737">Boeing 737</option>
-                                    <option value="airbusA320">Airbus A320</option>
-                                    <option value="cessna172">Cessna 172</option>
-                                    <option value="gulfstreamG650">Gulfstream G650</option>
-                            </select>
-                        </div>
-                        <div className={styles.rowAddContainer}>
-                            <div className={styles.itemContainer}>
-                                <label className={styles.label} htmlFor="windowPrice">Window Seat Price</label>
-                                <input className={styles.input} type="text" name="windowPrice" id="windowPrice" placeholder="0" required/>
-                            </div>
-                            <div className={styles.itemContainer}>
-                                <label className={styles.label} htmlFor="aislePrice">Aisle Seat Price</label>
-                                <input className={styles.input} type="text" name="aislePrice" id="aislePrice" placeholder="0" required/>
-                            </div>
-                            <div className={styles.itemContainer}>
-                                <label className={styles.label} htmlFor="exitSeat">Exit Row Seat Price</label>
-                                <input className={styles.input} type="text" name="exitSeat" id="exitSeat" placeholder="0" required/>
-                            </div>
-                        </div>
-                        <div className={styles.rowAddContainer}>
-                        <div className={styles.itemContainer}>
-                                <label className={styles.label} htmlFor="BusinessPrice">Business Class Price</label>
-                                <input className={styles.input} type="text" name="BusinessPrice" id="BusinessPrice" placeholder="0" required/>
-                            </div>
-                            <div className={styles.itemContainer}>
-                                <label className={styles.label} htmlFor="premium_economy">Premium Economy Price</label>
-                                <input className={styles.input} type="text" name="premium_economy" id="premium_economy" placeholder="0" required/>
-                            </div>
-                            <div className={styles.itemContainer}>
-                                <label className={styles.label} htmlFor="economy">Economy Class Price</label>
-                                <input className={styles.input} type="text" name="economy" id="economy" placeholder="0" required/>
-                            </div>
-                            <div className={styles.itemContainer}>
-                                <label className={styles.label} htmlFor="basic_economy">Basic Economy Class Price</label>
-                                <input className={styles.input} type="text" name="basic_economy" id="basic_economy" placeholder="0" required/>
-                            </div>
-                        </div>
-                        <div className={styles.buttonContainer}>
-                            <button className={styles.button}>Save</button>
-                        </div>
-                    </div>
-                </div>
-            </div> */}
-            {/* <FlightForm></FlightForm> */}
+        
+            {isShowPopup && <FlightForm flight={flight} isDummy={isDummy} setIsDummy={setIsDummy} callback={closePopup} groupBySeatClassData={groupFlightsBySeatClassData!}></FlightForm>}
         </div>
     );
 }
