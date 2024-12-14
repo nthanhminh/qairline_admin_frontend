@@ -98,7 +98,7 @@ export const FlightPage: FC<FlightPageProps> = ({
     };
 
     const fetchData = async () => {
-        let data = await getAllAirport();
+        const data = await getAllAirport();
         setAiportsGroupByRegions(data); 
     }
 
@@ -184,7 +184,7 @@ export const FlightPage: FC<FlightPageProps> = ({
                                 {
                                     aiportsGroupByRegions.map(({type, items}, index) => {
                                         return (
-                                            <div className={styles.regionContainer}>
+                                            <div className={styles.regionContainer} key={index}>
                                                 {type}
                                                 <div className={styles.airportList}>
                                                     {
@@ -230,9 +230,9 @@ export const FlightPage: FC<FlightPageProps> = ({
                         (
                             <div className={styles.airportContainer}>
                                 {
-                                    aiportsGroupByRegions.map(({type, items}) => {
+                                    aiportsGroupByRegions.map(({type, items}, index) => {
                                         return (
-                                            <div className={styles.regionContainer}>
+                                            <div className={styles.regionContainer} key={index}>
                                                 {type}
                                                 <div className={styles.airportList}>
                                                     {

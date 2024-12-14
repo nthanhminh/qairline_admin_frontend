@@ -96,10 +96,6 @@ export type CreateFLightDto = {
     exit_row_seat_price: number;
 }
 
-export type PriceSeatClassForFlight = {
-    
-}
-
 export type PriceData = {
     price: number;
     seatClass: string;

@@ -1,9 +1,10 @@
+import { baseUrl } from "../constants";
 import { DataApiResponse, DataGroupByType } from "../type/commom.type";
 import { Menu, MenuDto } from "../type/menu.type";
 
 export const getAllMenu = async () : Promise<DataGroupByType<Menu>[]> => {
     try {
-        const response = await fetch('http://localhost:8000/menu?page=1&pageSize=100');
+        const response = await fetch(`${baseUrl}/menu?page=1&pageSize=100`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -18,7 +19,7 @@ export const getAllMenu = async () : Promise<DataGroupByType<Menu>[]> => {
 
 export const createMenu = async (menuDto: MenuDto) => {
     try {
-        const response = await fetch('http://localhost:8000/menu', { 
+        const response = await fetch(`${baseUrl}/menu`, { 
           method: 'POST',
           headers: {
             'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzMzNzI0ODc5LCJleHAiOjE3MzQzMjk2Nzl9.uc5NJofSIyjou_lqufhwZ6mMdvY1Lc50juSPyfJPsjg`,
@@ -44,7 +45,7 @@ export const createMenu = async (menuDto: MenuDto) => {
 
 export const editMenu = async (id: string, menuDto: MenuDto) => {
     try {
-      const response = await fetch(`http://localhost:8000/menu/${id}`, {
+      const response = await fetch(`${baseUrl}/menu/${id}`, {
         method: 'PATCH',
         headers: {
             'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzMzNzI0ODc5LCJleHAiOjE3MzQzMjk2Nzl9.uc5NJofSIyjou_lqufhwZ6mMdvY1Lc50juSPyfJPsjg`,
@@ -68,7 +69,7 @@ export const editMenu = async (id: string, menuDto: MenuDto) => {
 
 export const deleteMenu = async (id: string) => {
     try {
-        const response = await fetch(`http://localhost:8000/menu/${id}`, {
+        const response = await fetch(`${baseUrl}/menu/${id}`, {
           method: 'DELETE',
           headers: {
               'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzMzNzI0ODc5LCJleHAiOjE3MzQzMjk2Nzl9.uc5NJofSIyjou_lqufhwZ6mMdvY1Lc50juSPyfJPsjg`,

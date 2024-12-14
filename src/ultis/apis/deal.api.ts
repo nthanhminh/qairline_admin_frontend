@@ -1,9 +1,10 @@
+import { baseUrl } from "../constants";
 import { DataApiResponse, DataGroupByType } from "../type/commom.type";
 import { News, NewsDto } from "../type/deal.type";
 
 export const getAllNews = async () : Promise<DataGroupByType<News>[]> => {
     try {
-        const response = await fetch('http://localhost:8000/news/groupByType?page=1&pageSize=100');
+        const response = await fetch(`${baseUrl}/news/groupByType?page=1&pageSize=100`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -18,7 +19,7 @@ export const getAllNews = async () : Promise<DataGroupByType<News>[]> => {
 
 export const createNews = async (newsDto: NewsDto) => {
     try {
-        const response = await fetch('http://localhost:8000/news', { 
+        const response = await fetch(`${baseUrl}/news`,{ 
           method: 'POST',
           headers: {
             'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzMzNzI0ODc5LCJleHAiOjE3MzQzMjk2Nzl9.uc5NJofSIyjou_lqufhwZ6mMdvY1Lc50juSPyfJPsjg`,
@@ -43,7 +44,7 @@ export const createNews = async (newsDto: NewsDto) => {
 
 export const editNews = async (id: string, NewsDto: NewsDto) => {
     try {
-      const response = await fetch(`http://localhost:8000/news/${id}`, {
+      const response = await fetch(`${baseUrl}/news/${id}`, {
         method: 'PATCH',
         headers: {
             'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzMzNzI0ODc5LCJleHAiOjE3MzQzMjk2Nzl9.uc5NJofSIyjou_lqufhwZ6mMdvY1Lc50juSPyfJPsjg`,
@@ -66,7 +67,7 @@ export const editNews = async (id: string, NewsDto: NewsDto) => {
 
 export const deleteNews = async (id: string) => {
     try {
-        const response = await fetch(`http://localhost:8000/news/${id}`, {
+        const response = await fetch(`${baseUrl}/news/${id}`, {
           method: 'DELETE',
           headers: {
               'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzMzNzI0ODc5LCJleHAiOjE3MzQzMjk2Nzl9.uc5NJofSIyjou_lqufhwZ6mMdvY1Lc50juSPyfJPsjg`,

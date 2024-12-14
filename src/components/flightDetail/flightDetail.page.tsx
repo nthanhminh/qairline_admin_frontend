@@ -214,7 +214,7 @@ export const FlightDetailPage: FC<FlightDetailPageProps> = ({
                             </div>
                         </div>
                         <div className={styles.includeContainer}>
-                            <h3>What's included</h3>
+                            <h3>What has included</h3>
                             <div className={styles.rowContainer}>
                                 <div className={styles.itemContainer}>
                                     <Image src="/images/flights/travel.png" alt="" width={12} height={12}></Image>

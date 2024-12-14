@@ -4,7 +4,7 @@ import { ENewsType, News } from "@/ultis/type/deal.type";
 import { uploadFile } from "@/ultis/apis/file.api";
 import { createNews, editNews } from "@/ultis/apis/deal.api";
 import { Airport } from "@/ultis/type/airport.type";
-import { getAllAirports } from "@/ultis/apis/airport.api";
+import { getAllAirport } from "@/ultis/apis/airport.api";
 
 interface NewFormData {
   title: string;
@@ -51,8 +51,11 @@ const NewForm: React.FC<NewsFormProps> = ({news, callback, setIsDummy, isDummy})
   const airportOptions = ["Airport 1", "Airport 2", "Airport 3"]; // List of airports
 
   const fetchAirports = async () => {
-    const data = await getAllAirports();
-    const airportList = data.items;
+    const data = await getAllAirport();
+    const airportList: Airport[] = [];
+    for(const {type, items} of data) {
+      airportList.push(...items);
+    }
     console.log(airportList);
     setAiports(airportList);
   }

@@ -66,8 +66,8 @@ export const DashBoardPage: FC<DashBoardPageProps> = ({
         const labels: string[] = [];
         const values: number[] = [];
         for(const ticketCharItem of ticketChartData) {
-            labels.push(ticketCharItem?.period!);
-            values.push(ticketCharItem?.totalTickets!);
+            labels.push(ticketCharItem?.period);
+            values.push(ticketCharItem?.totalTickets);
         }
         setTicketChartLabel(labels);
         setTicketChartValue(values);
@@ -77,8 +77,8 @@ export const DashBoardPage: FC<DashBoardPageProps> = ({
         const labels: string[] = [];
         const values: number[] = [];
         for(const flightChartItem of flightChartData) {
-            labels.push(flightChartItem?.month!);
-            values.push(flightChartItem?.totalFlights!);
+            labels.push(flightChartItem?.month);
+            values.push(flightChartItem?.totalFlights);
         }
         console.log(labels, values);
         setFlightChartLabel(labels);
@@ -267,7 +267,7 @@ export const DashBoardPage: FC<DashBoardPageProps> = ({
                                 const {startTime, endTime, date} = handleTime(booking.departuretime!, booking.duration!);
                                 const durationFormatted = convertSecondsToHHMM(booking.duration!);
                                 return (
-                                    <div className={styles.bookingItemContainer}>
+                                    <div className={styles.bookingItemContainer} key={index}>
                                         <div className={styles.bookingInfoContainer}>
                                             <div className={styles.bookingNameHeader}>Q Airline</div>
                                             <div className={styles.numberInfo}>

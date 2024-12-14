@@ -61,9 +61,9 @@ export const MenuPage: FC<MenuPageProps> = ({
                             <h3>{type}</h3>
                             <div className={styles.listContainer}>
                                 {
-                                    items.map((menu: Menu) => {
+                                    items.map((menu: Menu, index) => {
                                         return (
-                                            <div className={styles.itemContainer}>
+                                            <div className={styles.itemContainer} key={index}>
                                                 <div className={styles.imageContainer}>
                                                     <Image className={styles.image} src={menu.thumbnail!} alt="" width={200} height={200} unoptimized></Image>
                                                 </div>    

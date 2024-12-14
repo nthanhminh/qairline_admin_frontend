@@ -5,7 +5,7 @@ export const uploadFile = async (file: File) => {
     formData.append('files', file); 
 
     try {
-      const response = await fetch('http://localhost:8000/files', { // Add protocol here
+      const response = await fetch(`${baseUrl}/files`, { // Add protocol here
         method: 'POST',
         body: formData,
       });

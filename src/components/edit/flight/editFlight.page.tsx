@@ -67,7 +67,7 @@ const FlightForm: React.FC<FlightFormProps> = ({ flight, callback, setIsDummy, i
   const [planes, setPlanes] = useState<Plane[]>([]);
 
   const fetchData = async () => {
-    let [data, planeData] = await Promise.all([
+    const [data, planeData] = await Promise.all([
       getAllAirport(),
       getAllPlane(),
     ]);

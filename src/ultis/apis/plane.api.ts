@@ -1,9 +1,10 @@
+import { baseUrl } from "../constants";
 import { DataApiResponse, DataGroupByType, FindAllApiResponse } from "../type/commom.type";
 import { Plane, PlaneDto } from "../type/plane.type";
 
 export const getAllPlane = async () : Promise<FindAllApiResponse<Plane>> => {
     try {
-        const response = await fetch('http://localhost:8000/planes',{ 
+        const response = await fetch(`${baseUrl}/planes`,{ 
             method: 'GET',
             headers: {
               'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzMzNzI0ODc5LCJleHAiOjE3MzQzMjk2Nzl9.uc5NJofSIyjou_lqufhwZ6mMdvY1Lc50juSPyfJPsjg`,
@@ -26,7 +27,7 @@ export const getAllPlane = async () : Promise<FindAllApiResponse<Plane>> => {
 
 export const createPlane = async (planeDto: PlaneDto) => {
     try {
-        const response = await fetch('http://localhost:8000/planes', { 
+        const response = await fetch(`${baseUrl}/planes`, { 
           method: 'POST',
           headers: {
             'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzMzNzI0ODc5LCJleHAiOjE3MzQzMjk2Nzl9.uc5NJofSIyjou_lqufhwZ6mMdvY1Lc50juSPyfJPsjg`,
@@ -49,7 +50,7 @@ export const createPlane = async (planeDto: PlaneDto) => {
 
 export const editPlane = async (id: string, planeDto: PlaneDto) => {
     try {
-      const response = await fetch(`http://localhost:8000/planes/${id}`, {
+      const response = await fetch(`${baseUrl}/planes/${id}`, {
         method: 'PATCH',
         headers: {
             'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzMzNzI0ODc5LCJleHAiOjE3MzQzMjk2Nzl9.uc5NJofSIyjou_lqufhwZ6mMdvY1Lc50juSPyfJPsjg`,
@@ -71,7 +72,7 @@ export const editPlane = async (id: string, planeDto: PlaneDto) => {
 
 export const deletePlane = async (id: string) => {
     try {
-        const response = await fetch(`http://localhost:8000/planes/${id}`, {
+        const response = await fetch(`${baseUrl}/planes/${id}`, {
           method: 'DELETE',
           headers: {
               'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzMzNzI0ODc5LCJleHAiOjE3MzQzMjk2Nzl9.uc5NJofSIyjou_lqufhwZ6mMdvY1Lc50juSPyfJPsjg`,
