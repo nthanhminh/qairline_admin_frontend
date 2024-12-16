@@ -1,4 +1,4 @@
-/* .container {
+.container {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -12,4 +12,4 @@
     min-height: 100vh;
     background-color: #D6EEF1;
     margin-left: 252px;
-} */
+}

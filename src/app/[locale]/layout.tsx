@@ -27,11 +27,13 @@ export default async function LocaleLayout({
         <html lang={locale} suppressHydrationWarning>
         <body>
             <NextIntlClientProvider messages={messages}>
-                <div className={styles.container}>
-                    <NavBarPage translate={{}} />
-                    <div className={styles.content}>{children}</div>
-                </div>
-            {/* {children} */}
+            
+                    {/* <div className={styles.container}>
+                        <NavBarPage translate={{}} />
+                        <div className={styles.content}>{children}</div>
+                    </div> */}
+                
+            {children}
             </NextIntlClientProvider>
         </body>
         </html>

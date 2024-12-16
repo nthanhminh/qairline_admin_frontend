@@ -11,7 +11,7 @@
 }
 
 .addItem {
-    border: none;
+    order: none;
     background-color: #65B9C7;
     border-radius: 12px;
     padding: 12px 18px;
