@@ -5,6 +5,7 @@ import styles from "./styles.module.css"
 import { Plane } from "@/ultis/type/plane.type";
 import { deletePlane, getAllPlane } from "@/ultis/apis/plane.api";
 import AircraftForm from "../edit/aircraft/editAircraft.page";
+import { useGlobalContext } from "@/contexts/global.context";
 export interface AircraftPageProps {
     translate: any
 }
@@ -16,11 +17,16 @@ export const AircraftPage: FC<AircraftPageProps> = ({
     const [isShowPopup, setIsShowPopup] = useState<boolean>(false);
     const [planeChange, setPlaneChange] = useState<Plane | null>(null);
     const [isDummy, setIsDummy] = useState<boolean>(false);
+    const { handleShowMessage } = useGlobalContext();
     const fetchData = async () => {
-        const planeResponse = await getAllPlane() ?? [];
-        const planeList = planeResponse.items;
-        console.log(planeList);
-        setPlane(planeList);
+        try {
+            const planeResponse = await getAllPlane() ?? [];
+            const planeList = planeResponse.items;
+            console.log(planeList);
+            setPlane(planeList);
+        } catch (error) {
+            handleShowMessage(2, 'Error when fetching data');
+        }
     }
 
     const handleEditPlane = async (plane: Plane) => {
@@ -38,8 +44,12 @@ export const AircraftPage: FC<AircraftPageProps> = ({
     }
 
     const removePlane = async (id: string) => {
-        const result = await deletePlane(id);
-        setIsDummy(!isDummy)
+        try {
+            const result = await deletePlane(id);
+            setIsDummy(!isDummy)
+        } catch (error) {
+            handleShowMessage(2, 'Delete aircraft failed');
+        }
     }
 
     useEffect(() => {

@@ -2,6 +2,7 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 import styles from "./styles.module.css";
 import { EPlaneType, Plane } from "@/ultis/type/plane.type";
 import { createPlane, editPlane } from "@/ultis/apis/plane.api";
+import { useGlobalContext } from "@/contexts/global.context";
 
 interface FormData {
   name: string;
@@ -26,6 +27,8 @@ const AircraftForm: React.FC<AircraftFormProps> = ({plane, callback, setIsDummy,
     type: plane!.type ?? EPlaneType.A310,
     description: plane!.description ?? '',
   });
+  
+  const {handleShowMessage} = useGlobalContext();
 
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -70,25 +73,35 @@ const AircraftForm: React.FC<AircraftFormProps> = ({plane, callback, setIsDummy,
   };
 
   const createNewPlane = async () => {
-    const newService = await createPlane({
-      name: formData.name,
-      type: formData.type as EPlaneType,
-      description: formData.description,
-    })
-    setIsDummy(!isDummy);
-    callback();
-    console.log(newService);
+    try {
+      const newService = await createPlane({
+        name: formData.name,
+        type: formData.type as EPlaneType,
+        description: formData.description,
+      })
+      handleShowMessage(1, 'Create new aircraft successfully');
+      setIsDummy(!isDummy);
+      callback();
+      console.log(newService); 
+    } catch (error) {
+      handleShowMessage(2, 'Create new aircraft failed');
+    }
   }
 
   const updatePlane = async () => {
-    const newService = await editPlane(plane!.id!, {
-      name: formData.name,
-      type: formData.type as EPlaneType,
-      description: formData.description,
-    })
-    setIsDummy(!isDummy);
-    callback();
-    console.log(newService);
+    try {
+      const newAircraft = await editPlane(plane!.id!, {
+        name: formData.name,
+        type: formData.type as EPlaneType,
+        description: formData.description,
+      })
+      setIsDummy(!isDummy);
+      handleShowMessage(1, 'Update aircraft successfully');
+      callback();
+      console.log(newAircraft);
+    } catch (error) {
+      handleShowMessage(2, 'Update aircraft failed')
+    }
   }
 
   return (
@@ -96,7 +109,6 @@ const AircraftForm: React.FC<AircraftFormProps> = ({plane, callback, setIsDummy,
       <form onSubmit={handleSubmit} noValidate>
         <div className={styles.overlayContent} onClick={handleContentOnClick}>
           <h3 style={{ textAlign: "center", width: "100%" }}>Aircraft</h3>
-
           {/* Input Name */}
           <div className={styles.itemContainer}>
             <label className={styles.label} htmlFor="name">Name</label>

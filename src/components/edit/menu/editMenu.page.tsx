@@ -3,6 +3,7 @@ import styles from "./styles.module.css";
 import { EMenuType, Menu } from "@/ultis/type/menu.type";
 import { uploadFile } from "@/ultis/apis/file.api";
 import { createMenu, editMenu } from "@/ultis/apis/menu.api";
+import { useGlobalContext } from "@/contexts/global.context";
 
 interface FormData {
   name: string;
@@ -33,6 +34,7 @@ const MenuForm: React.FC<MenuFormProps> = ({menu, callback, setIsDummy, isDummy}
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
+  const {handleShowMessage} = useGlobalContext();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -79,42 +81,51 @@ const MenuForm: React.FC<MenuFormProps> = ({menu, callback, setIsDummy, isDummy}
   };
 
   const createNewMenu = async () => {
-    console.log(formData.thumbnail!);
-    let imageUrl = null;
-    if(formData.thumbnail!) {
-      imageUrl = await uploadFile(formData.thumbnail!);
+    try {
+      let imageUrl = null;
+      if(formData.thumbnail!) {
+        imageUrl = await uploadFile(formData.thumbnail!);
+      }
+      console.log(imageUrl);
+      const newMenu = await createMenu({
+        name: formData.name,
+        ...(imageUrl ? { thumbnail: imageUrl } : {}),
+        // thumbnail: 'https://www.wikihow.com/images/thumb/4/4f/Take-Care-of-Your-Pet-Step-7-Version-4.jpg/v4-460px-Take-Care-of-Your-Pet-Step-7-Version-4.jpg',
+        description: formData.description,
+        type: formData.type as EMenuType,
+        price: formData.price
+      })
+      setIsDummy(!isDummy);
+      handleShowMessage(1, 'Create new menu successfully');
+      callback();
+      console.log(newMenu); 
+    } catch (error) {
+      handleShowMessage(2, 'Create new menu failed');
     }
-    console.log(imageUrl);
-    const newMenu = await createMenu({
-      name: formData.name,
-      ...(imageUrl ? { thumbnail: imageUrl } : {}),
-      // thumbnail: 'https://www.wikihow.com/images/thumb/4/4f/Take-Care-of-Your-Pet-Step-7-Version-4.jpg/v4-460px-Take-Care-of-Your-Pet-Step-7-Version-4.jpg',
-      description: formData.description,
-      type: formData.type as EMenuType,
-      price: formData.price
-    })
-    setIsDummy(!isDummy);
-    callback();
-    console.log(newMenu);
   }
 
   const updateMenu = async () => {
-    console.log(formData.thumbnail!);
-    let imageUrl = null;
-    if(formData.thumbnail!) {
-      imageUrl = await uploadFile(formData.thumbnail!);
+    try {
+      console.log(formData.thumbnail!);
+      let imageUrl = null;
+      if(formData.thumbnail!) {
+        imageUrl = await uploadFile(formData.thumbnail!);
+      }
+      const newMenu = await editMenu(menu!.id!, {
+        name: formData.name,
+        thumbnail: imageUrl ?? menu!.thumbnail! ,
+        // thumbnail: 'https://www.wikihow.com/images/thumb/4/4f/Take-Care-of-Your-Pet-Step-7-Version-4.jpg/v4-460px-Take-Care-of-Your-Pet-Step-7-Version-4.jpg',
+        description: formData.description,
+        type: formData.type as EMenuType,
+        price: formData.price
+      })
+      setIsDummy(!isDummy);
+      handleShowMessage(1, 'Update menu successfully');
+      callback();
+      console.log(newMenu); 
+    } catch (error) {
+      handleShowMessage(2, 'Update menu failed');
     }
-    const newMenu = await editMenu(menu!.id!, {
-      name: formData.name,
-      thumbnail: imageUrl ?? menu!.thumbnail! ,
-      // thumbnail: 'https://www.wikihow.com/images/thumb/4/4f/Take-Care-of-Your-Pet-Step-7-Version-4.jpg/v4-460px-Take-Care-of-Your-Pet-Step-7-Version-4.jpg',
-      description: formData.description,
-      type: formData.type as EMenuType,
-      price: formData.price
-    })
-    setIsDummy(!isDummy);
-    callback();
-    console.log(newMenu);
   }
 
   return (

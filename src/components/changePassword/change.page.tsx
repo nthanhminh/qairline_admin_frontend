@@ -5,6 +5,7 @@ import styles from "./styles.module.css";
 import Image from "next/image";
 import { changePassword } from "@/ultis/apis/auth.api";
 import { useRouter } from "next/navigation";
+import { useGlobalContext } from "@/contexts/global.context";
 
 export interface ChangePasswordPageProps {
     translate: any;
@@ -18,7 +19,8 @@ export const ChangePasswordPage: FC<ChangePasswordPageProps> = ({
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const router = useRouter();
-
+    const {handleShowMessage} = useGlobalContext();
+    
     const handleOldPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setOldPassword(e.target.value);
     };
@@ -39,8 +41,7 @@ export const ChangePasswordPage: FC<ChangePasswordPageProps> = ({
             });
             router.push('dashboard');
         } catch (error) {
-            console.error("Error updating password:", error);
-            // setError("Failed to update password. Please try again.");
+            handleShowMessage(2, 'Update password failed');
         }
     };
 

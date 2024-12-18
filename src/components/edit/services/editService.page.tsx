@@ -3,6 +3,7 @@ import styles from "./styles.module.css"; // Đường dẫn file CSS của bạ
 import { EServiceType, Service } from "@/ultis/type/service.type";
 import { uploadFile } from "@/ultis/apis/file.api";
 import { createService, editService } from "@/ultis/apis/service.api";
+import { useGlobalContext } from "@/contexts/global.context";
 
 interface ServiceFormData {
   name: string;
@@ -33,6 +34,8 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ service, callback, isDummy, s
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
+
+  const {handleShowMessage} = useGlobalContext();
 
   const serviceTypes = Object.values(EServiceType);
 
@@ -74,33 +77,42 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ service, callback, isDummy, s
   };
 
   const createNewService = async () => {
-    const imageUrl = await uploadFile(formData.imageUrl!);
-    const newService = await createService({
-      name: formData.name,
-      // imageUrl: imageUrl,
-      imageUrl: 'https://www.wikihow.com/images/thumb/4/4f/Take-Care-of-Your-Pet-Step-7-Version-4.jpg/v4-460px-Take-Care-of-Your-Pet-Step-7-Version-4.jpg',
-      description: formData.description,
-      type: formData.type as EServiceType,
-      price: formData.price
-    })
-    setIsDummy(!isDummy);
-    callback();
-    console.log(newService);
+    try {
+      const imageUrl = await uploadFile(formData.imageUrl!);
+      const newService = await createService({
+        name: formData.name,
+        imageUrl: imageUrl,
+        description: formData.description,
+        type: formData.type as EServiceType,
+        price: formData.price
+      })
+      setIsDummy(!isDummy);
+      handleShowMessage(1,'Create new service successfully');
+      callback();
+      console.log(newService);
+    } catch (error) {
+      handleShowMessage(2,'Create new service failed');
+    }
   }
 
   const updateService = async () => {
-    const imageUrl = await uploadFile(formData.imageUrl!);
-    const newService = await editService(service!.id!, {
-      name: formData.name,
-      // imageUrl: imageUrl,
-      imageUrl: 'https://www.wikihow.com/images/thumb/4/4f/Take-Care-of-Your-Pet-Step-7-Version-4.jpg/v4-460px-Take-Care-of-Your-Pet-Step-7-Version-4.jpg',
-      description: formData.description,
-      type: formData.type as EServiceType,
-      price: formData.price
-    })
-    setIsDummy(!isDummy);
-    callback();
-    console.log(newService);
+    try {
+      const imageUrl = await uploadFile(formData.imageUrl!);
+      const newService = await editService(service!.id!, {
+        name: formData.name,
+        imageUrl: imageUrl,
+        // imageUrl: 'https://www.wikihow.com/images/thumb/4/4f/Take-Care-of-Your-Pet-Step-7-Version-4.jpg/v4-460px-Take-Care-of-Your-Pet-Step-7-Version-4.jpg',
+        description: formData.description,
+        type: formData.type as EServiceType,
+        price: formData.price
+      })
+      setIsDummy(!isDummy);
+      handleShowMessage(1,'Service updated successfully');
+      callback();
+      console.log(newService);
+    } catch (error) {
+      handleShowMessage(2,'Service updated failed');
+    }
   }
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {

@@ -8,6 +8,7 @@ import { ENewsType, News } from "@/ultis/type/deal.type";
 import { deleteNews, getAllNews } from "@/ultis/apis/deal.api";
 import NewForm from "../edit/news/editNews.page";
 import moment from 'moment';
+import { useGlobalContext } from "@/contexts/global.context";
 export interface DealPageProps {
     translate: any
 }
@@ -19,10 +20,15 @@ export const DealPage: FC<DealPageProps> = ({
     const [isShowPopup, setIsShowPopup] = useState<boolean>(false);
     const [dealChange, setDealChange] = useState<News | null>(null);
     const [isDummy, setIsDummy] = useState<boolean>(false);
+    const {handleShowMessage} = useGlobalContext();
     const fetchData = async () => {
-        const menuList = await getAllNews() ?? [];
-        console.log(menuList);
-        setDeals(menuList);
+        try {
+            const menuList = await getAllNews() ?? [];
+            console.log(menuList);
+            setDeals(menuList);
+        } catch (error) {
+            handleShowMessage(2, 'Error when fetching data');
+        }
     }
 
     const handleEditNews = async (deal: News) => {
@@ -40,8 +46,13 @@ export const DealPage: FC<DealPageProps> = ({
     }
 
     const removeMenu = async (id: string) => {
-        const result = await deleteNews(id);
-        setIsDummy(!isDummy)
+        try {
+            const result = await deleteNews(id);
+            setIsDummy(!isDummy);
+            handleShowMessage(1, "Delete news successfully");
+        } catch (error) {
+            handleShowMessage(2, "Delete news failed");
+        }
     }
 
     useEffect(() => {

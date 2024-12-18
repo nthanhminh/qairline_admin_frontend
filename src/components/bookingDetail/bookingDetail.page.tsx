@@ -5,6 +5,7 @@ import styles from "./styles.module.css"
 import Image from "next/image";
 import { Flight, Ticket } from "@/ultis/type/flight.type";
 import { getFlighById } from "@/ultis/apis/flight.api";
+import { useGlobalContext } from "@/contexts/global.context";
 export interface BookingDetailPageProps {
     translate: any,
     id: string
@@ -20,17 +21,22 @@ export const BookingDetailPage: FC<BookingDetailPageProps> = ({
     const [page, setPage] = useState<number>(1);
     const [pageNumber, setPageNumber] = useState<number>(0);
     const pageSize = 10;
+    const {handleShowMessage} = useGlobalContext();
     const fetchData = async () => {
-        const flight = await getFlighById(id);
-        setFlight(flight);
-        const tmpTicketList: Ticket[] = [];
-        for (const booking of flight?.bookings || []) {
-            tmpTicketList.push(...(booking.tickets ?? []));
+        try {
+            const flight = await getFlighById(id);
+            setFlight(flight);
+            const tmpTicketList: Ticket[] = [];
+            for (const booking of flight?.bookings || []) {
+                tmpTicketList.push(...(booking.tickets ?? []));
+            }
+            console.log(flight);
+            setTickets(tmpTicketList);
+            setTotalPages(tmpTicketList.length);
+            setPageNumber(Math.ceil(tmpTicketList.length/pageSize));   
+        } catch (error) {
+            handleShowMessage(2, 'Error when fetching data');
         }
-        console.log(flight);
-        setTickets(tmpTicketList);
-        setTotalPages(tmpTicketList.length);
-        setPageNumber(Math.ceil(tmpTicketList.length/pageSize));
     }
     useEffect(() => {
         fetchData();

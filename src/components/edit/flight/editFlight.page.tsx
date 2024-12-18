@@ -7,6 +7,7 @@ import { getAllAirport } from "@/ultis/apis/airport.api";
 import { createFlight, UpdateFlightAndPrice } from "@/ultis/apis/flight.api";
 import { getAllPlane } from "@/ultis/apis/plane.api";
 import moment from 'moment-timezone';
+import { useGlobalContext } from "@/contexts/global.context";
 
 interface FormData {
   name: string;
@@ -65,14 +66,18 @@ const FlightForm: React.FC<FlightFormProps> = ({ flight, callback, setIsDummy, i
   const [fromAirportId, setFromAirportId] = useState<string>(flight?.fromAirport?.id ?? '');
   const [toAirportId, setToAirportId] = useState<string>(flight?.toAirport?.id ?? '');
   const [planes, setPlanes] = useState<Plane[]>([]);
-
+  const {handleShowMessage} = useGlobalContext();
   const fetchData = async () => {
-    const [data, planeData] = await Promise.all([
-      getAllAirport(),
-      getAllPlane(),
-    ]);
-    setAiportsGroupByRegions(data); 
-    setPlanes(planeData.items);
+    try {
+      const [data, planeData] = await Promise.all([
+        getAllAirport(),
+        getAllPlane(),
+      ]);
+      setAiportsGroupByRegions(data); 
+      setPlanes(planeData.items); 
+    } catch (error) {
+      handleShowMessage(2,'Error when fetching data');
+    }
   }
 
   useEffect(() => {
@@ -156,54 +161,64 @@ const FlightForm: React.FC<FlightFormProps> = ({ flight, callback, setIsDummy, i
   }
 
   const create = async() => {
-    const check = await createFlight({
-      name: formData.name,
-      flightCode: formData.code,
-      departureTime: formData.departureTime,
-      duration: formData.duration,
-      planeId: formData.plane,
-      fromAirportId: fromAirportId,
-      toAirportId: toAirportId,
-      window_seat_price: parseFloat(formData.windowPrice),
-      aisle_seat_price: parseFloat(formData.aislePrice),
-      exit_row_seat_price: parseFloat(formData.exitSeat),
-      business_price: parseFloat(formData.businessPrice),
-      premium_economy_price: parseFloat(formData.premiumEconomy),
-      economy_price: parseFloat(formData.economy),
-      basic_economy_price: parseFloat(formData.basicEconomy),
-    });
-    if(check) {
-      setIsDummy(!isDummy);
-      callback();
-      console.log('create new flight successfully');
-    } else {
-      console.log('error');
+    try {
+      const check = await createFlight({
+        name: formData.name,
+        flightCode: formData.code,
+        departureTime: formData.departureTime,
+        duration: formData.duration,
+        planeId: formData.plane,
+        fromAirportId: fromAirportId,
+        toAirportId: toAirportId,
+        window_seat_price: parseFloat(formData.windowPrice),
+        aisle_seat_price: parseFloat(formData.aislePrice),
+        exit_row_seat_price: parseFloat(formData.exitSeat),
+        business_price: parseFloat(formData.businessPrice),
+        premium_economy_price: parseFloat(formData.premiumEconomy),
+        economy_price: parseFloat(formData.economy),
+        basic_economy_price: parseFloat(formData.basicEconomy),
+      });
+      if(check) {
+        setIsDummy(!isDummy);
+        callback();
+        console.log('create new flight successfully');
+        handleShowMessage(1, 'Create new flight successfully')
+      } else {
+        console.log('error');
+      }
+    } catch (error) {
+      handleShowMessage(1, 'Create new flight failed');
     }
   }
 
   const update = async () => {
-    const check = await UpdateFlightAndPrice(flight?.id!,{
-      name: formData.name,
-      flightCode: formData.code,
-      departureTime: formData.departureTime,
-      duration: formData.duration,
-      planeId: formData.plane,
-      fromAirportId: fromAirportId,
-      toAirportId: toAirportId,
-      window_seat_price: parseFloat(formData.windowPrice),
-      aisle_seat_price: parseFloat(formData.aislePrice),
-      exit_row_seat_price: parseFloat(formData.exitSeat),
-      business_price: parseFloat(formData.businessPrice),
-      premium_economy_price: parseFloat(formData.premiumEconomy),
-      economy_price: parseFloat(formData.economy),
-      basic_economy_price: parseFloat(formData.basicEconomy),
-    }, flight?.flightsPrice!);
-    if(check) {
-      setIsDummy(!isDummy);
-      callback();
-      console.log('update flight successfully');
-    } else {
-      console.log('error');
+    try {
+      const check = await UpdateFlightAndPrice(flight?.id!,{
+        name: formData.name,
+        flightCode: formData.code,
+        departureTime: formData.departureTime,
+        duration: formData.duration,
+        planeId: formData.plane,
+        fromAirportId: fromAirportId,
+        toAirportId: toAirportId,
+        window_seat_price: parseFloat(formData.windowPrice),
+        aisle_seat_price: parseFloat(formData.aislePrice),
+        exit_row_seat_price: parseFloat(formData.exitSeat),
+        business_price: parseFloat(formData.businessPrice),
+        premium_economy_price: parseFloat(formData.premiumEconomy),
+        economy_price: parseFloat(formData.economy),
+        basic_economy_price: parseFloat(formData.basicEconomy),
+      }, flight?.flightsPrice!);
+      if(check) {
+        setIsDummy(!isDummy);
+        callback();
+        console.log('update flight successfully');
+        handleShowMessage(1, "Update flight successfully");
+      } else {
+        console.log('error');
+      }
+    } catch (error) {
+        handleShowMessage(2, 'Update flight failed');
     }
   }
 

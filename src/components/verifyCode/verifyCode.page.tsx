@@ -5,6 +5,7 @@ import styles from "./styles.module.css"
 import Image from "next/image";
 import { verifyCode } from "@/ultis/apis/auth.api";
 import { useRouter } from "next/navigation";
+import { useGlobalContext } from "@/contexts/global.context";
 
 export interface VerifyPageProps {
     translate: any,
@@ -18,9 +19,9 @@ export const VerifyPage: FC<VerifyPageProps> = ({
     const [code, setCode] = useState("");
     const [error, setError] = useState("");
     const router = useRouter();
+    const {handleShowMessage} = useGlobalContext();
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
-
         if (/^\d{0,6}$/.test(value)) {
             setCode(value);
             setError(""); 
@@ -35,9 +36,13 @@ export const VerifyPage: FC<VerifyPageProps> = ({
                 code: code,
                 email: email
             })
-            router.push(`forgotPassword?code=${code}&email=${email}`);
+            handleShowMessage(1, 'Verify code successfully');
+            setTimeout(() => {
+                router.push(`forgotPassword?code=${code}&email=${email}`);
+            }, 3000);
+            // router.push(`forgotPassword?code=${code}&email=${email}`);
         } catch (error) {
-            console.log(error);
+            handleShowMessage(2, 'Verify code failed');
         }
     }
 

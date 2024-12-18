@@ -16,6 +16,7 @@ import { Flight } from "@/ultis/type/flight.type";
 import FlightForm from "../edit/flight/editFlight.page";
 import { useRouter } from "next/navigation";
 import { convertSecondsToHHMM, handleTime } from "@/ultis/helpers/time.helper";
+import { useGlobalContext } from "@/contexts/global.context";
 
 export interface FlightPageProps {
     translate: any
@@ -46,6 +47,7 @@ export const FlightPage: FC<FlightPageProps> = ({
     const [flightChange, setFlightChange] = useState<Flight | null>(null);
     const [isDummy, setIsDummy] = useState<boolean>(false);
     const router = useRouter()
+    const {handleShowMessage} = useGlobalContext();
 
     useEffect(() => {
         setPageNumber(Math.ceil(totalPages/4))
@@ -75,21 +77,25 @@ export const FlightPage: FC<FlightPageProps> = ({
     // }
 
     const handleSearch = async () => {
-        console.log(fromAirportId, toAirportId, selectedDate, priceSortBy, departureSortBy, status);
-        const {items, count} = await getAllFlight(
-            null,
-            flightCode,
-            selectedDate ? moment(selectedDate).format('DD-MM-YYYY') : null,
-            priceSortBy,
-            departureSortBy,
-            fromAirportId,
-            toAirportId,
-            status,
-            page
-        );
-        console.log(items, count);
-        setFlightList(items);
-        setTotalPages(count);
+        try {
+            console.log(fromAirportId, toAirportId, selectedDate, priceSortBy, departureSortBy, status);
+            const {items, count} = await getAllFlight(
+                null,
+                flightCode,
+                selectedDate ? moment(selectedDate).format('DD-MM-YYYY') : null,
+                priceSortBy,
+                departureSortBy,
+                fromAirportId,
+                toAirportId,
+                status,
+                page
+            );
+            console.log(items, count);
+            setFlightList(items);
+            setTotalPages(count);
+        } catch (error) {
+            handleShowMessage(2, 'Error when fetching data');
+        }
     }
 
     const handleChangeFlightCode = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -98,8 +104,12 @@ export const FlightPage: FC<FlightPageProps> = ({
     };
 
     const fetchData = async () => {
-        const data = await getAllAirport();
-        setAiportsGroupByRegions(data); 
+        try {
+            const data = await getAllAirport();
+            setAiportsGroupByRegions(data); 
+        } catch (error) {
+            handleShowMessage(2, 'Error when fetching data');
+        }
     }
 
     useEffect(() => {
@@ -112,13 +122,21 @@ export const FlightPage: FC<FlightPageProps> = ({
     }
 
     const getFromRecommendedAirport = async(search: string) : Promise<void> => {
-        const airports = (await fetchRecommendedAirport(search)).items;
-        setFromAiportRecommended(airports);
+        try {
+            const airports = (await fetchRecommendedAirport(search)).items;
+            setFromAiportRecommended(airports);
+        } catch (error) {
+            handleShowMessage(2, 'Error when fetching data');
+        }
     }
 
     const getToRecommendedAirport = async(search: string) : Promise<void> => {
-        const airports = (await fetchRecommendedAirport(search)).items;
-        setToAiportRecommended(airports);
+        try {
+            const airports = (await fetchRecommendedAirport(search)).items;
+            setToAiportRecommended(airports);   
+        } catch (error) {
+            handleShowMessage(2, 'Error when fetching data');
+        }
     }
 
     const handleChangeFromAirport = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {

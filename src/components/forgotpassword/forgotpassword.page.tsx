@@ -5,6 +5,7 @@ import styles from "./styles.module.css";
 import Image from "next/image";
 import { forgotPassword } from "@/ultis/apis/auth.api";
 import { useRouter } from "next/navigation";
+import { useGlobalContext } from "@/contexts/global.context";
 
 export interface ForgotPageProps {
     translate: any;
@@ -20,6 +21,7 @@ export const ForgotPage: FC<ForgotPageProps> = ({
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const router = useRouter();
+    const {handleShowMessage} = useGlobalContext();
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         if (value.length >= 6 && value.length <= 14) {
@@ -38,9 +40,12 @@ export const ForgotPage: FC<ForgotPageProps> = ({
                 code: code,
                 email: email
             })
-            router.push('login');
+            handleShowMessage(1, 'Password updated successfully');
+            setTimeout(() => {
+                router.push('login');
+            }, 3000);
         } catch (error) {
-            console.log(error);
+            handleShowMessage(2, 'Password updated failed');
         }
     }
 

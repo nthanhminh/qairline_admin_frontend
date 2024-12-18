@@ -5,6 +5,7 @@ import { uploadFile } from "@/ultis/apis/file.api";
 import { createNews, editNews } from "@/ultis/apis/deal.api";
 import { Airport } from "@/ultis/type/airport.type";
 import { getAllAirport } from "@/ultis/apis/airport.api";
+import { useGlobalContext } from "@/contexts/global.context";
 
 interface NewFormData {
   title: string;
@@ -48,16 +49,22 @@ const NewForm: React.FC<NewsFormProps> = ({news, callback, setIsDummy, isDummy})
 
   const [airports, setAiports] = useState<Airport[]>([]);
 
+  const {handleShowMessage} = useGlobalContext();
+
   const airportOptions = ["Airport 1", "Airport 2", "Airport 3"]; // List of airports
 
   const fetchAirports = async () => {
-    const data = await getAllAirport();
-    const airportList: Airport[] = [];
-    for(const {type, items} of data) {
-      airportList.push(...items);
+    try {
+      const data = await getAllAirport();
+      const airportList: Airport[] = [];
+      for(const {type, items} of data) {
+        airportList.push(...items);
+      }
+      console.log(airportList);
+      setAiports(airportList);
+    } catch (error) {
+      handleShowMessage(2, 'Error when fetching data');
     }
-    console.log(airportList);
-    setAiports(airportList);
   }
 
   useEffect(() => {
@@ -119,44 +126,54 @@ const NewForm: React.FC<NewsFormProps> = ({news, callback, setIsDummy, isDummy})
   };
 
   const createNewNews = async () => {
-    let imageUrl = null;
-    if(formData.imageUrl!) {
-      imageUrl = await uploadFile(formData.imageUrl!);
+    try {
+      let imageUrl = null;
+      if(formData.imageUrl!) {
+        imageUrl = await uploadFile(formData.imageUrl!);
+      }
+      console.log(formData.airportIds);
+      const newService = await createNews({
+        title: formData.title,
+        content: formData.content,
+        percentDiscount: formData.percentDiscount ?? 0,
+        cashDiscount: formData.cashDiscount ?? 0,
+        ...(imageUrl ? { imageUrl: imageUrl } : {}),
+        type: formData.type as ENewsType,
+        endTime: formData.endTime ? formatDate(formData.endTime) : null,
+        airportIds: formData.airportIds ?? []
+      })
+      setIsDummy(!isDummy);
+      handleShowMessage(1, 'Create new news successfully');
+      callback();
+      console.log(newService); 
+    } catch (error) {
+      handleShowMessage(1, 'Create new news failed');
     }
-    console.log(formData.airportIds);
-    const newService = await createNews({
-      title: formData.title,
-      content: formData.content,
-      percentDiscount: formData.percentDiscount ?? 0,
-      cashDiscount: formData.cashDiscount ?? 0,
-      ...(imageUrl ? { imageUrl: imageUrl } : {}),
-      type: formData.type as ENewsType,
-      endTime: formData.endTime ? formatDate(formData.endTime) : null,
-      airportIds: formData.airportIds ?? []
-    })
-    setIsDummy(!isDummy);
-    callback();
-    console.log(newService);
   }
 
   const updateNews = async () => {
-    let imageUrl = null;
-    if(formData.imageUrl!) {
-      imageUrl = await uploadFile(formData.imageUrl!);
+    try {
+      let imageUrl = null;
+      if(formData.imageUrl!) {
+        imageUrl = await uploadFile(formData.imageUrl!);
+      }
+      const newNews = await editNews(news!.id!, {
+        title: formData.title,
+        content: formData.content,
+        percentDiscount: formData.percentDiscount ?? 0,
+        cashDiscount: formData.cashDiscount ?? 0,
+        ...(imageUrl ? { imageUrl: imageUrl } : {}),
+        type: formData.type as ENewsType,
+        endTime: formData.endTime ? formatDate(formData.endTime) : null,
+        airportIds: formData.airportIds || []
+      })
+      setIsDummy(!isDummy);
+      handleShowMessage(1, 'Update news successfully');
+      callback();
+      console.log(newNews); 
+    } catch (error) {
+      handleShowMessage(2, 'Update news failed');
     }
-    const newNews = await editNews(news!.id!, {
-      title: formData.title,
-      content: formData.content,
-      percentDiscount: formData.percentDiscount ?? 0,
-      cashDiscount: formData.cashDiscount ?? 0,
-      ...(imageUrl ? { imageUrl: imageUrl } : {}),
-      type: formData.type as ENewsType,
-      endTime: formData.endTime ? formatDate(formData.endTime) : null,
-      airportIds: formData.airportIds || []
-    })
-    setIsDummy(!isDummy);
-    callback();
-    console.log(newNews);
   }
 
   function formatDate(inputDate: any): string {

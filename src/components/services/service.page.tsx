@@ -8,6 +8,7 @@ import { Service } from "@/ultis/type/service.type";
 import { deleteService, getAllServices } from "@/ultis/apis/service.api";
 import ServiceForm from "../edit/services/editService.page";
 import { DataGroupByType } from "@/ultis/type/commom.type";
+import { useGlobalContext } from "@/contexts/global.context";
 export interface ServicePageProps {
     translate: any
 }
@@ -19,10 +20,15 @@ export const ServicePage: FC<ServicePageProps> = ({
     const [isShowPopup, setIsShowPopup] = useState<boolean>(false);
     const [serviceChange, setServiceChange] = useState<Service | null>(null);
     const [isDummy, setIsDummy] = useState<boolean>(false);
+    const {handleShowMessage} = useGlobalContext();
     const fetchData = async () => {
-        const serviceList = await getAllServices() ?? [];
-        console.log(serviceList);
-        setServices(serviceList);
+        try {
+            const serviceList = await getAllServices() ?? [];
+            console.log(serviceList);
+            setServices(serviceList);
+        } catch (error) {
+            handleShowMessage(2, 'Error when fetching data');
+        }
     }
 
     const handleEditService = async (service: Service) => {
@@ -40,8 +46,13 @@ export const ServicePage: FC<ServicePageProps> = ({
     }
 
     const removeService = async (id: string) => {
-        const result = await deleteService(id);
-        setIsDummy(!isDummy)
+        try {
+            const result = await deleteService(id);
+            handleShowMessage(1, 'Delete service successfully');
+            setIsDummy(!isDummy)
+        } catch (error) {
+            handleShowMessage(2, 'Delete service failed');
+        }
     }
 
     useEffect(() => {

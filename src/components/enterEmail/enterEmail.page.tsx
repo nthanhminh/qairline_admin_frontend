@@ -5,6 +5,7 @@ import styles from "./styles.module.css";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { sendCode } from "@/ultis/apis/auth.api";
+import { useGlobalContext } from "@/contexts/global.context";
 
 export interface EnterEmailPageProps {
     translate: any;
@@ -16,6 +17,7 @@ export const EnterEmailPage: FC<EnterEmailPageProps> = ({
     const [email, setEmail] = useState("");
     const [error, setError] = useState("");
     const router = useRouter();
+    const {handleShowMessage} = useGlobalContext();
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
 
@@ -33,9 +35,12 @@ export const EnterEmailPage: FC<EnterEmailPageProps> = ({
     const handleVerifyEmailApi = async () => {
         try {
             await sendCode(email);
-            router.push(`verify?email=${email}`);   
+            handleShowMessage(1,'Verify successfully');
+            setTimeout(() => {
+                router.push(`verify?email=${email}`); 
+            }, 3000); 
         } catch (error) {
-            console.log(error);
+            handleShowMessage(2,'Verify failed');
         }
     };
 

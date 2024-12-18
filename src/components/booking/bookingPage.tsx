@@ -10,6 +10,7 @@ import { convertSecondsToHHMM, handleTime } from "@/ultis/helpers/time.helper";
 import { getFlighById } from "@/ultis/apis/flight.api";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
+import { useGlobalContext } from "@/contexts/global.context";
 export interface BookingPageProps {
     translate: any
 }
@@ -25,18 +26,27 @@ export const BookingPage: FC<BookingPageProps> = ({
     const pageSize = 4;
     const router = useRouter();
     const lng = useLocale();
+    const {handleShowMessage} = useGlobalContext();
     const fetchData = async () => {
-        const {
-            count,
-            items
-        } = await getAllFligh(page, pageSize);
-        setFlights(items);
-        setTotalPages(count);
+        try {
+            const {
+                count,
+                items
+            } = await getAllFligh(page, pageSize);
+            setFlights(items);
+            setTotalPages(count);
+        } catch (error) {
+            handleShowMessage(2,'Error when fetching data');
+        }
     }
 
     const handleSearch = async (id: string) => {
-        const flight = await getFlighById(id);
-        setFlights([flight]);
+        try {
+            const flight = await getFlighById(id);
+            setFlights([flight]);
+        } catch (error) {
+            handleShowMessage(2,'Error when fetching data');
+        }
     }
 
     useEffect(() => {

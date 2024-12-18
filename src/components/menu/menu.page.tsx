@@ -7,6 +7,7 @@ import MenuForm from "../edit/menu/editMenu.page";
 import { Menu } from "@/ultis/type/menu.type";
 import { deleteMenu, getAllMenu } from "@/ultis/apis/menu.api";
 import { DataGroupByType } from "@/ultis/type/commom.type";
+import { useGlobalContext } from "@/contexts/global.context";
 export interface MenuPageProps {
     translate: any
 }
@@ -19,10 +20,15 @@ export const MenuPage: FC<MenuPageProps> = ({
     const [isShowPopup, setIsShowPopup] = useState<boolean>(false);
     const [menuChange, setMenuChange] = useState<Menu | null>(null);
     const [isDummy, setIsDummy] = useState<boolean>(false);
+    const {handleShowMessage} = useGlobalContext();
     const fetchData = async () => {
-        const menuList = await getAllMenu() ?? [];
-        console.log(menuList);
-        setMenus(menuList);
+        try {
+            const menuList = await getAllMenu() ?? [];
+            console.log(menuList);
+            setMenus(menuList);
+        } catch (error) {
+            handleShowMessage(2, 'Error when fetching data');
+        }
     }
 
     const handleEditmenu = async (menu: Menu) => {
@@ -40,8 +46,13 @@ export const MenuPage: FC<MenuPageProps> = ({
     }
 
     const removeMenu = async (id: string) => {
-        const result = await deleteMenu(id);
-        setIsDummy(!isDummy)
+        try {
+            const result = await deleteMenu(id);
+            handleShowMessage(1, 'Delete menu successfully');
+            setIsDummy(!isDummy)
+        } catch (error) {
+            handleShowMessage(2, 'Delete menu failed');
+        }
     }
 
     useEffect(() => {

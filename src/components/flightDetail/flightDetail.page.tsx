@@ -8,6 +8,7 @@ import { ESeatClass, Flight, FlightPrice } from "@/ultis/type/flight.type";
 import { getFlighById, getNumberOfTicketFromFlightId } from "@/ultis/apis/flight.api";
 import { useRouter } from "next/navigation";
 import { convertSecondsToHHMM, handleTime } from "@/ultis/helpers/time.helper";
+import { useGlobalContext } from "@/contexts/global.context";
 export interface FlightDetailPageProps {
     id: string
     translate: any
@@ -24,6 +25,7 @@ export const FlightDetailPage: FC<FlightDetailPageProps> = ({
     const [groupFlightsBySeatClassData, setGroupFlightsBySeatClassData] = useState<Record<string, FlightPrice[]>>();
     const [seatClassDetail, setSeatClassDetail] = useState<ESeatClass>(ESeatClass.ECONOMY)
     const router = useRouter();
+    const {handleShowMessage} = useGlobalContext();
 
     const groupFlightsBySeatClassName = (flights: FlightPrice[]) => {
         return flights.reduce((acc, flight) => {
@@ -37,18 +39,22 @@ export const FlightDetailPage: FC<FlightDetailPageProps> = ({
     };
 
     const fetchData = async () => {
-        const [flightData, ticketsData] = await Promise.all([
-            getFlighById(id),
-            getNumberOfTicketFromFlightId(id),
-        ])
-        console.log(flightData.flightsPrice);
-        const data = groupFlightsBySeatClassName(flightData.flightsPrice!);
-        console.log("test",data);
-        console.log(data["BUSINESS"]?.[0]?.price);
-        setFlight(flightData);
-        setPassengers(ticketsData);
-        setGroupFlightsBySeatClassData(data);
-        // console.log(groupFlightsBySeatClassName(flight?.flightsPrice!));
+        try {
+            const [flightData, ticketsData] = await Promise.all([
+                getFlighById(id),
+                getNumberOfTicketFromFlightId(id),
+            ])
+            console.log(flightData.flightsPrice);
+            const data = groupFlightsBySeatClassName(flightData.flightsPrice!);
+            console.log("test",data);
+            console.log(data["BUSINESS"]?.[0]?.price);
+            setFlight(flightData);
+            setPassengers(ticketsData);
+            setGroupFlightsBySeatClassData(data);
+            // console.log(groupFlightsBySeatClassName(flight?.flightsPrice!));   
+        } catch (error) {
+            handleShowMessage(2, 'Error when fetching data');
+        }
     }
 
     useEffect(() => {

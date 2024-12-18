@@ -21,8 +21,7 @@ export const login = async (dto: LoginDto) => {
         Cookies.set('refreshToken', data.refreshToken, { path: '/', secure: true, sameSite: 'strict' });
         return data;
     } catch (error) {
-        console.error('Error fetching menu:', error);
-        return [];
+        throw new Error(`error`);
     }
 }
 

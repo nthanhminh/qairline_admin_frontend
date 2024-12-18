@@ -11,6 +11,7 @@ import { getAllMenu } from "@/ultis/apis/menu.api";
 import { BookingStatisticDetails, ETimeType, FlightChartData, FlightStatisticByAirportData, FlightStatisticDashboard, TicketChartData } from "@/ultis/type/statistic.type";
 import { getFlightDataDashboard, getFlightChartData, getTicketChartData, getFlightStatisticByAirport, getBookingStatisticDetail, getAllTickets, getAllFlights } from "@/ultis/apis/statistic.api";
 import { convertSecondsToHHMM, handleTime } from "@/ultis/helpers/time.helper";
+import { useGlobalContext } from "@/contexts/global.context";
 export interface DashBoardPageProps {
     translate: any
 }
@@ -30,36 +31,41 @@ export const DashBoardPage: FC<DashBoardPageProps> = ({
     const [flightChartLabel, setFlightChartLabel] = useState<string[]>([]);
     const [totalTickets, setTotalTickets] = useState<number>(0);
     const [totalFlights, setTotalFlights] = useState<number>(0);
+    const {handleShowMessage} = useGlobalContext();
     const initData = async () => {
-        const [
-            flightDashboardDataFromApi,
-            flightChartDataFromApi,
-            ticketChartDataFromApi,
-            flightStatisticByAirportFromApi,
-            bookingDataFromApi,
-            totalTicketsFromApi,
-            totalFlightsFromApi,
-        ] = await Promise.all([
-            getFlightDataDashboard(),
-            getFlightChartData(),
-            getTicketChartData(timeType),
-            getFlightStatisticByAirport(),
-            getBookingStatisticDetail(),
-            getAllTickets(),
-            getAllFlights()
-        ])
-        console.log(flightDashboardDataFromApi);
-        console.log(flightChartDataFromApi);
-        console.log(ticketChartDataFromApi);
-        console.log(flightStatisticByAirportFromApi);
-        console.log(bookingDataFromApi);
-        setFlightDashboardData(flightDashboardDataFromApi);
-        setFlightChartData(flightChartDataFromApi);
-        setTicketChartData(ticketChartDataFromApi);
-        setFlightStatisticByAirport(flightStatisticByAirportFromApi);
-        setBookingData(bookingDataFromApi);
-        setTotalTickets(totalTicketsFromApi);
-        setTotalFlights(totalFlightsFromApi);
+        try {
+            const [
+                flightDashboardDataFromApi,
+                flightChartDataFromApi,
+                ticketChartDataFromApi,
+                flightStatisticByAirportFromApi,
+                bookingDataFromApi,
+                totalTicketsFromApi,
+                totalFlightsFromApi,
+            ] = await Promise.all([
+                getFlightDataDashboard(),
+                getFlightChartData(),
+                getTicketChartData(timeType),
+                getFlightStatisticByAirport(),
+                getBookingStatisticDetail(),
+                getAllTickets(),
+                getAllFlights()
+            ])
+            console.log(flightDashboardDataFromApi);
+            console.log(flightChartDataFromApi);
+            console.log(ticketChartDataFromApi);
+            console.log(flightStatisticByAirportFromApi);
+            console.log(bookingDataFromApi);
+            setFlightDashboardData(flightDashboardDataFromApi);
+            setFlightChartData(flightChartDataFromApi);
+            setTicketChartData(ticketChartDataFromApi);
+            setFlightStatisticByAirport(flightStatisticByAirportFromApi);
+            setBookingData(bookingDataFromApi);
+            setTotalTickets(totalTicketsFromApi);
+            setTotalFlights(totalFlightsFromApi);
+        } catch (error) {
+            handleShowMessage(2, 'Error when fetching statistic data');
+        }
     }
 
     useEffect(() => {
@@ -86,8 +92,12 @@ export const DashBoardPage: FC<DashBoardPageProps> = ({
     }, [flightChartData])
 
     const fetchTicketChartData = async() => {
-        const ticketChartDataFromApi = await getTicketChartData(timeType);
-        setTicketChartData(ticketChartDataFromApi);
+        try {
+            const ticketChartDataFromApi = await getTicketChartData(timeType);
+            setTicketChartData(ticketChartDataFromApi);
+        } catch (error) {
+            handleShowMessage(2, 'Error when fetching ticket chart data');
+        }
     }
 
     useEffect(() => {
