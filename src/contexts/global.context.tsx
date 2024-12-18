@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { MessagePage } from '@/components/message/message.page';
 
 interface GlobalContextType {
@@ -7,7 +7,7 @@ interface GlobalContextType {
   isLogin: boolean;
   setUser: React.Dispatch<React.SetStateAction<any>>;
   setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
-  isShowMessage: Boolean;
+  isShowMessage: boolean;
   setIsShowMessage: React.Dispatch<React.SetStateAction<boolean>>;
   handleShowMessage: Function;
   type: number;

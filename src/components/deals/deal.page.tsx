@@ -9,6 +9,7 @@ import { deleteNews, getAllNews } from "@/ultis/apis/deal.api";
 import NewForm from "../edit/news/editNews.page";
 import moment from 'moment';
 import { useGlobalContext } from "@/contexts/global.context";
+import LottieAnimation from "../loading/loadingForPage/loadingPage";
 export interface DealPageProps {
     translate: any
 }
@@ -21,11 +22,14 @@ export const DealPage: FC<DealPageProps> = ({
     const [dealChange, setDealChange] = useState<News | null>(null);
     const [isDummy, setIsDummy] = useState<boolean>(false);
     const {handleShowMessage} = useGlobalContext();
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const fetchData = async () => {
         try {
+            setIsLoading(true);
             const menuList = await getAllNews() ?? [];
             console.log(menuList);
             setDeals(menuList);
+            setIsLoading(false);
         } catch (error) {
             handleShowMessage(2, 'Error when fetching data');
         }
@@ -60,6 +64,7 @@ export const DealPage: FC<DealPageProps> = ({
     }, [isDummy]);
     
     return (
+        isLoading ? <LottieAnimation></LottieAnimation> :
         <div className={styles.container}>
             <div className={styles.header}>
                 <h2>Service</h2>

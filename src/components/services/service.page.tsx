@@ -9,6 +9,7 @@ import { deleteService, getAllServices } from "@/ultis/apis/service.api";
 import ServiceForm from "../edit/services/editService.page";
 import { DataGroupByType } from "@/ultis/type/commom.type";
 import { useGlobalContext } from "@/contexts/global.context";
+import LottieAnimation from "../loading/loadingForPage/loadingPage";
 export interface ServicePageProps {
     translate: any
 }
@@ -21,11 +22,14 @@ export const ServicePage: FC<ServicePageProps> = ({
     const [serviceChange, setServiceChange] = useState<Service | null>(null);
     const [isDummy, setIsDummy] = useState<boolean>(false);
     const {handleShowMessage} = useGlobalContext();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const fetchData = async () => {
         try {
+            setIsLoading(true);
             const serviceList = await getAllServices() ?? [];
             console.log(serviceList);
             setServices(serviceList);
+            setIsLoading(false)
         } catch (error) {
             handleShowMessage(2, 'Error when fetching data');
         }
@@ -60,6 +64,7 @@ export const ServicePage: FC<ServicePageProps> = ({
     }, [isDummy]);
 
     return (
+        isLoading ? <LottieAnimation></LottieAnimation> :
         <div className={styles.container}>
             <div className={styles.header}>
                 <h2>Service</h2>

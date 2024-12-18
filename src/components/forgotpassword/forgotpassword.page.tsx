@@ -6,6 +6,7 @@ import Image from "next/image";
 import { forgotPassword } from "@/ultis/apis/auth.api";
 import { useRouter } from "next/navigation";
 import { useGlobalContext } from "@/contexts/global.context";
+import { LoadingBtn } from "../loading/loadingForButton/loadingBtn";
 
 export interface ForgotPageProps {
     translate: any;
@@ -22,6 +23,7 @@ export const ForgotPage: FC<ForgotPageProps> = ({
     const [error, setError] = useState("");
     const router = useRouter();
     const {handleShowMessage} = useGlobalContext();
+    const [isBtnLoading,setIsBtnLoading] = useState<boolean>(false);
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         if (value.length >= 6 && value.length <= 14) {
@@ -35,12 +37,14 @@ export const ForgotPage: FC<ForgotPageProps> = ({
 
     const handleForgotPasswordApi = async () => {
         try {
+            setIsBtnLoading(true);
             await forgotPassword({
                 password: password,
                 code: code,
                 email: email
             })
             handleShowMessage(1, 'Password updated successfully');
+            setIsBtnLoading(false);
             setTimeout(() => {
                 router.push('login');
             }, 3000);
@@ -80,9 +84,17 @@ export const ForgotPage: FC<ForgotPageProps> = ({
                         />
                         {error && <div className={styles.error}>{error}</div>}
                     </div>
-                    <button className={styles.btn} onClick={handleUpdatePassword}>
-                        Update password
-                    </button>
+                    <div className={styles.btnContainer}>
+                        {
+                            isBtnLoading ? (
+                                <LoadingBtn/>
+                            ) : (
+                                <button className={styles.btn} onClick={handleUpdatePassword}>
+                                    Update password
+                                </button>
+                            )
+                        }
+                    </div>
                 </div>
             </div>
         </div>

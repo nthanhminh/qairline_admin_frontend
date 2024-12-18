@@ -12,6 +12,7 @@ import { BookingStatisticDetails, ETimeType, FlightChartData, FlightStatisticByA
 import { getFlightDataDashboard, getFlightChartData, getTicketChartData, getFlightStatisticByAirport, getBookingStatisticDetail, getAllTickets, getAllFlights } from "@/ultis/apis/statistic.api";
 import { convertSecondsToHHMM, handleTime } from "@/ultis/helpers/time.helper";
 import { useGlobalContext } from "@/contexts/global.context";
+import LottieAnimation from "../loading/loadingForPage/loadingPage";
 export interface DashBoardPageProps {
     translate: any
 }
@@ -31,9 +32,11 @@ export const DashBoardPage: FC<DashBoardPageProps> = ({
     const [flightChartLabel, setFlightChartLabel] = useState<string[]>([]);
     const [totalTickets, setTotalTickets] = useState<number>(0);
     const [totalFlights, setTotalFlights] = useState<number>(0);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const {handleShowMessage} = useGlobalContext();
     const initData = async () => {
         try {
+            setIsLoading(true);
             const [
                 flightDashboardDataFromApi,
                 flightChartDataFromApi,
@@ -63,6 +66,7 @@ export const DashBoardPage: FC<DashBoardPageProps> = ({
             setBookingData(bookingDataFromApi);
             setTotalTickets(totalTicketsFromApi);
             setTotalFlights(totalFlightsFromApi);
+            setIsLoading(false);
         } catch (error) {
             handleShowMessage(2, 'Error when fetching statistic data');
         }
@@ -108,6 +112,7 @@ export const DashBoardPage: FC<DashBoardPageProps> = ({
         fetchTicketChartData();
     }, [timeType]);
     return (
+        isLoading ?  <LottieAnimation></LottieAnimation> :
         <div className={styles.dashboardContainer}>
             <div className={styles.leftContainer}>
                 <div className={styles.rowsContainer}>

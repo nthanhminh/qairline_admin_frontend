@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Flight, Ticket } from "@/ultis/type/flight.type";
 import { getFlighById } from "@/ultis/apis/flight.api";
 import { useGlobalContext } from "@/contexts/global.context";
+import LottieAnimation from "../loading/loadingForPage/loadingPage";
 export interface BookingDetailPageProps {
     translate: any,
     id: string
@@ -22,8 +23,10 @@ export const BookingDetailPage: FC<BookingDetailPageProps> = ({
     const [pageNumber, setPageNumber] = useState<number>(0);
     const pageSize = 10;
     const {handleShowMessage} = useGlobalContext();
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const fetchData = async () => {
         try {
+            setIsLoading(true);
             const flight = await getFlighById(id);
             setFlight(flight);
             const tmpTicketList: Ticket[] = [];
@@ -33,7 +36,8 @@ export const BookingDetailPage: FC<BookingDetailPageProps> = ({
             console.log(flight);
             setTickets(tmpTicketList);
             setTotalPages(tmpTicketList.length);
-            setPageNumber(Math.ceil(tmpTicketList.length/pageSize));   
+            setPageNumber(Math.ceil(tmpTicketList.length/pageSize)); 
+            setIsLoading(true);  
         } catch (error) {
             handleShowMessage(2, 'Error when fetching data');
         }
@@ -74,6 +78,7 @@ export const BookingDetailPage: FC<BookingDetailPageProps> = ({
         // Add more booking objects here
     ];
     return (
+        isLoading ? <LottieAnimation></LottieAnimation> :
         <div className={styles.bookingContainer}>
             <h2 className={styles.bookingHeader}>
                 Booking Detail

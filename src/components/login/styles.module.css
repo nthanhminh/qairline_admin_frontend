@@ -86,3 +86,13 @@
     font-weight: normal;
     letter-spacing: 1.2px;
 }
+
+.btnContainer {
+    width: 100%;
+    background-color: #65B9C7;
+    border-radius: 12px;
+    min-height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

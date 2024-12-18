@@ -11,6 +11,7 @@ import { getFlighById } from "@/ultis/apis/flight.api";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { useGlobalContext } from "@/contexts/global.context";
+import LottieAnimation from "../loading/loadingForPage/loadingPage";
 export interface BookingPageProps {
     translate: any
 }
@@ -27,14 +28,17 @@ export const BookingPage: FC<BookingPageProps> = ({
     const router = useRouter();
     const lng = useLocale();
     const {handleShowMessage} = useGlobalContext();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const fetchData = async () => {
         try {
+            setIsLoading(true);
             const {
                 count,
                 items
             } = await getAllFligh(page, pageSize);
             setFlights(items);
             setTotalPages(count);
+            setIsLoading(false);
         } catch (error) {
             handleShowMessage(2,'Error when fetching data');
         }
@@ -62,6 +66,7 @@ export const BookingPage: FC<BookingPageProps> = ({
     };
 
     return (
+        isLoading ? <LottieAnimation></LottieAnimation> :
         <div className={styles.bookingContainer}>
             <h2 className={styles.bookingHeader}>
                 Bookings

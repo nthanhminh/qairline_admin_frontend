@@ -17,6 +17,7 @@ import FlightForm from "../edit/flight/editFlight.page";
 import { useRouter } from "next/navigation";
 import { convertSecondsToHHMM, handleTime } from "@/ultis/helpers/time.helper";
 import { useGlobalContext } from "@/contexts/global.context";
+import LottieAnimation from "../loading/loadingForPage/loadingPage";
 
 export interface FlightPageProps {
     translate: any
@@ -46,7 +47,8 @@ export const FlightPage: FC<FlightPageProps> = ({
     const [isShowPopup, setIsShowPopup] = useState<boolean>(false);
     const [flightChange, setFlightChange] = useState<Flight | null>(null);
     const [isDummy, setIsDummy] = useState<boolean>(false);
-    const router = useRouter()
+    const router = useRouter();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const {handleShowMessage} = useGlobalContext();
 
     useEffect(() => {
@@ -79,6 +81,7 @@ export const FlightPage: FC<FlightPageProps> = ({
     const handleSearch = async () => {
         try {
             console.log(fromAirportId, toAirportId, selectedDate, priceSortBy, departureSortBy, status);
+            setIsLoading(true);
             const {items, count} = await getAllFlight(
                 null,
                 flightCode,
@@ -93,6 +96,7 @@ export const FlightPage: FC<FlightPageProps> = ({
             console.log(items, count);
             setFlightList(items);
             setTotalPages(count);
+            setIsLoading(false)
         } catch (error) {
             handleShowMessage(2, 'Error when fetching data');
         }
@@ -353,89 +357,91 @@ export const FlightPage: FC<FlightPageProps> = ({
                 </div>
             </div>
             <div className={styles.contentContainer}>
-            <div className={styles.flightListContainer}>
-                {
-                    flightList.length === 0 ? (
-                        <div className={styles.noData}>
-                            No Data
-                        </div>
-                    ) :
-                    flightList.map((flight, index) => {
-                        const {startTime, endTime} = handleTime(flight.departureTime!, flight.duration!);
-                        return (
-                            <div className={styles.flightItemContainer} key={flight.id ?? index} onClick={
-                                () => {
-                                    router.push(`flights/${flight.id!}`);
-                                }
-                            }>
-                                <div className={styles.flightItemInfo}>
-                                    <Image src='/images/flights/paper-plane.png' width={28} height={28} alt="" unoptimized></Image>
-                                    <div className={styles.airlineInfo}>
-                                        <h5 className={styles.airlineName}>
-                                            Q Airline
-                                        </h5>
-                                        <p className={styles.flightInfo}>
-                                            {flight.flightCode}
-                                        </p>
-                                    </div>
-                                    <div className={styles.airportInfo}>
-                                        <p className={styles.airlineName}>{startTime}</p>
-                                        <p className={styles.flightInfo}>{flight.fromAirport?.name}</p>
-                                    </div>
-                                    <div className={styles.durationContainer}>
-                                        <div className={styles.flightInfoContainer}>
-                                            <div className={styles.flightInfo}>
-                                                {flight.fromAirport?.code}
-                                            </div>
-                                            <div className={styles.decoration}>
-                                                <div className={styles.circle}></div>
-                                                <div className={styles.line}></div>
-                                                <div className={styles.circle}></div>
-                                                <Image src="/images/icons/departure.png" alt="" width={12} height={12} unoptimized></Image>
-                                            </div>
-                                            <div className={styles.flightInfo}>
-                                                {flight.toAirport?.code}
-                                            </div>
-                                        </div>
-                                        <div className={styles.durationDetail}>
-                                            Duration: {convertSecondsToHHMM(flight.duration!)}
-                                        </div> 
-                                    </div>
-                                    <div className={styles.airportInfo}>
-                                        <p className={styles.airlineName}>{endTime}</p>
-                                        <p className={styles.flightInfo}>{flight.toAirport?.name}</p>
-                                    </div>
-                                </div>
-                                <div className={styles.priceAndClassInfo}>
-                                    <div className={styles.priceFacility}>
-                                        <p>Facility</p>
-                                        <div className={styles.advantage}>
-                                            <Image src='/images/flights/travel.png' alt="" width={16} height={16}></Image>
-                                            <div className={styles.classInfo}>
-                                                1 baggage
-                                            </div>
-                                        </div>
-                                        <div className={styles.advantage}>
-                                            <Image src='/images/flights/dinner.png' alt="" width={16} height={16}></Image>
-                                            <div className={styles.classInfo}>
-                                                In - flight meal
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className={styles.priceInfo}>
-                                        <div className={styles.price}>
-                                            ${flight.flightsPrice?.[0]?.price ?? 350} <span className={styles.unit}>/ pax</span>
-                                        </div>
-                                        <div className={styles.viewDetail}>
-                                            View Detail
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        )
-                    })
-                }
-            </div>
+                {isLoading ? <LottieAnimation></LottieAnimation> : (
+                     <div className={styles.flightListContainer}>
+                     {
+                         flightList.length === 0 ? (
+                             <div className={styles.noData}>
+                                 No Data
+                             </div>
+                         ) :
+                         flightList.map((flight, index) => {
+                             const {startTime, endTime} = handleTime(flight.departureTime!, flight.duration!);
+                             return (
+                                 <div className={styles.flightItemContainer} key={flight.id ?? index} onClick={
+                                     () => {
+                                         router.push(`flights/${flight.id!}`);
+                                     }
+                                 }>
+                                     <div className={styles.flightItemInfo}>
+                                         <Image src='/images/flights/paper-plane.png' width={28} height={28} alt="" unoptimized></Image>
+                                         <div className={styles.airlineInfo}>
+                                             <h5 className={styles.airlineName}>
+                                                 Q Airline
+                                             </h5>
+                                             <p className={styles.flightInfo}>
+                                                 {flight.flightCode}
+                                             </p>
+                                         </div>
+                                         <div className={styles.airportInfo}>
+                                             <p className={styles.airlineName}>{startTime}</p>
+                                             <p className={styles.flightInfo}>{flight.fromAirport?.name}</p>
+                                         </div>
+                                         <div className={styles.durationContainer}>
+                                             <div className={styles.flightInfoContainer}>
+                                                 <div className={styles.flightInfo}>
+                                                     {flight.fromAirport?.code}
+                                                 </div>
+                                                 <div className={styles.decoration}>
+                                                     <div className={styles.circle}></div>
+                                                     <div className={styles.line}></div>
+                                                     <div className={styles.circle}></div>
+                                                     <Image src="/images/icons/departure.png" alt="" width={12} height={12} unoptimized></Image>
+                                                 </div>
+                                                 <div className={styles.flightInfo}>
+                                                     {flight.toAirport?.code}
+                                                 </div>
+                                             </div>
+                                             <div className={styles.durationDetail}>
+                                                 Duration: {convertSecondsToHHMM(flight.duration!)}
+                                             </div> 
+                                         </div>
+                                         <div className={styles.airportInfo}>
+                                             <p className={styles.airlineName}>{endTime}</p>
+                                             <p className={styles.flightInfo}>{flight.toAirport?.name}</p>
+                                         </div>
+                                     </div>
+                                     <div className={styles.priceAndClassInfo}>
+                                         <div className={styles.priceFacility}>
+                                             <p>Facility</p>
+                                             <div className={styles.advantage}>
+                                                 <Image src='/images/flights/travel.png' alt="" width={16} height={16}></Image>
+                                                 <div className={styles.classInfo}>
+                                                     1 baggage
+                                                 </div>
+                                             </div>
+                                             <div className={styles.advantage}>
+                                                 <Image src='/images/flights/dinner.png' alt="" width={16} height={16}></Image>
+                                                 <div className={styles.classInfo}>
+                                                     In - flight meal
+                                                 </div>
+                                             </div>
+                                         </div>
+                                         <div className={styles.priceInfo}>
+                                             <div className={styles.price}>
+                                                 ${flight.flightsPrice?.[0]?.price ?? 350} <span className={styles.unit}>/ pax</span>
+                                             </div>
+                                             <div className={styles.viewDetail}>
+                                                 View Detail
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+                             )
+                         })
+                     }
+                 </div>
+                )}
             <div className={styles.pageContainer}>
                 {Array.from({ length: pageNumber }, (_, i) => (
                     <button key={i} className={`${styles.pageButton} ${(i+1) === page ? styles.selected : ''}`} onClick={() => setPage(i+1)}>

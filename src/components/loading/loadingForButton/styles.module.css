@@ -1,0 +1,27 @@
+/* styles.module.css */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .spinner {
+    width: 28px;
+    height: 28px;
+    border: 4px solid rgba(0, 0, 0, 0.2); /* Màu viền nhạt */
+    border-top: 4px solid #FFF; /* Màu viền trên */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  

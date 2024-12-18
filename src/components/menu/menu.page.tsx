@@ -8,6 +8,7 @@ import { Menu } from "@/ultis/type/menu.type";
 import { deleteMenu, getAllMenu } from "@/ultis/apis/menu.api";
 import { DataGroupByType } from "@/ultis/type/commom.type";
 import { useGlobalContext } from "@/contexts/global.context";
+import LottieAnimation from "../loading/loadingForPage/loadingPage";
 export interface MenuPageProps {
     translate: any
 }
@@ -21,11 +22,14 @@ export const MenuPage: FC<MenuPageProps> = ({
     const [menuChange, setMenuChange] = useState<Menu | null>(null);
     const [isDummy, setIsDummy] = useState<boolean>(false);
     const {handleShowMessage} = useGlobalContext();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const fetchData = async () => {
         try {
+            setIsLoading(true);
             const menuList = await getAllMenu() ?? [];
             console.log(menuList);
             setMenus(menuList);
+            setIsLoading(false)
         } catch (error) {
             handleShowMessage(2, 'Error when fetching data');
         }
@@ -60,6 +64,7 @@ export const MenuPage: FC<MenuPageProps> = ({
     }, [isDummy]);
 
     return (
+        isLoading ? <LottieAnimation></LottieAnimation> :
         <div className={styles.container}>
             <div className={styles.header}>
                 <h2>Menu</h2>

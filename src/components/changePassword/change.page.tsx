@@ -6,6 +6,7 @@ import Image from "next/image";
 import { changePassword } from "@/ultis/apis/auth.api";
 import { useRouter } from "next/navigation";
 import { useGlobalContext } from "@/contexts/global.context";
+import { LoadingBtn } from "../loading/loadingForButton/loadingBtn";
 
 export interface ChangePasswordPageProps {
     translate: any;
@@ -20,6 +21,7 @@ export const ChangePasswordPage: FC<ChangePasswordPageProps> = ({
     const [error, setError] = useState("");
     const router = useRouter();
     const {handleShowMessage} = useGlobalContext();
+    const [isBtnLoading, setIsBtnLoading] = useState<boolean>(false);
     
     const handleOldPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setOldPassword(e.target.value);
@@ -35,10 +37,13 @@ export const ChangePasswordPage: FC<ChangePasswordPageProps> = ({
 
     const handleUpdatePasswordApi = async () => {
         try {
+            setIsBtnLoading(true);
             await changePassword({
                 oldPassword,
                 password: newPassword,
             });
+            handleShowMessage(1, 'Update password successfully');
+            setIsBtnLoading(false);
             router.push('dashboard');
         } catch (error) {
             handleShowMessage(2, 'Update password failed');
@@ -108,9 +113,17 @@ export const ChangePasswordPage: FC<ChangePasswordPageProps> = ({
                         />
                     </div>
                     {error && <div className={styles.error}>{error}</div>}
-                    <button className={styles.btn} onClick={handleSubmit}>
-                        Change password
-                    </button>
+                    <div className={styles.btnContainer}>
+                        {
+                            isBtnLoading ? (
+                                <LoadingBtn/>
+                            ) : (
+                                <button className={styles.btn} onClick={handleSubmit}>
+                                    Change password
+                                </button>
+                            )
+                        }
+                    </div>
                 </div>
             </div>
         </div>

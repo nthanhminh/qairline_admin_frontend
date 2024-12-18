@@ -10,10 +10,6 @@ export function middleware(request: NextRequest) {
     } else {
       return NextResponse.redirect(new URL('/en/login', request.url))
     }
-  } else {
-    if (request.nextUrl.pathname.startsWith('/en/login')) {
-      return NextResponse.redirect(new URL('/en/dashboard', request.url))
-    }
   }
   return NextResponse.next();
 }

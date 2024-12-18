@@ -7,6 +7,7 @@ import { login } from "@/ultis/apis/auth.api";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { useGlobalContext } from "@/contexts/global.context";
+import { LoadingBtn } from "../loading/loadingForButton/loadingBtn";
 
 export interface MenuPageProps {
     translate: any
@@ -16,17 +17,19 @@ export const LoginPage: FC<MenuPageProps> = ({ translate }) => {
     const router = useRouter();
     const lng = useLocale();
     const {handleShowMessage} = useGlobalContext();
+    const [isBtnLoading, setIsBtnLoading] = useState<boolean>(false);
     const signIn = async() => {
         try {
+            setIsBtnLoading(true);
             await login({
                 email: formData.email,
                 password: formData.password
             })
             handleShowMessage(1, 'Login successfully');
+            setIsBtnLoading(false);
             setTimeout(() => {
                 router.push(`dashboard`);
             }, 3000)
-            // router.push(`dashboard`);
         } catch (error) {
             console.log(error);
             handleShowMessage(2, 'Login failed');
@@ -130,9 +133,17 @@ export const LoginPage: FC<MenuPageProps> = ({ translate }) => {
                         {errors.password && <div className={styles.error}>{errors.password}</div>}
                     </div>
                     <div className={styles.forgotPassword} onClick={() => {handleForgotPassword()}}>Forgot password?</div>
-                    <button type="submit" className={styles.btn}>
-                        Sign In
-                    </button>
+                    <div className={styles.btnContainer}>
+                        {
+                            !isBtnLoading ? (
+                                <button type="submit" className={styles.btn}>
+                                    Sign In
+                                </button>
+                            ) : (
+                                <LoadingBtn/>
+                            )
+                        }
+                    </div>
                 </form>
             </div>
         </div>
