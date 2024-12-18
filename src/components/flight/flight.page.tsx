@@ -374,7 +374,7 @@ export const FlightPage: FC<FlightPageProps> = ({
                                      }
                                  }>
                                      <div className={styles.flightItemInfo}>
-                                         <Image src='/images/flights/paper-plane.png' width={28} height={28} alt="" unoptimized></Image>
+                                         <Image  className={styles.paperIcon} src='/images/flights/paper-plane.png' width={28} height={28} alt="" unoptimized></Image>
                                          <div className={styles.airlineInfo}>
                                              <h5 className={styles.airlineName}>
                                                  Q Airline
@@ -383,7 +383,7 @@ export const FlightPage: FC<FlightPageProps> = ({
                                                  {flight.flightCode}
                                              </p>
                                          </div>
-                                         <div className={styles.airportInfo}>
+                                         <div className={`${styles.airportInfo} ${styles.from}`}>
                                              <p className={styles.airlineName}>{startTime}</p>
                                              <p className={styles.flightInfo}>{flight.fromAirport?.name}</p>
                                          </div>
@@ -406,7 +406,7 @@ export const FlightPage: FC<FlightPageProps> = ({
                                                  Duration: {convertSecondsToHHMM(flight.duration!)}
                                              </div> 
                                          </div>
-                                         <div className={styles.airportInfo}>
+                                         <div className={`${styles.airportInfo} ${styles.to}`}>
                                              <p className={styles.airlineName}>{endTime}</p>
                                              <p className={styles.flightInfo}>{flight.toAirport?.name}</p>
                                          </div>
