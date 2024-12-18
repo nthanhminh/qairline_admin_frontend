@@ -1,136 +1,93 @@
 import { baseUrl } from "../constants"
 import { DataApiResponse } from "../type/commom.type"
 import { BookingStatisticDetails, ETimeType, FlightChartData, FlightStatisticByAirportData, FlightStatisticDashboard, TicketChartData } from "../type/statistic.type";
+import { fetchInterceptor } from "./fetch.interceptor";
 
 export const getFlightDataDashboard = async () : Promise<FlightStatisticDashboard> => {
     try {
-        const response = await fetch(`${baseUrl}/admins/statistic/flightDashBoard`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzM0MzY1NTc5LCJleHAiOjE3MzQ5NzAzNzl9.Cfs-VPoduoO3SsVLqxjI8sF8DDHOIaN8hfBRJvtstsE`,
-                'Content-type': 'application/json'
-            },
-        })
+        const response = await fetchInterceptor(`${baseUrl}/admins/statistic/flightDashBoard`);
 
-        const parsedResponse: DataApiResponse<FlightStatisticDashboard> = await response.json();
+        const parsedResponse: DataApiResponse<FlightStatisticDashboard> = await response?.json();
         const data: FlightStatisticDashboard = parsedResponse.data;
         return data;
     } catch (error) {
-        console.log(error);
-        throw error;
+        throw new Error('Error');
     }
 }
 
 export const getFlightChartData = async () : Promise<FlightChartData[]> => {
     try {
-        const response = await fetch(`${baseUrl}/admins/statistic/flightChartData`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzM0MzY1NTc5LCJleHAiOjE3MzQ5NzAzNzl9.Cfs-VPoduoO3SsVLqxjI8sF8DDHOIaN8hfBRJvtstsE`,
-                'Content-type': 'application/json'
-            },
-        })
+        const response = await fetchInterceptor(`${baseUrl}/admins/statistic/flightChartData`);
 
-        const parsedResponse: DataApiResponse<FlightChartData[]> = await response.json();
+        const parsedResponse: DataApiResponse<FlightChartData[]> = await response?.json();
         const data: FlightChartData[] = parsedResponse.data;
         return data;
     } catch (error) {
-        console.log(error);
-        throw error;
+        throw new Error('Error');
     }   
 }
 
 export const getTicketChartData = async (timeType: ETimeType) : Promise<TicketChartData[]> => {
     try {
-        const response = await fetch(`${baseUrl}/admins/statistic/ticketStatistic?timeType=${timeType}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzM0MzY1NTc5LCJleHAiOjE3MzQ5NzAzNzl9.Cfs-VPoduoO3SsVLqxjI8sF8DDHOIaN8hfBRJvtstsE`,
-                'Content-type': 'application/json'
-            },
-        })
+        const response = await fetchInterceptor(`${baseUrl}/admins/statistic/ticketStatistic?timeType=${timeType}`)
 
-        const parsedResponse: DataApiResponse<TicketChartData[]> = await response.json();
+        const parsedResponse: DataApiResponse<TicketChartData[]> = await response?.json();
         const data: TicketChartData[] = parsedResponse.data;
         return data;
     } catch (error) {
-        console.log(error);
-        throw error;
+        throw new Error('Error');
     }   
 }
 
 export const getFlightStatisticByAirport = async () : Promise<FlightStatisticByAirportData[]> => {
     try {
-        const response = await fetch(`${baseUrl}/admins/statistic/flightStatisticByAirport`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzM0MzY1NTc5LCJleHAiOjE3MzQ5NzAzNzl9.Cfs-VPoduoO3SsVLqxjI8sF8DDHOIaN8hfBRJvtstsE`,
-                'Content-type': 'application/json'
-            },
-        })
-
-        const parsedResponse: DataApiResponse<FlightStatisticByAirportData[]> = await response.json();
+        const response = await fetchInterceptor(`${baseUrl}/admins/statistic/flightStatisticByAirport`)
+        const parsedResponse: DataApiResponse<FlightStatisticByAirportData[]> = await response?.json();
         const data: FlightStatisticByAirportData[] = parsedResponse.data;
         return data;
     } catch (error) {
-        console.log(error);
-        throw error;
+        throw new Error('Error');
     }  
 }
 
 export const getBookingStatisticDetail = async () : Promise<BookingStatisticDetails[]> => {
     try {
-        const response = await fetch(`${baseUrl}/admins/booking?page=1&pageSize=5`, {
+        const response = await fetchInterceptor(`${baseUrl}/admins/booking?page=1&pageSize=5`, {
             method: 'GET',
-            headers: {
-                'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzM0MzY1NTc5LCJleHAiOjE3MzQ5NzAzNzl9.Cfs-VPoduoO3SsVLqxjI8sF8DDHOIaN8hfBRJvtstsE`,
-                'Content-type': 'application/json'
-            },
         })
 
-        const parsedResponse: DataApiResponse<BookingStatisticDetails[]> = await response.json();
+        const parsedResponse: DataApiResponse<BookingStatisticDetails[]> = await response?.json();
         const data: BookingStatisticDetails[] = parsedResponse.data;
         return data;
     } catch (error) {
-        console.log(error);
-        throw error;
+        throw new Error('Error');
     }  
 }
 
 export const getAllTickets = async () : Promise<number> => {
     try {
-        const response = await fetch(`${baseUrl}/admins/getAllTickets`, {
+        const response = await fetchInterceptor(`${baseUrl}/admins/getAllTickets`, {
             method: 'GET',
-            headers: {
-                'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzM0MzY1NTc5LCJleHAiOjE3MzQ5NzAzNzl9.Cfs-VPoduoO3SsVLqxjI8sF8DDHOIaN8hfBRJvtstsE`,
-                'Content-type': 'application/json'
-            },
         })
 
-        const parsedResponse: DataApiResponse<number> = await response.json();
+        const parsedResponse: DataApiResponse<number> = await response?.json();
         const data: number = parsedResponse.data;
         return data;
     } catch (error) {
-        console.log(error);
-        throw error;
+        throw new Error('Error');
     }  
 }
 
 export const getAllFlights = async () : Promise<number> => {
     try {
-        const response = await fetch(`${baseUrl}/admins/getAllFlights`, {
+        const response = await fetchInterceptor(`${baseUrl}/admins/getAllFlights`, {
             method: 'GET',
-            headers: {
-                'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzM0MzY1NTc5LCJleHAiOjE3MzQ5NzAzNzl9.Cfs-VPoduoO3SsVLqxjI8sF8DDHOIaN8hfBRJvtstsE`,
-                'Content-type': 'application/json'
-            },
         })
 
-        const parsedResponse: DataApiResponse<number> = await response.json();
+        const parsedResponse: DataApiResponse<number> = await response?.json();
         const data: number = parsedResponse.data;
         return data;
     } catch (error) {
-        console.log(error);
-        throw error;
+        throw new Error('Error');
     }  
 }

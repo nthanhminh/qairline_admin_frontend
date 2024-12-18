@@ -1,42 +1,139 @@
 'use client';
 
-import { FC } from "react";
-import styles from "./styles.module.css"
+import { FC, useEffect, useState } from "react";
+import styles from "./styles.module.css";
 import Image from "next/image";
+import { login } from "@/ultis/apis/auth.api";
+import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
+import { useGlobalContext } from "@/contexts/global.context";
+
 export interface MenuPageProps {
     translate: any
 }
-  
-export const LoginPage: FC<MenuPageProps> = ({
-    translate
-}) => {
+
+export const LoginPage: FC<MenuPageProps> = ({ translate }) => {
+    const router = useRouter();
+    const lng = useLocale();
+    const {handleShowMessage} = useGlobalContext();
+    const signIn = async() => {
+        try {
+            await login({
+                email: formData.email,
+                password: formData.password
+            })
+            handleShowMessage(1, 'Login successfully');
+            setTimeout(() => {
+                router.push(`dashboard`);
+            }, 3000)
+            // router.push(`dashboard`);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleForgotPassword = () => {
+        router.push('enterEmail')
+    }
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+    });
+
+    const [errors, setErrors] = useState({
+        email: "",
+        password: "",
+    });
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+
+        // Clear the error for the current field
+        setErrors((prev) => ({
+            ...prev,
+            [name]: "",
+        }));
+    };
+
+    const validateForm = () => {
+        const newErrors = {
+            email: "",
+            password: "",
+        };
+
+        if (!formData.email) {
+            newErrors.email = "Email is required.";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            newErrors.email = "Please enter a valid email address.";
+        }
+
+        if (!formData.password) {
+            newErrors.password = "Password is required.";
+        } else if (formData.password.length < 6) {
+            newErrors.password = "Password must be at least 6 characters long.";
+        }
+
+        setErrors(newErrors);
+
+        // Return true if there are no errors
+        return !Object.values(newErrors).some((error) => error);
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (validateForm()) {
+            signIn();
+        }
+    };
+
     return (
         <div className={styles.container}>
             <div className={styles.content}>
-                <h3 className={styles.title}>
-                    Q Airline Admin
-                </h3>
-                <div className={styles.content}>
+                <div className={styles.imageContainer}>
+                    <Image
+                        src="/images/airplane.png"
+                        width={48}
+                        height={48}
+                        unoptimized
+                        alt="Logo"
+                    />
+                </div>
+                <h3 className={styles.title}>Q Airline Admin</h3>
+                <form className={styles.content} onSubmit={handleSubmit}>
                     <div className={styles.item}>
-                        <input className={styles.input} type="text" placeholder="name"/>
-                        <div className={styles.error}></div>
+                        <input
+                            className={styles.input}
+                            type="email"
+                            name="email"
+                            placeholder="Email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                        />
+                        {errors.email && <div className={styles.error}>{errors.email}</div>}
                     </div>
                     <div className={styles.item}>
-                        <input className={styles.input} type="email" placeholder="email"/>
-                        <div className={styles.error}></div>
+                        <input
+                            className={styles.input}
+                            type="password"
+                            name="password"
+                            placeholder="Password"
+                            value={formData.password}
+                            onChange={handleInputChange}
+                        />
+                        {errors.password && <div className={styles.error}>{errors.password}</div>}
                     </div>
-                    <div className={styles.item}>
-                        <input className={styles.input} type="password" placeholder="password"/>
-                        <div className={styles.error}></div>
-                    </div>
-                    <div className={styles.forgotPassword}>
-                        Forgot password?
-                    </div>
-                    <button className={styles.btn}>
+                    <div className={styles.forgotPassword} onClick={() => {handleForgotPassword()}}>Forgot password?</div>
+                    <button type="submit" className={styles.btn}>
                         Sign In
                     </button>
-                </div>
+                </form>
             </div>
         </div>
     );
-}
+};

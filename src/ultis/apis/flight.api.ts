@@ -2,6 +2,7 @@ import { EFlightStatus, SortBy } from "@/components/flight/enums";
 import { baseUrl } from "../constants";
 import { FindAllApiResponse, DataApiResponse } from "../type/commom.type";
 import { CreateFLightDto, ESeatClass, Flight, FlightDto, FlightPrice, PriceData, PriceDataId, UpdatePriceDto } from "../type/flight.type";
+import { fetchInterceptor } from "./fetch.interceptor";
 
 export const getAllFlight = async (
     search: string | null | undefined, 
@@ -29,47 +30,39 @@ export const getAllFlight = async (
         };
         const queryString = buildQueryString(queryParams);
         console.log(queryString);
-        const response = await fetch(`${baseUrl}/flights?${queryString}`, { 
+        const response = await fetchInterceptor(`${baseUrl}/flights?${queryString}`, { 
             method: 'GET',
-            headers: {
-              'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzM0MzY1NTc5LCJleHAiOjE3MzQ5NzAzNzl9.Cfs-VPoduoO3SsVLqxjI8sF8DDHOIaN8hfBRJvtstsE`,
-              'Content-type': 'application/json'
-            },
         });
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        if (!response?.ok) {
+            throw new Error(`HTTP error! status: ${response?.status}`);
         }
         const parseResponse: DataApiResponse<FindAllApiResponse<Flight>> = await response.json();
         const data: FindAllApiResponse<Flight> = parseResponse.data;
         return data;
     } catch (error) {
-        console.error('Error fetching menu:', error);
-        return {
-            count: 0,
-            items: []
-        };
+        throw new Error('Error');
     }
 }
 
 export const getFlighById = async (id: string) : Promise<Flight> => {
     try {
-        const response = await fetch(`${baseUrl}/flights/getFlightById?id=${id}`);
-        const parsedResponse: DataApiResponse<Flight> = await response.json();
+        const response = await fetchInterceptor(`${baseUrl}/flights/getFlightById?id=${id}`);
+        const parsedResponse: DataApiResponse<Flight> = await response?.json();
         const data: Flight = parsedResponse.data;
         return data;
     } catch (error) {
-        throw error
+        throw new Error('Error');
     }
 }
 
 export const getNumberOfTicketFromFlightId = async (flightId: string) : Promise<number> => {
     try {
-        const response = await fetch(`${baseUrl}/tickets/getNumberOfTicketsForFlight?flightId=${flightId}`);
-        const parsedResponse: DataApiResponse<number> = await response.json();
+        const response = await fetchInterceptor(`${baseUrl}/tickets/getNumberOfTicketsForFlight?flightId=${flightId}`);
+        const parsedResponse: DataApiResponse<number> = await response?.json();
         const data: number = parsedResponse.data;
         return data;
     } catch (error) {
-        throw error
+        throw new Error('Error');
     }
 }
 
@@ -85,55 +78,44 @@ export const createFlight = async (flightDto: FlightDto) : Promise<boolean> => {
         }, flight.id!);
         return updateFlight;
     } catch (error) {
-        console.error('Upload failed:', error);
-        throw error; 
+        throw new Error('Error');
     }
 }
 
 export const createNewFlight = async(createFLightDto: CreateFLightDto) : Promise<Flight> => {
     try {
-        const response = await fetch(`${baseUrl}/flights`, { 
+        const response = await fetchInterceptor(`${baseUrl}/flights`, { 
           method: 'POST',
-          headers: {
-            'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzM0MzY1NTc5LCJleHAiOjE3MzQ5NzAzNzl9.Cfs-VPoduoO3SsVLqxjI8sF8DDHOIaN8hfBRJvtstsE`,
-            'Content-type': 'application/json'
-          },
           body: JSON.stringify(createFLightDto),
         });
     
-        if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
+        if (!response?.ok) {
+          throw new Error(`Error: ${response?.statusText}`);
         }
     
         const result:DataApiResponse<Flight> = await response.json();
         const flight:Flight = result.data;
         return flight;
     } catch (error) {
-        console.error('Upload failed:', error);
-        throw error; 
+        throw new Error('Error');
     }
 }
 
 export const updateFlight = async (id: string, createFlightDto: CreateFLightDto) => {
     try {
-        const response = await fetch(`${baseUrl}/flights/${id}`, { 
+        const response = await fetchInterceptor(`${baseUrl}/flights/${id}`, { 
             method: 'PATCH',
-            headers: {
-              'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzM0MzY1NTc5LCJleHAiOjE3MzQ5NzAzNzl9.Cfs-VPoduoO3SsVLqxjI8sF8DDHOIaN8hfBRJvtstsE`,
-              'Content-type': 'application/json'
-            },
             body: JSON.stringify(createFlightDto),
           });
       
-          if (!response.ok) {
-            throw new Error(`Error: ${response.statusText}`);
+          if (!response?.ok) {
+            throw new Error(`Error: ${response?.statusText}`);
           }
       
           const result = await response.json();
           return result.data;
     } catch (error) {
-        console.error('Upload failed:', error);
-        throw error; 
+        throw new Error('Error');
     }
 }
 
@@ -151,28 +133,23 @@ export const UpdateFlightAndPrice = async(flightId: string, flightDto: FlightDto
         ]);
         return updatedPrice;
     } catch (error) {
-        console.log('Error:', error);
-        throw error;
+        throw new Error('Error');
     }
 }
 
 export const createPriceForFlight = async(updatePriceDto: UpdatePriceDto, flightId: string) : Promise<boolean> => {
     try {
         const pricesData = getPriceDataFromUpdatePriceDto(updatePriceDto);
-        const response = await fetch(`${baseUrl}/flight_price/createAllPrice/`, { 
+        const response = await fetchInterceptor(`${baseUrl}/flight_price/createAllPrice/`, { 
           method: 'POST',
-          headers: {
-            'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzM0MzY1NTc5LCJleHAiOjE3MzQ5NzAzNzl9.Cfs-VPoduoO3SsVLqxjI8sF8DDHOIaN8hfBRJvtstsE`,
-            'Content-type': 'application/json'
-          },
           body: JSON.stringify({
             flightId: flightId,
             pricesData: pricesData
           }),
         });
     
-        if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
+        if (!response?.ok) {
+          throw new Error(`Error: ${response?.statusText}`);
         }
     
         const result:DataApiResponse<boolean> = await response.json();
@@ -180,28 +157,23 @@ export const createPriceForFlight = async(updatePriceDto: UpdatePriceDto, flight
 
         return check;
     } catch (error) {
-        console.error('Upload failed:', error);
-        throw error; 
+        throw new Error('Error');
     }
 }
 
 export const updatePriceForFlight = async(updatePriceDto: UpdatePriceDto, flightId: string, flightPrice: FlightPrice[]) : Promise<boolean> => {
     try {
         const pricesData = getPriceDataFromUpdatePriceDtoForUpdate(updatePriceDto, flightPrice);
-        const response = await fetch(`${baseUrl}/flight_price/updateAllPrice/`, { 
+        const response = await fetchInterceptor(`${baseUrl}/flight_price/updateAllPrice/`, { 
           method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTQ2ZDg4MC05YmE5LTQyMDMtYmI3NC04OGUxZjIyMmQwNjIiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzM0MzY1NTc5LCJleHAiOjE3MzQ5NzAzNzl9.Cfs-VPoduoO3SsVLqxjI8sF8DDHOIaN8hfBRJvtstsE`,
-            'Content-type': 'application/json'
-          },
           body: JSON.stringify({
             flightId: flightId,
             pricesData: pricesData
           }),
         });
     
-        if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
+        if (!response?.ok) {
+          throw new Error(`Error: ${response?.statusText}`);
         }
     
         const result:DataApiResponse<boolean> = await response.json();
@@ -209,8 +181,7 @@ export const updatePriceForFlight = async(updatePriceDto: UpdatePriceDto, flight
 
         return check;
     } catch (error) {
-        console.error('Upload failed:', error);
-        throw error; 
+        throw new Error('Error');
     }
 }
 

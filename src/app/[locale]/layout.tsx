@@ -5,6 +5,7 @@ import {routing} from '@/i18n/routing';
 import { PossibleLocale } from '@/types/common.type';
 import styles from './styles.module.css'
 import { NavBarPage } from '@/components/navBar/navBar.page';
+import { GlobalProvider } from '@/contexts/global.context';
 
 export default async function LocaleLayout({
   children,
@@ -27,13 +28,9 @@ export default async function LocaleLayout({
         <html lang={locale} suppressHydrationWarning>
         <body>
             <NextIntlClientProvider messages={messages}>
-            
-                    {/* <div className={styles.container}>
-                        <NavBarPage translate={{}} />
-                        <div className={styles.content}>{children}</div>
-                    </div> */}
-                
-            {children}
+                <GlobalProvider>
+                    {children}  
+                </GlobalProvider>
             </NextIntlClientProvider>
         </body>
         </html>

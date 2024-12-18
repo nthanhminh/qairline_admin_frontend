@@ -21,7 +21,7 @@
     border-radius: 18px;
     flex-direction: column;
     align-items: flex-end;
-    min-width: 360px;
+    width: 400px;
     gap: 18px;
 }
 
@@ -57,20 +57,6 @@
     font-size: 14px;
     font-weight: bold;
     transition: all 0.35s ease-in-out;
-}
-
-.forgotPassword {
-    width: 100%;
-    text-align: right;
-    color: #65B9C7;
-    transition: all 0.5s ease-in-out;
-    width: fit-content;
-    font-size: 13px;
-    font-weight: bold;
-}
-
-.forgotPassword:hover {
-    color: #1D7D8F;
     cursor: pointer;
 }
 
@@ -82,7 +68,6 @@
 
 .error {
     color: red;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: normal;
-    letter-spacing: 1.2px;
 }

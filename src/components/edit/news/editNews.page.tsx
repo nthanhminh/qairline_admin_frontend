@@ -97,7 +97,7 @@ const NewForm: React.FC<NewsFormProps> = ({news, callback, setIsDummy, isDummy})
     if (!formData.title) newErrors.title = "Title is required.";
     if (!formData.content) newErrors.content = "Content is required.";
     if (!formData.type) newErrors.type = "Type is required.";
-    if (formData.type === "NEWS" && formData.percentDiscount === 0 && formData.cashDiscount === 0) {
+    if (formData.type !== "NEWS" && formData.percentDiscount === 0 && formData.cashDiscount === 0) {
       newErrors.percentDiscount = "Either percentDiscount or cashDiscount must be greater than 0.";
     }
     // if (formData.airportIds.length === 0) newErrors.airportIds = "At least one airport must be selected.";

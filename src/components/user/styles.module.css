@@ -1,0 +1,54 @@
+.container {
+    margin-right: 32px;
+    display: flex;
+    justify-content: flex-end;
+    /* position: relative; */
+}
+
+.row {
+    margin: 12px 32px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    /* position: relative; */
+}
+
+.row:hover .optionContainer {
+    max-height: 100px;
+}
+
+.optionContainer {
+    /* display: none; */
+    max-height: 0;
+    position: absolute;
+    display: block;
+    top: 42px;
+    right: 18px;
+    /* left: 46px; */
+    background-color: #65B9C7;
+    color: #FFF;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.35s ease-in-out;
+    z-index: 1;
+    width: 160px;
+    margin-right: 8px;
+}
+
+.optionItem {
+    padding: 8px 12px;
+    transition: all 0.35s ease-in-out;
+    text-align: left;
+}
+
+.optionItem:hover {
+    background-color: #f7e1e1;
+    color: #333;
+    cursor: pointer;
+}
+
+.name {
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+}
