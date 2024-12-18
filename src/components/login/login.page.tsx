@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { FC, useEffect, useState } from "react";
 import styles from "./styles.module.css";
@@ -10,35 +10,36 @@ import { useGlobalContext } from "@/contexts/global.context";
 import { LoadingBtn } from "../loading/loadingForButton/loadingBtn";
 
 export interface MenuPageProps {
-    translate: any
+    translate: any;
 }
 
 export const LoginPage: FC<MenuPageProps> = ({ translate }) => {
     const router = useRouter();
     const lng = useLocale();
-    const {handleShowMessage} = useGlobalContext();
+    const { handleShowMessage } = useGlobalContext();
     const [isBtnLoading, setIsBtnLoading] = useState<boolean>(false);
-    const signIn = async() => {
+    const signIn = async () => {
         try {
             setIsBtnLoading(true);
             await login({
                 email: formData.email,
-                password: formData.password
-            })
-            handleShowMessage(1, 'Login successfully');
+                password: formData.password,
+            });
+            handleShowMessage(1, "Login successfully");
             setIsBtnLoading(false);
             setTimeout(() => {
                 router.push(`dashboard`);
-            }, 3000)
+            }, 3000);
         } catch (error) {
             console.log(error);
-            handleShowMessage(2, 'Login failed');
+            setIsBtnLoading(false);
+            handleShowMessage(2, "Login failed");
         }
-    }
+    };
 
     const handleForgotPassword = () => {
-        router.push('enterEmail')
-    }
+        router.push("enterEmail");
+    };
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -119,7 +120,9 @@ export const LoginPage: FC<MenuPageProps> = ({ translate }) => {
                             value={formData.email}
                             onChange={handleInputChange}
                         />
-                        {errors.email && <div className={styles.error}>{errors.email}</div>}
+                        {errors.email && (
+                            <div className={styles.error}>{errors.email}</div>
+                        )}
                     </div>
                     <div className={styles.item}>
                         <input
@@ -130,19 +133,28 @@ export const LoginPage: FC<MenuPageProps> = ({ translate }) => {
                             value={formData.password}
                             onChange={handleInputChange}
                         />
-                        {errors.password && <div className={styles.error}>{errors.password}</div>}
+                        {errors.password && (
+                            <div className={styles.error}>
+                                {errors.password}
+                            </div>
+                        )}
                     </div>
-                    <div className={styles.forgotPassword} onClick={() => {handleForgotPassword()}}>Forgot password?</div>
+                    <div
+                        className={styles.forgotPassword}
+                        onClick={() => {
+                            handleForgotPassword();
+                        }}
+                    >
+                        Forgot password?
+                    </div>
                     <div className={styles.btnContainer}>
-                        {
-                            !isBtnLoading ? (
-                                <button type="submit" className={styles.btn}>
-                                    Sign In
-                                </button>
-                            ) : (
-                                <LoadingBtn/>
-                            )
-                        }
+                        {!isBtnLoading ? (
+                            <button type="submit" className={styles.btn}>
+                                Sign In
+                            </button>
+                        ) : (
+                            <LoadingBtn />
+                        )}
                     </div>
                 </form>
             </div>

@@ -115,7 +115,7 @@ export const DashBoardPage: FC<DashBoardPageProps> = ({
         isLoading ?  <LottieAnimation></LottieAnimation> :
         <div className={styles.dashboardContainer}>
             <div className={styles.leftContainer}>
-                <div className={styles.rowsContainer}>
+                <div className={`${styles.rowsContainer} ${styles.statisticContainer_}`}>
                     <div className={styles.statisticContainer}>
                         <div className={styles.contentContainer}>
                             <div className={styles.contentName}>

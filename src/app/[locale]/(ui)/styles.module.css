@@ -10,6 +10,13 @@
     flex: 1;
     height: 100%;
     min-height: 100vh;
-    background-color: #D6EEF1;
+    background-color: #d6eef1;
     margin-left: 252px;
+}
+
+@media screen and (max-width: 1024px) {
+    .content {
+        transition: all 0.35s ease-in-out;
+        margin-left: 0;
+    }
 }

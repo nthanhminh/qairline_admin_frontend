@@ -1,11 +1,11 @@
-.navBarContainer{
+.navBarContainer {
     padding: 32px 36px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
     row-gap: 32px;
-    background-color: #FFF;
+    background-color: #fff;
     position: fixed;
     top: 0;
     left: 0;
@@ -22,7 +22,7 @@
 .branchName {
     font-size: 16px;
     font-weight: bold;
-    font-family: 'Roboto', sans-serif;
+    font-family: "Roboto", sans-serif;
 }
 
 .itemContainer {
@@ -52,4 +52,69 @@
     font-weight: 400;
     color: #333;
     letter-spacing: 0.9px;
+}
+
+.openNavButton {
+    display: none;
+}
+.openNavOverlay {
+    display: none;
+}
+
+@media screen and (max-width: 1024px) {
+    .navBarContainer {
+        transition: all 0.35s ease-in-out;
+        position: fixed;
+        transform: translateX(-100%);
+        z-index: 1000;
+    }
+
+    .navBarContainer.open {
+        transform: translateX(0);
+    }
+
+    .openNavButton {
+        position: fixed;
+        top: 5px;
+        left: 18px;
+        padding: 8px;
+        border-radius: 8px;
+        background-color: #fff;
+        border: 1px solid #333;
+        display: flex;
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+
+        &:hover {
+            cursor: pointer;
+            background-color: #f7f7f7;
+        }
+    }
+    .openNavIcon {
+        z-index: 1000;
+        width: 20px;
+        height: 20px;
+    }
+    .openNavOverlay.open {
+        transition: all 0.35s ease-in-out;
+        display: block;
+        cursor: pointer;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+    .logoContainer {
+        margin-top: 32px;
+    }
+    .closeNavButton {
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        width: 20px;
+        height: 20px;
+        align-self: right;
+    }
 }
