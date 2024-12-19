@@ -27,8 +27,8 @@ export const FlightPage: FC<FlightPageProps> = ({
     translate
 }) => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-    const [fromAirportValue, setFromAirportValue] = useState<string>('');
-    const [toAirportValue, setToAirportValue] = useState<string>('');
+    const [fromAirportValue, setFromAirportValue] = useState<string|undefined>(undefined);
+    const [toAirportValue, setToAirportValue] = useState<string|undefined>(undefined);
     const [isFromActive, setIsFromActive] = useState<boolean>(false);
     const [isToActive, setIsToActive] = useState<boolean>(false);
     const [aiportsGroupByRegions, setAiportsGroupByRegions] = useState<DataGroupByType<Airport>[]>([]);
@@ -64,6 +64,13 @@ export const FlightPage: FC<FlightPageProps> = ({
         handleSearch();
     },[]);
 
+    const exchangeAiports = (fromAirportValue: string, toAirportValue: string, fromAirportId:string, toAirportId: string) => {
+        setToAiportId(fromAirportId);
+        setToAirportValue(fromAirportValue); 
+        setFromAiportId(toAirportId);
+        setFromAirportValue(toAirportValue);
+    }
+
     const handleCreateNewFlight = async () => {
         setFlightChange(null);
         setIsShowPopup(true);
@@ -73,14 +80,19 @@ export const FlightPage: FC<FlightPageProps> = ({
         setIsShowPopup(false);
     }
 
-    // const removeMenu = async (id: string) => {
-    //     const result = await deleteMenu(id);
-    //     setIsDummy(!isDummy)
-    // }
-
     const handleSearch = async () => {
         try {
             console.log(fromAirportId, toAirportId, selectedDate, priceSortBy, departureSortBy, status);
+            if((!fromAirportId && fromAirportValue) || (!toAirportId && toAirportValue)) {
+                setFromAirportValue('');
+                setToAirportValue('');
+                setFromAiportId(undefined);
+                setToAiportId(undefined);
+                setIsFromActive(false);
+                setIsToActive(false);
+                handleShowMessage(2, 'Please select correct airports');
+                return;
+            }
             setIsLoading(true);
             const {items, count} = await getAllFlight(
                 null,
@@ -182,7 +194,7 @@ export const FlightPage: FC<FlightPageProps> = ({
             <div className={styles.flightSearchContainer}>
                 <div className={styles.airportSearch}>
                     <label htmlFor="fromAirport">From</label>
-                    <input type="text" name="fromAirport" id="fromAirport" className={styles.input} onClick={() => {setIsFromActive(true)}} onChange={handleChangeFromAirport} value={fromAirportValue}/>
+                    <input type="text" name="fromAirport" id="fromAirport" className={styles.input} onClick={() => {setIsFromActive(true)}} onChange={handleChangeFromAirport} value={fromAirportValue} required/>
                     {
                         fromAirportValue !== '' ? 
                         (
@@ -227,12 +239,14 @@ export const FlightPage: FC<FlightPageProps> = ({
                         )
                     }
                 </div> 
-                <div className={styles.exchangeBtn}>
+                <div className={styles.exchangeBtn} onClick={() => {
+                    exchangeAiports(fromAirportValue!, toAirportValue!, fromAirportId!, toAirportId!);
+                }}>
                     <Image src="/images/flights/transfer.png" alt="" width={20} height={20} unoptimized></Image>
                 </div>
                 <div className={styles.airportSearch}>
                     <label htmlFor="toAirport">To</label>
-                    <input type="text" name="toAirport" id="toAirport" className={styles.input} onClick={() => {setIsToActive(true)}} onChange={handleChangeToAirport} value={toAirportValue}/>
+                    <input type="text" name="toAirport" id="toAirport" className={styles.input} onClick={() => {setIsToActive(true)}} onChange={handleChangeToAirport} value={toAirportValue} required/>
                     {
                         toAirportValue !== '' ? 
                         <div className={styles.airportListRecommended}>

@@ -4,7 +4,7 @@ import { FC, useEffect, useRef, useState } from "react";
 // import { NavBarTranslation } from "./navBar.translation";
 import styles from "./styles.module.css";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 export interface NavBarPageProps {
     translate: any;
@@ -13,32 +13,33 @@ export interface NavBarPageProps {
 export const NavBarPage: FC<NavBarPageProps> = ({ translate }) => {
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const router = useRouter();
+    const pathName = usePathname();
     const locale = useLocale();
     useEffect(() => {
-        switch (selectedIndex) {
-            case 0:
-                router.push(`/${locale}/dashboard`);
+        switch (pathName) {
+            case `/${locale}/dashboard`:
+                setSelectedIndex(0);
                 break;
-            case 1:
-                router.push(`/${locale}/bookings`);
+            case `/${locale}/bookings`:
+                setSelectedIndex(1);
                 break;
-            case 2:
-                router.push(`/${locale}/flights`);
+            case `/${locale}/flights`:
+                setSelectedIndex(2);
                 break;
-            case 3:
-                router.push(`/${locale}/services`);
+            case `/${locale}/services`:
+                setSelectedIndex(3);
                 break;
-            case 4:
-                router.push(`/${locale}/menus`);
+            case `/${locale}/menus`:
+                setSelectedIndex(4);
                 break;
-            case 5:
-                router.push(`/${locale}/aircrafts`);
+            case `/${locale}/aircrafts`:
+                setSelectedIndex(5);
                 break;
-            case 6:
-                router.push(`/${locale}/deals`);
+            case `/${locale}/deals`:
+                setSelectedIndex(6);
                 break;
         }
-    }, [selectedIndex]);
+    }, [pathName]);
 
     const updateSelectedIndex = (index: number) => {
         setSelectedIndex(index);
@@ -99,7 +100,7 @@ export const NavBarPage: FC<NavBarPageProps> = ({ translate }) => {
                             selectedIndex === 0 ? styles.navBarSelected : ""
                         }`}
                         onClick={() => {
-                            updateSelectedIndex(0);
+                            router.push(`/${locale}/dashboard`);
                         }}
                     >
                         <Image
@@ -116,7 +117,7 @@ export const NavBarPage: FC<NavBarPageProps> = ({ translate }) => {
                             selectedIndex === 1 ? styles.navBarSelected : ""
                         }`}
                         onClick={() => {
-                            updateSelectedIndex(1);
+                            router.push(`/${locale}/bookings`);
                         }}
                     >
                         <Image
@@ -133,7 +134,7 @@ export const NavBarPage: FC<NavBarPageProps> = ({ translate }) => {
                             selectedIndex === 2 ? styles.navBarSelected : ""
                         }`}
                         onClick={() => {
-                            updateSelectedIndex(2);
+                            router.push(`/${locale}/flights`);
                         }}
                     >
                         <Image
@@ -150,7 +151,7 @@ export const NavBarPage: FC<NavBarPageProps> = ({ translate }) => {
                             selectedIndex === 3 ? styles.navBarSelected : ""
                         }`}
                         onClick={() => {
-                            updateSelectedIndex(3);
+                            router.push(`/${locale}/services`);
                         }}
                     >
                         <Image
@@ -167,7 +168,7 @@ export const NavBarPage: FC<NavBarPageProps> = ({ translate }) => {
                             selectedIndex === 4 ? styles.navBarSelected : ""
                         }`}
                         onClick={() => {
-                            updateSelectedIndex(4);
+                            router.push(`/${locale}/menus`);
                         }}
                     >
                         <Image
@@ -184,7 +185,7 @@ export const NavBarPage: FC<NavBarPageProps> = ({ translate }) => {
                             selectedIndex === 5 ? styles.navBarSelected : ""
                         }`}
                         onClick={() => {
-                            updateSelectedIndex(5);
+                            router.push(`/${locale}/aircrafts`);
                         }}
                     >
                         <Image
@@ -201,7 +202,7 @@ export const NavBarPage: FC<NavBarPageProps> = ({ translate }) => {
                             selectedIndex === 6 ? styles.navBarSelected : ""
                         }`}
                         onClick={() => {
-                            updateSelectedIndex(6);
+                            router.push(`/${locale}/deals`);
                         }}
                     >
                         <Image

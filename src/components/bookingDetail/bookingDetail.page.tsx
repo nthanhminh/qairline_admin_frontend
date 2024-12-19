@@ -37,7 +37,7 @@ export const BookingDetailPage: FC<BookingDetailPageProps> = ({
             setTickets(tmpTicketList);
             setTotalPages(tmpTicketList.length);
             setPageNumber(Math.ceil(tmpTicketList.length/pageSize)); 
-            setIsLoading(true);  
+            setIsLoading(false);  
         } catch (error) {
             handleShowMessage(2, 'Error when fetching data');
         }
