@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { sendCode } from "@/ultis/apis/auth.api";
 import { useGlobalContext } from "@/contexts/global.context";
+import { LoadingBtn } from "../loading/loadingForButton/loadingBtn";
 
 export interface EnterEmailPageProps {
     translate: any;
@@ -18,6 +19,7 @@ export const EnterEmailPage: FC<EnterEmailPageProps> = ({
     const [error, setError] = useState("");
     const router = useRouter();
     const {handleShowMessage} = useGlobalContext();
+    const [isBtnLoading, setIsBtnLoading] = useState<boolean>(false);
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
 
@@ -34,13 +36,16 @@ export const EnterEmailPage: FC<EnterEmailPageProps> = ({
 
     const handleVerifyEmailApi = async () => {
         try {
+            setIsBtnLoading(true);
             await sendCode(email);
-            handleShowMessage(1,'Verify successfully');
+            handleShowMessage(1,'Send code successfully');
+            setIsBtnLoading(false);
             setTimeout(() => {
                 router.push(`verify?email=${email}`); 
             }, 3000); 
         } catch (error) {
-            handleShowMessage(2,'Verify failed');
+            setIsBtnLoading(false);
+            handleShowMessage(2,'Send code failed');
         }
     };
 
@@ -79,9 +84,15 @@ export const EnterEmailPage: FC<EnterEmailPageProps> = ({
                     />
                     {error && <div className={styles.error}>{error}</div>}
                 </div>
-                <button className={styles.btn} onClick={handleVerify}>
-                    Enter
-                </button>
+                <div className={styles.btnContainer}>
+                    {
+                        isBtnLoading ? <LoadingBtn></LoadingBtn> : (
+                            <button className={styles.btn} onClick={handleVerify}>
+                                Enter
+                            </button>
+                        )
+                    }
+                </div>
             </div>
         </div>
     );

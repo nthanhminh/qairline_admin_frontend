@@ -7,6 +7,7 @@ import { forgotPassword } from "@/ultis/apis/auth.api";
 import { useRouter } from "next/navigation";
 import { useGlobalContext } from "@/contexts/global.context";
 import { LoadingBtn } from "../loading/loadingForButton/loadingBtn";
+import { EEnvironmentLogin } from "@/ultis/type/commom.type";
 
 export interface ForgotPageProps {
     translate: any;
@@ -41,7 +42,8 @@ export const ForgotPage: FC<ForgotPageProps> = ({
             await forgotPassword({
                 password: password,
                 code: code,
-                email: email
+                email: email,
+                environment: EEnvironmentLogin.APP_ADMIN 
             })
             handleShowMessage(1, 'Password updated successfully');
             setIsBtnLoading(false);
@@ -49,6 +51,7 @@ export const ForgotPage: FC<ForgotPageProps> = ({
                 router.push('login');
             }, 3000);
         } catch (error) {
+            setIsBtnLoading(false);
             handleShowMessage(2, 'Password updated failed');
         }
     }

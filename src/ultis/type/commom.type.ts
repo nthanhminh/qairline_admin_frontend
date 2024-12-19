@@ -11,3 +11,8 @@ export type FindAllApiResponse<T> = {
     count: number;
     items: T[];
 }
+
+export enum EEnvironmentLogin {
+    APP_ADMIN = "APP_ADMIN",
+    USER = "APP_USER",
+}

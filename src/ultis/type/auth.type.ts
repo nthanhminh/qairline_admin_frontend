@@ -1,6 +1,9 @@
+import { EEnvironmentLogin } from "./commom.type";
+
 export type LoginDto = {
     password: string;
     email: string;
+    environment: EEnvironmentLogin
 }
 
 export type TokenResponse = {
@@ -21,6 +24,7 @@ export type ForgotPasswordDto = {
     password: string;
     code: number;
     email: string;
+    environment: EEnvironmentLogin
 }
 
 export type ChangePasswordDto = {

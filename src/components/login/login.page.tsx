@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { useGlobalContext } from "@/contexts/global.context";
 import { LoadingBtn } from "../loading/loadingForButton/loadingBtn";
+import { EEnvironmentLogin } from "@/ultis/type/commom.type";
 
 export interface MenuPageProps {
     translate: any;
@@ -24,6 +25,7 @@ export const LoginPage: FC<MenuPageProps> = ({ translate }) => {
             await login({
                 email: formData.email,
                 password: formData.password,
+                environment: EEnvironmentLogin.APP_ADMIN
             });
             handleShowMessage(1, "Login successfully");
             setIsBtnLoading(false);

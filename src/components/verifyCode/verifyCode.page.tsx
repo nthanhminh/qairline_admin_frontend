@@ -46,6 +46,7 @@ export const VerifyPage: FC<VerifyPageProps> = ({
             }, 3000);
             // router.push(`forgotPassword?code=${code}&email=${email}`);
         } catch (error) {
+            setIsBtnLoading(false);
             handleShowMessage(2, 'Verify code failed');
         }
     }

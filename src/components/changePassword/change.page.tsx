@@ -46,6 +46,7 @@ export const ChangePasswordPage: FC<ChangePasswordPageProps> = ({
             setIsBtnLoading(false);
             router.push('dashboard');
         } catch (error) {
+            setIsBtnLoading(false);
             handleShowMessage(2, 'Update password failed');
         }
     };

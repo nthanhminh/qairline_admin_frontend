@@ -82,3 +82,14 @@
     font-size: 12px;
     font-weight: normal;
 }
+
+.btnContainer {
+    width: 100%;
+    background-color: #65b9c7;
+    border-radius: 12px;
+    min-height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
