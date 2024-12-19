@@ -64,7 +64,16 @@ const handleRefreshToken = async (url: RequestInfo, options: RequestInit = {}): 
         const parseResponse: DataApiResponse<{ accessToken: string }> = await response.json();
         const { accessToken } = parseResponse.data;
 
-        Cookies.set('accessToken', accessToken, { path: '/', secure: true, sameSite: 'strict' });
+        Cookies.set(
+          'accessToken', 
+          accessToken, 
+          { 
+            path: '/', 
+            secure: true, 
+            sameSite: 'strict',
+            maxAge: 60 * 60 * 24 * 7
+          }
+        );
 
         return fetchInterceptor(url, options);
 

@@ -17,10 +17,29 @@ export const login = async (dto: LoginDto) => {
         }
         const parseResponse: DataApiResponse<TokenResponse> = await response.json();
         const data: TokenResponse = parseResponse.data;
-        Cookies.set('accessToken', data.accessToken, { path: '/', secure: true, sameSite: 'strict' });
-        Cookies.set('refreshToken', data.refreshToken, { path: '/', secure: true, sameSite: 'strict' });
+        Cookies.set(
+            'accessToken', 
+            data.accessToken, 
+            { 
+                path: '/', 
+                secure: true, 
+                sameSite: 'strict',
+                expires: 60 * 60 * 24 * 7
+            }
+        );
+        Cookies.set(
+            'refreshToken', 
+            data.refreshToken, 
+            { 
+                path: '/', 
+                secure: true, 
+                sameSite: 'strict',
+                expires: 60 * 60 * 24 * 7
+            }
+        );
         return data;
     } catch (error) {
+        console.error(error);
         throw new Error(`error`);
     }
 }
