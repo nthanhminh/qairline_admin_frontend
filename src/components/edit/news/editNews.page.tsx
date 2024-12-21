@@ -60,7 +60,6 @@ const NewForm: React.FC<NewsFormProps> = ({news, callback, setIsDummy, isDummy})
       for(const {type, items} of data) {
         airportList.push(...items);
       }
-      console.log(airportList);
       setAiports(airportList);
     } catch (error) {
       handleShowMessage(2, 'Error when fetching data');
@@ -107,13 +106,7 @@ const NewForm: React.FC<NewsFormProps> = ({news, callback, setIsDummy, isDummy})
     if (formData.type !== "NEWS" && formData.percentDiscount === 0 && formData.cashDiscount === 0) {
       newErrors.percentDiscount = "Either percentDiscount or cashDiscount must be greater than 0.";
     }
-    // if (formData.airportIds.length === 0) newErrors.airportIds = "At least one airport must be selected.";
-    // if (!formData.endTime) newErrors.endTime = "End time is required.";
-
-    // Check if the image is selected when required (optional validation)
-    // if (!formData.imageUrl && formData.type !== "NEWS") newErrors.imageUrl = "Image is required.";
     setErrors(newErrors);
-    console.log(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
@@ -131,7 +124,6 @@ const NewForm: React.FC<NewsFormProps> = ({news, callback, setIsDummy, isDummy})
       if(formData.imageUrl!) {
         imageUrl = await uploadFile(formData.imageUrl!);
       }
-      console.log(formData.airportIds);
       const newService = await createNews({
         title: formData.title,
         content: formData.content,
@@ -145,7 +137,6 @@ const NewForm: React.FC<NewsFormProps> = ({news, callback, setIsDummy, isDummy})
       setIsDummy(!isDummy);
       handleShowMessage(1, 'Create new news successfully');
       callback();
-      console.log(newService); 
     } catch (error) {
       handleShowMessage(1, 'Create new news failed');
     }
@@ -170,7 +161,6 @@ const NewForm: React.FC<NewsFormProps> = ({news, callback, setIsDummy, isDummy})
       setIsDummy(!isDummy);
       handleShowMessage(1, 'Update news successfully');
       callback();
-      console.log(newNews); 
     } catch (error) {
       handleShowMessage(2, 'Update news failed');
     }

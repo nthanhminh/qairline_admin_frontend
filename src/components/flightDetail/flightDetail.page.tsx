@@ -44,22 +44,14 @@ export const FlightDetailPage: FC<FlightDetailPageProps> = ({
                 getFlighById(id),
                 getNumberOfTicketFromFlightId(id),
             ])
-            console.log(flightData.flightsPrice);
             const data = groupFlightsBySeatClassName(flightData.flightsPrice!);
-            console.log("test",data);
-            console.log(data["BUSINESS"]?.[0]?.price);
             setFlight(flightData);
             setPassengers(ticketsData);
-            setGroupFlightsBySeatClassData(data);
-            // console.log(groupFlightsBySeatClassName(flight?.flightsPrice!));   
+            setGroupFlightsBySeatClassData(data);   
         } catch (error) {
             handleShowMessage(2, 'Error when fetching data');
         }
     }
-
-    useEffect(() => {
-        console.log(groupFlightsBySeatClassData);
-    }, [groupFlightsBySeatClassData])
 
     const handleEditFlight = async () => {
         setIsShowPopup(true);

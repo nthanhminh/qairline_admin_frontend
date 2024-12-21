@@ -23,9 +23,9 @@ interface AircraftFormProps {
 
 const AircraftForm: React.FC<AircraftFormProps> = ({plane, callback, setIsDummy, isDummy}) => {
   const [formData, setFormData] = useState<FormData>({
-    name: plane!.name ?? '',
-    type: plane!.type ?? EPlaneType.A310,
-    description: plane!.description ?? '',
+    name: plane?.name ?? '',
+    type: plane?.type ?? EPlaneType.A310,
+    description: plane?.description ?? '',
   });
   
   const {handleShowMessage} = useGlobalContext();
@@ -82,7 +82,6 @@ const AircraftForm: React.FC<AircraftFormProps> = ({plane, callback, setIsDummy,
       handleShowMessage(1, 'Create new aircraft successfully');
       setIsDummy(!isDummy);
       callback();
-      console.log(newService); 
     } catch (error) {
       handleShowMessage(2, 'Create new aircraft failed');
     }
@@ -98,7 +97,6 @@ const AircraftForm: React.FC<AircraftFormProps> = ({plane, callback, setIsDummy,
       setIsDummy(!isDummy);
       handleShowMessage(1, 'Update aircraft successfully');
       callback();
-      console.log(newAircraft);
     } catch (error) {
       handleShowMessage(2, 'Update aircraft failed')
     }

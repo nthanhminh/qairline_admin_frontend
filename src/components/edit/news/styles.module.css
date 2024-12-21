@@ -34,6 +34,10 @@
     gap: 12px;
 }
 
+.checkboxGroup {
+    overflow: auto;
+}
+
 .label {
     color: #827d7d;
     font-size: 12px;

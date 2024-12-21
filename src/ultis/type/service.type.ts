@@ -11,8 +11,7 @@ export type ServiceDto = {
 }
 
 export enum EServiceType {
-    CAR = "CAR",
-    TAKE_CARE = "TAKE_CARE",
+    BAGGAGE = "BAGGAGE",
     INSURANCE = "INSURANCE",
     ANIMAL = "ANIMAL",
 }

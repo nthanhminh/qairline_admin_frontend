@@ -31,8 +31,6 @@ export const createService = async (serviceDto: ServiceDto) => {
 
         const result = await response.json();
         const data = result.data;
-        console.log("Upload success:", result);
-        console.log("data", data);
         return result.data;
     } catch (error) {
         throw new Error("Error");
@@ -50,7 +48,6 @@ export const editService = async (id: string, serviceDto: ServiceDto) => {
             throw new Error(`Error: ${response?.statusText}`);
         }
         const result = await response?.json();
-        console.log("Edit success:", result);
         return result;
     } catch (error) {
         throw new Error("Error");
@@ -68,7 +65,6 @@ export const deleteService = async (id: string) => {
         }
 
         const result = await response?.json();
-        console.log("Edit success:", result);
         return result;
     } catch (error) {
         throw new Error("Error");

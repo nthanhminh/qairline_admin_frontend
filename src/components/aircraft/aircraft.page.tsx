@@ -25,7 +25,6 @@ export const AircraftPage: FC<AircraftPageProps> = ({
             setIsLoading(true);
             const planeResponse = await getAllPlane() ?? [];
             const planeList = planeResponse.items;
-            console.log(planeList);
             setPlane(planeList);
             setIsLoading(false);
         } catch (error) {

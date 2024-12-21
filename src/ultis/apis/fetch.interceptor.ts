@@ -38,7 +38,9 @@ export const fetchInterceptor = async (url: RequestInfo, options: RequestInit = 
 };
 
 const handleRefreshToken = async (url: RequestInfo, options: RequestInit = {}): Promise<Response | null> => {
+    console.log('handleRefreshToken');
     const refreshToken = Cookies.get('refreshToken');
+    console.log(refreshToken);
     const locale = Cookies.get('NEXT_LOCALE') || 'en';
     if (!refreshToken) {
         console.error('No refresh token available');
@@ -48,7 +50,7 @@ const handleRefreshToken = async (url: RequestInfo, options: RequestInit = {}): 
 
     try {
         const response = await fetch(`${baseUrl}/auth/refresh`, {
-            method: "POST",
+            method: "GET",
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${refreshToken}`,
@@ -57,7 +59,7 @@ const handleRefreshToken = async (url: RequestInfo, options: RequestInit = {}): 
 
         if (!response.ok) {
             console.error('Unauthorized! Redirecting to login...');
-            window.location.href = `/${locale}/login`;
+            // window.location.href = `/${locale}/login`;
             return null;
         }
 
@@ -66,15 +68,14 @@ const handleRefreshToken = async (url: RequestInfo, options: RequestInit = {}): 
 
         Cookies.set(
           'accessToken', 
-          accessToken, 
+            accessToken.toString(), 
           { 
             path: '/', 
             secure: true, 
             sameSite: 'strict',
-            maxAge: 60 * 60 * 24 * 7
+            expires: 60 * 60 * 24 * 7
           }
         );
-
         return fetchInterceptor(url, options);
 
     } catch (error) {

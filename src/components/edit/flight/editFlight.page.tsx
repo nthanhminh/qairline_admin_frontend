@@ -94,7 +94,6 @@ const FlightForm: React.FC<FlightFormProps> = ({ flight, callback, setIsDummy, i
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-
     // Clear the error for the specific field when its value changes
     setErrors((prev) => ({ ...prev, [name]: "" }));
 
@@ -181,13 +180,11 @@ const FlightForm: React.FC<FlightFormProps> = ({ flight, callback, setIsDummy, i
       if(check) {
         setIsDummy(!isDummy);
         callback();
-        console.log('create new flight successfully');
         handleShowMessage(1, 'Create new flight successfully')
       } else {
-        console.log('error');
       }
     } catch (error) {
-      handleShowMessage(1, 'Create new flight failed');
+      handleShowMessage(2, 'Create new flight failed');
     }
   }
 
@@ -212,7 +209,6 @@ const FlightForm: React.FC<FlightFormProps> = ({ flight, callback, setIsDummy, i
       if(check) {
         setIsDummy(!isDummy);
         callback();
-        console.log('update flight successfully');
         handleShowMessage(1, "Update flight successfully");
       } else {
         console.log('error');
@@ -298,6 +294,7 @@ const FlightForm: React.FC<FlightFormProps> = ({ flight, callback, setIsDummy, i
               value={formData.plane}
               onChange={handleChange}
             >
+              <option value="" disabled selected>-- Please select an aircraft --</option>
               {
                 planes.map((plane,index) => {
                   return (

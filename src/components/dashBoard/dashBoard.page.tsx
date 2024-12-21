@@ -54,11 +54,6 @@ export const DashBoardPage: FC<DashBoardPageProps> = ({
                 getAllTickets(),
                 getAllFlights()
             ])
-            console.log(flightDashboardDataFromApi);
-            console.log(flightChartDataFromApi);
-            console.log(ticketChartDataFromApi);
-            console.log(flightStatisticByAirportFromApi);
-            console.log(bookingDataFromApi);
             setFlightDashboardData(flightDashboardDataFromApi);
             setFlightChartData(flightChartDataFromApi);
             setTicketChartData(ticketChartDataFromApi);
@@ -90,7 +85,6 @@ export const DashBoardPage: FC<DashBoardPageProps> = ({
             labels.push(flightChartItem?.month);
             values.push(flightChartItem?.totalFlights);
         }
-        console.log(labels, values);
         setFlightChartLabel(labels);
         setFlightChartValue(values);
     }, [flightChartData])

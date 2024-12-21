@@ -61,10 +61,7 @@ export const ForgotPage: FC<ForgotPageProps> = ({
             setError("Password must be between 6 and 14 characters.");
             return;
         }
-
-        // Logic cập nhật mật khẩu ở đây
         handleForgotPasswordApi();
-        console.log("Updating password:", password);
     };
 
     return (

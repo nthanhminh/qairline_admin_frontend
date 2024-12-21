@@ -52,27 +52,19 @@ export const ChangePasswordPage: FC<ChangePasswordPageProps> = ({
     };
 
     const handleSubmit = () => {
-        // Validate old password
         if (!oldPassword) {
             setError("Old password is required.");
             return;
         }
-
-        // Validate new password length
         if (newPassword.length < 6 || newPassword.length > 14) {
             setError("New password must be between 6 and 14 characters.");
             return;
         }
-
-        // Validate passwords match
         if (newPassword !== confirmPassword) {
             setError("Passwords do not match.");
             return;
         }
-
-        // Clear error and process submission
         setError("");
-        console.log("Password change submitted successfully.");
         handleUpdatePasswordApi();
     };
 

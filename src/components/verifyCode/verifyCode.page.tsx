@@ -57,7 +57,6 @@ export const VerifyPage: FC<VerifyPageProps> = ({
             return;
         }
         handleVerifyCodeApi();
-        console.log("Verifying code:", code);
     };
 
     return (

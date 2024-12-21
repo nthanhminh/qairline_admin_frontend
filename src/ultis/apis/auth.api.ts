@@ -59,7 +59,6 @@ export const logout = async() => {
         }
         const parseResponse: DataApiResponse<any> = await response.json();
         const data: any = parseResponse.data;
-        console.log(data);
         clearCookies();
         return data;
     } catch (error) {
@@ -110,7 +109,6 @@ export const verifyCode = async(dto: VerifyCodeDto) => {
 export const changePassword = async (dto: ChangePasswordDto) => {
     try {
         const token = Cookies.get('accessToken');
-        console.log(token);
         const response = await fetch(`${baseUrl}/auth/updatePassword`, {
             method: "PATCH",
             headers: {
@@ -153,6 +151,4 @@ export const forgotPassword = async (dto: ForgotPasswordDto) => {
 const clearCookies = () => {
     Cookies.remove('accessToken', { path: '/' });
     Cookies.remove('refreshToken', { path: '/' });
-  
-    console.log('Cookies đã bị xóa');
 };

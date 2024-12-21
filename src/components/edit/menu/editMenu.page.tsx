@@ -68,7 +68,6 @@ const MenuForm: React.FC<MenuFormProps> = ({menu, callback, setIsDummy, isDummy}
       } else {
         createNewMenu();
       }
-      console.log("Form data submitted:", formData);
     }
   };
 
@@ -86,19 +85,17 @@ const MenuForm: React.FC<MenuFormProps> = ({menu, callback, setIsDummy, isDummy}
       if(formData.thumbnail!) {
         imageUrl = await uploadFile(formData.thumbnail!);
       }
-      console.log(imageUrl);
       const newMenu = await createMenu({
         name: formData.name,
         ...(imageUrl ? { thumbnail: imageUrl } : {}),
         // thumbnail: 'https://www.wikihow.com/images/thumb/4/4f/Take-Care-of-Your-Pet-Step-7-Version-4.jpg/v4-460px-Take-Care-of-Your-Pet-Step-7-Version-4.jpg',
         description: formData.description,
         type: formData.type as EMenuType,
-        price: formData.price
+        price: parseFloat(formData.price.toString())
       })
       setIsDummy(!isDummy);
       handleShowMessage(1, 'Create new menu successfully');
       callback();
-      console.log(newMenu); 
     } catch (error) {
       handleShowMessage(2, 'Create new menu failed');
     }
@@ -106,7 +103,6 @@ const MenuForm: React.FC<MenuFormProps> = ({menu, callback, setIsDummy, isDummy}
 
   const updateMenu = async () => {
     try {
-      console.log(formData.thumbnail!);
       let imageUrl = null;
       if(formData.thumbnail!) {
         imageUrl = await uploadFile(formData.thumbnail!);
@@ -117,12 +113,11 @@ const MenuForm: React.FC<MenuFormProps> = ({menu, callback, setIsDummy, isDummy}
         // thumbnail: 'https://www.wikihow.com/images/thumb/4/4f/Take-Care-of-Your-Pet-Step-7-Version-4.jpg/v4-460px-Take-Care-of-Your-Pet-Step-7-Version-4.jpg',
         description: formData.description,
         type: formData.type as EMenuType,
-        price: formData.price
+        price: parseFloat(formData.price.toString())
       })
       setIsDummy(!isDummy);
       handleShowMessage(1, 'Update menu successfully');
       callback();
-      console.log(newMenu); 
     } catch (error) {
       handleShowMessage(2, 'Update menu failed');
     }

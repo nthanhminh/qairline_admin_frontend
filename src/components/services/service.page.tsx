@@ -27,7 +27,6 @@ export const ServicePage: FC<ServicePageProps> = ({
         try {
             setIsLoading(true);
             const serviceList = await getAllServices() ?? [];
-            console.log(serviceList);
             setServices(serviceList);
             setIsLoading(false)
         } catch (error) {
