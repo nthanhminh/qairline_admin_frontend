@@ -59,7 +59,7 @@ const handleRefreshToken = async (url: RequestInfo, options: RequestInit = {}): 
 
         if (!response.ok) {
             console.error('Unauthorized! Redirecting to login...');
-            // window.location.href = `/${locale}/login`;
+            window.location.href = `/${locale}/login`;
             return null;
         }
 
