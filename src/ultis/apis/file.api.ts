@@ -15,10 +15,8 @@ export const uploadFile = async (file: File) => {
       }
   
       const result = await response.json();
-      console.log('Upload success:', result);
       return `${baseUrl}/${result.data[0]}`; 
     } catch (error) {
-      console.error('Upload failed:', error);
       throw error;
     }
   };

@@ -47,8 +47,6 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ service, callback, isDummy, s
     setErrors((prev) => ({ ...prev, [name]: "" })); // Xóa lỗi khi thay đổi giá trị
 
     if (name === "imageUrl" && files) {
-      console.log(files);
-      // Nếu là input file, lấy file đầu tiên
       setFormData((prev) => ({ ...prev, imageUrl: files[0] }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -67,7 +65,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ service, callback, isDummy, s
     const newErrors: FormErrors = {};
 
     if (!formData.name) newErrors.name = "Name is required.";
-    if (!formData.imageUrl) newErrors.imageUrl = "Image is required.";
+    // if (!formData.imageUrl) newErrors.imageUrl = "Image is required.";
     if (!formData.description) newErrors.description = "Description is required.";
     if (!formData.type) newErrors.type = "Type is required.";
     if (formData.price <= 0) newErrors.price = "Price must be greater than 0.";
@@ -78,18 +76,20 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ service, callback, isDummy, s
 
   const createNewService = async () => {
     try {
-      const imageUrl = await uploadFile(formData.imageUrl!);
+      let thumbnail = null;
+      if(formData.imageUrl!) {
+        thumbnail = await uploadFile(formData.imageUrl!);
+      }
       const newService = await createService({
         name: formData.name,
-        imageUrl: imageUrl,
+        imageUrl: thumbnail ?? service!.imageUrl! ,
         description: formData.description,
         type: formData.type as EServiceType,
-        price: formData.price
+        price: parseInt(formData.price.toString()) 
       })
       setIsDummy(!isDummy);
       handleShowMessage(1,'Create new service successfully');
       callback();
-      console.log(newService);
     } catch (error) {
       handleShowMessage(2,'Create new service failed');
     }
@@ -97,19 +97,21 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ service, callback, isDummy, s
 
   const updateService = async () => {
     try {
-      const imageUrl = await uploadFile(formData.imageUrl!);
+      let thumbnail = null;
+      if(formData.imageUrl!) {
+        thumbnail = await uploadFile(formData.imageUrl!);
+      }
       const newService = await editService(service!.id!, {
         name: formData.name,
-        imageUrl: imageUrl,
+        imageUrl: thumbnail ?? service!.imageUrl!,
         // imageUrl: 'https://www.wikihow.com/images/thumb/4/4f/Take-Care-of-Your-Pet-Step-7-Version-4.jpg/v4-460px-Take-Care-of-Your-Pet-Step-7-Version-4.jpg',
         description: formData.description,
         type: formData.type as EServiceType,
-        price: formData.price
+        price: parseInt(formData.price.toString()) 
       })
       setIsDummy(!isDummy);
       handleShowMessage(1,'Service updated successfully');
       callback();
-      console.log(newService);
     } catch (error) {
       handleShowMessage(2,'Service updated failed');
     }
@@ -124,7 +126,6 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ service, callback, isDummy, s
       } else {
         createNewService();
       }
-      console.log(formData);
     }
   };
 

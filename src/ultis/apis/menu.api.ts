@@ -30,8 +30,6 @@ export const createMenu = async (menuDto: MenuDto) => {
     
         const result = await response.json();
         const data = result.data;
-        console.log('Upload success:', result);
-        console.log("data", data);
         return result.data;
     } catch (error) {
       throw new Error('Error');
@@ -50,7 +48,6 @@ export const editMenu = async (id: string, menuDto: MenuDto) => {
       }
   
       const result = await response.json();
-      console.log('Edit success:', result);
       return result;
     } catch (error) {
       throw new Error('Error');
@@ -68,7 +65,6 @@ export const deleteMenu = async (id: string) => {
         }
     
         const result = await response.json();
-        console.log('Edit success:', result);
         return result;
     } catch (error) {
       throw new Error('Error');

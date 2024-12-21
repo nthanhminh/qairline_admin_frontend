@@ -46,8 +46,15 @@ export const BookingPage: FC<BookingPageProps> = ({
 
     const handleSearch = async (id: string) => {
         try {
+            if(id === '' || !id) {
+                fetchData();
+                return;
+            }
             const flight = await getFlighById(id);
-            setFlights([flight]);
+            if(flight)
+                setFlights([flight]);
+            else 
+                setFlights([]);
         } catch (error) {
             handleShowMessage(2,'Error when fetching data');
         }
@@ -83,11 +90,12 @@ export const BookingPage: FC<BookingPageProps> = ({
             <div className={styles.content}>
                 <div className={styles.bookingListContainer}>
                     {
+                        flights.length > 0  ?
                         flights.map((flight,index) => {
                             const {startTime, endTime, date} = handleTime(flight?.departureTime!, flight?.duration!);
                             const durationTime = convertSecondsToHHMM(flight?.duration!);
                             let numberOfTickets = 0;
-                            for (const booking of flight.bookings) {
+                            for (const booking of (flight?.bookings ?? [])) {
                                 numberOfTickets += (booking.tickets?.length ?? 0);
                             }
                             return (
@@ -159,7 +167,9 @@ export const BookingPage: FC<BookingPageProps> = ({
                                     </div>
                                 </div>
                             )
-                        })
+                        }) : (
+                            <div className={styles.notFound}>No Data Found</div>
+                        )
                     }
                     {/* <div className={styles.bookingItemContainer}>
                         <div className={styles.bookingInfoContainer}>

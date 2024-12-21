@@ -27,7 +27,6 @@ export const DealPage: FC<DealPageProps> = ({
         try {
             setIsLoading(true);
             const menuList = await getAllNews() ?? [];
-            console.log(menuList);
             setDeals(menuList);
             setIsLoading(false);
         } catch (error) {
@@ -67,7 +66,7 @@ export const DealPage: FC<DealPageProps> = ({
         isLoading ? <LottieAnimation></LottieAnimation> :
         <div className={styles.container}>
             <div className={styles.header}>
-                <h2>Service</h2>
+                <h2>Deals</h2>
                 <button className={styles.addItem} onClick={() => handleCreateNews()}>Add Item</button>
             </div>
             {

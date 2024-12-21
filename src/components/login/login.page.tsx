@@ -33,7 +33,6 @@ export const LoginPage: FC<MenuPageProps> = ({ translate }) => {
                 router.push(`dashboard`);
             }, 3000);
         } catch (error) {
-            console.log(error);
             setIsBtnLoading(false);
             handleShowMessage(2, "Login failed");
         }

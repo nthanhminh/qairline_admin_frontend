@@ -6,7 +6,7 @@ import { fetchInterceptor } from "./fetch.interceptor";
 
 export const getAllFlight = async (
     search: string | null | undefined, 
-    flightCode: string | null | undefined, 
+    // flightCode: string | null | undefined, 
     departureTime: string | null | undefined,
     sortedByPrice: SortBy | null | undefined,
     sortedByDeparture: SortBy | null | undefined,
@@ -18,7 +18,7 @@ export const getAllFlight = async (
     try {
         const queryParams = {
             search,
-            flightCode,
+            // flightCode,
             departureTime,
             sortedByPrice,
             sortedByDeparture,
@@ -29,7 +29,6 @@ export const getAllFlight = async (
             pageSize: 4,
         };
         const queryString = buildQueryString(queryParams);
-        console.log(queryString);
         const response = await fetchInterceptor(`${baseUrl}/flights?${queryString}`, { 
             method: 'GET',
         });
@@ -57,10 +56,10 @@ export const getFlighById = async (id: string) : Promise<Flight> => {
 
 export const getNumberOfTicketFromFlightId = async (flightId: string) : Promise<number> => {
     try {
-        const response = await fetchInterceptor(`${baseUrl}/tickets/getNumberOfTicketsForFlight?flightId=${flightId}`);
-        const parsedResponse: DataApiResponse<number> = await response?.json();
-        const data: number = parsedResponse.data;
-        return data;
+        const response = await fetchInterceptor(`${baseUrl}/tickets/flight?flightId=${flightId}`);
+        const parsedResponse: DataApiResponse<string[]> = await response?.json();
+        const data: string[] = parsedResponse.data;
+        return data.length;
     } catch (error) {
         throw new Error('Error');
     }

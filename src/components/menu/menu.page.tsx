@@ -27,7 +27,6 @@ export const MenuPage: FC<MenuPageProps> = ({
         try {
             setIsLoading(true);
             const menuList = await getAllMenu() ?? [];
-            console.log(menuList);
             setMenus(menuList);
             setIsLoading(false)
         } catch (error) {

@@ -67,7 +67,6 @@ export const deletePlane = async (id: string) => {
         }
     
         const result = await response.json();
-        console.log('Edit success:', result);
         return result;
     } catch (error) {
       throw new Error('Error');

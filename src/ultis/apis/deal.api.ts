@@ -30,7 +30,6 @@ export const createNews = async (newsDto: NewsDto) => {
     
         const result = await response.json();
         const data = result.data;
-        console.log("data", data);
         return result.data;
     } catch (error) {
       throw new Error('Error');

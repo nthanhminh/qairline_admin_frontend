@@ -7,6 +7,7 @@ import { Flight, Ticket } from "@/ultis/type/flight.type";
 import { getFlighById } from "@/ultis/apis/flight.api";
 import { useGlobalContext } from "@/contexts/global.context";
 import LottieAnimation from "../loading/loadingForPage/loadingPage";
+import { useRouter } from "next/navigation";
 export interface BookingDetailPageProps {
     translate: any,
     id: string
@@ -24,6 +25,7 @@ export const BookingDetailPage: FC<BookingDetailPageProps> = ({
     const pageSize = 10;
     const {handleShowMessage} = useGlobalContext();
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const router = useRouter();
     const fetchData = async () => {
         try {
             setIsLoading(true);
@@ -33,11 +35,10 @@ export const BookingDetailPage: FC<BookingDetailPageProps> = ({
             for (const booking of flight?.bookings || []) {
                 tmpTicketList.push(...(booking.tickets ?? []));
             }
-            console.log(flight);
             setTickets(tmpTicketList);
             setTotalPages(tmpTicketList.length);
             setPageNumber(Math.ceil(tmpTicketList.length/pageSize)); 
-            setIsLoading(true);  
+            setIsLoading(false);  
         } catch (error) {
             handleShowMessage(2, 'Error when fetching data');
         }
@@ -80,9 +81,18 @@ export const BookingDetailPage: FC<BookingDetailPageProps> = ({
     return (
         isLoading ? <LottieAnimation></LottieAnimation> :
         <div className={styles.bookingContainer}>
-            <h2 className={styles.bookingHeader}>
-                Booking Detail
-            </h2>
+            <div className={styles.descriptionContainer}>
+                    <div className={styles.backBtn} onClick= {
+                        () => {
+                            router.back();
+                        }
+                    }>
+                        <Image src="/images/flights/back.png" alt="" width={18} height={18}></Image>
+                    </div>
+                    <h2 className={styles.bookingHeader}>
+                        Booking Detail
+                    </h2>
+            </div>
             <div className={styles.bookingListContainer}>
                 <table className={styles.bookingTable}>
                     <thead>

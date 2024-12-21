@@ -17,10 +17,29 @@ export const login = async (dto: LoginDto) => {
         }
         const parseResponse: DataApiResponse<TokenResponse> = await response.json();
         const data: TokenResponse = parseResponse.data;
-        Cookies.set('accessToken', data.accessToken, { path: '/', secure: true, sameSite: 'strict' });
-        Cookies.set('refreshToken', data.refreshToken, { path: '/', secure: true, sameSite: 'strict' });
+        Cookies.set(
+            'accessToken', 
+            data.accessToken, 
+            { 
+                path: '/', 
+                secure: true, 
+                sameSite: 'strict',
+                expires: 60 * 60 * 24 * 7
+            }
+        );
+        Cookies.set(
+            'refreshToken', 
+            data.refreshToken, 
+            { 
+                path: '/', 
+                secure: true, 
+                sameSite: 'strict',
+                expires: 60 * 60 * 24 * 7
+            }
+        );
         return data;
     } catch (error) {
+        console.error(error);
         throw new Error(`error`);
     }
 }
@@ -40,7 +59,6 @@ export const logout = async() => {
         }
         const parseResponse: DataApiResponse<any> = await response.json();
         const data: any = parseResponse.data;
-        console.log(data);
         clearCookies();
         return data;
     } catch (error) {
@@ -91,7 +109,6 @@ export const verifyCode = async(dto: VerifyCodeDto) => {
 export const changePassword = async (dto: ChangePasswordDto) => {
     try {
         const token = Cookies.get('accessToken');
-        console.log(token);
         const response = await fetch(`${baseUrl}/auth/updatePassword`, {
             method: "PATCH",
             headers: {
@@ -134,6 +151,4 @@ export const forgotPassword = async (dto: ForgotPasswordDto) => {
 const clearCookies = () => {
     Cookies.remove('accessToken', { path: '/' });
     Cookies.remove('refreshToken', { path: '/' });
-  
-    console.log('Cookies đã bị xóa');
 };
